@@ -4,16 +4,6 @@
 
 const path = require('path')
 
-module.exports = merge(prodEnv, {
-  MODE_ENV: '"development"',
-  API_HOST: "/api/"
-})
-
-module.exports = merge(prodEnv, {
-  MODE_ENV: '"production"',
-  API_HOST: "http://store.ink/"
-})
-
 module.exports = {
   dev: {
     // Paths

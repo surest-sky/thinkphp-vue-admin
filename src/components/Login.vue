@@ -53,9 +53,13 @@ export default {
         account: [{ validator: checkAccount, trigger: "blur"}]
       }
     }
-
-
   },
+
+
+  created: () => {
+    console.log(process.env.API_HOST)
+  },
+
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
