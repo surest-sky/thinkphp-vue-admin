@@ -6,15 +6,17 @@ const path = require('path')
 
 module.exports = {
   dev: {
+    dev: require('./dev.env'),
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    autoOpenBrowser: true,
     proxyTable: {
-      'api' : {
-        target: 'http://store.ink/',
+      '/api' : {
+        target: 'http://store.ink',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': '/'
+          '^/api': '/admin'
         }
       }
     },

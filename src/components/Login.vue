@@ -25,6 +25,7 @@
 </template>
 
 <script>
+
 export default {
   name: "Login",
   data() {
@@ -51,7 +52,8 @@ export default {
       rules: {
         pass: [{ validator: validatePass, trigger: "blur" }],
         account: [{ validator: checkAccount, trigger: "blur"}]
-      }
+      },
+      title: "登录发生错误"
     }
   },
 
@@ -64,7 +66,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.login_()
         } else {
           console.log("error submit!!");
           return false;
@@ -73,6 +75,23 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    login_() {
+      var data = this.ruleForm2
+      this.$post('/api/login', {
+        name: data.account,
+        password: data.pass
+      })
+      .then((response) => {
+        if(response.code !== 200) {
+          this.$message.error(response.msg)
+          // return
+        }
+        this.$router.push({path: '/admin'})
+      })
+      .catch((response)=>{
+        console.log(response)
+      })
     },
     
   }
