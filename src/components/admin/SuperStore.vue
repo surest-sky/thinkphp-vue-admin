@@ -193,7 +193,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cacheEdit = false">取 消</el-button>
-        <el-button type="primary" v-if="inputSuperStoreTitle == '更新商圈'"  @click="confirmUpdate('superstore_form')">创建</el-button>
+        <el-button type="primary" v-if="inputSuperStoreTitle == '编辑商圈'"  @click="confirmUpdate('superstore_form')">更新</el-button>
         <el-button type="primary" v-if="inputSuperStoreTitle == '添加商圈'"  @click="confirmCreate('superstore_form')">创建</el-button>
       </div>
     </el-dialog>
@@ -275,13 +275,6 @@ export default {
             message: "输入的字符串在2-100个之间",
             trigger: "blur"
           }
-        ],
-        longitude_latitude: [
-            {
-              required: true,
-              message: "请输入经纬度",
-              trigger: "blur"
-            }
         ],
         popularity: [
             {

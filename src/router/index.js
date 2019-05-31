@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-import Login from '@/components/Login'
+// import Login from '@/components/Login'
 import Admin from '@/components/admin/Index'
 import Home from '@/components/admin/Home'
 import SuperStore from '@/components/admin/SuperStore'
@@ -18,11 +18,11 @@ export default new Router({
       name: 'HelloWorld',
       component: HelloWorld
     },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   component: Login
+    // },
     {
       path: '/admin',
       name: 'admin',

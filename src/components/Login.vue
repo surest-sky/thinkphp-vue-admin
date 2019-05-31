@@ -98,8 +98,7 @@ export default {
 };
 </script>
 
-
-<style>
+<style lang="less">
   .container{
     max-width: 30%;
     margin: 0px auto;

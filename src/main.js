@@ -10,6 +10,7 @@ import VueAMap from 'vue-amap';
 import {success_, error_} from './common/message.js'
 
 Vue.use(VueAMap)
+
 VueAMap.initAMapApiLoader({
   key: 'f55794f39e0e0385fa42fdf0beb7b4df',
   plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.PlaceSearch', 'AMap.MapType','AMap.Geocoder', 'AMap.Autocomplete'],
