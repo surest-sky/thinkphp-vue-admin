@@ -1,6 +1,42 @@
 <template>
   <div>
-    <el-table :data="list" style="width: 100%" v-loading="table_loading">
+    <my-header v-bind:title="title"></my-header>
+
+    <div class="filter-form">
+      <el-row>
+        <el-col :span="10">
+          <el-form ref="filter" label-position="left">
+            <el-form-item label="商圈名称:" label-width="80px">
+              <el-col :span="12">
+                <el-input v-model="search_superstore_name"></el-input>
+              </el-col>
+              <el-col class="line" :span="1"></el-col>
+              <el-col :span="5">
+                <el-button type="primary" @click="summit_search">查找</el-button>
+              </el-col>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col class="filter-tool" :span="10">
+          <el-form>
+            <el-button type="primary" @click="add_superstore">添加商圈</el-button>
+            <el-button @click="filter_lower">下架</el-button>
+            <el-button @click="filter_online">上架</el-button>
+            <!-- 选择后删除 -->
+            <el-button type="primary" @click="filter_delete">删除</el-button>
+          </el-form>
+        </el-col>
+      </el-row>
+    </div>
+
+    <el-table
+      :data="list"
+      style="width: 100%;"
+      v-loading="table_loading"
+      :row-class-name="tableRowClassName"
+    >
       <el-table-column
         type="selection"
         width="55"
@@ -26,6 +62,26 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="showDetail(scope.row.id)">详情</el-button>
           <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
+          <!-- 弹出更多 -->
+          <el-dropdown @command="handTool">
+            <el-button type="text" size="small">
+              更多
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                command="lower"
+                :data-value="scope.row.id"
+                v-if="scope.row.status == 1"
+              >下架</el-dropdown-item>
+              <el-dropdown-item
+                command="onLine"
+                :data-value="scope.row.id"
+                v-if="scope.row.status == 2"
+              >上架</el-dropdown-item>
+              <el-dropdown-item command="delete" :data-value="scope.row.id">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -78,52 +134,103 @@
     </div>
 
     <!-- 编辑商圈 -->
-    <el-dialog title="编辑商圈" :visible.sync="editSuperStore">
-      <el-form :model="superstore_form" v-loadding="edit_loadding">
-        <el-form-item label="商圈名称">
-          <el-input v-model="superstore_form.name" auto-complete="off"></el-input>
+    <el-dialog :title="inputSuperStoreTitle" :visible.sync="inputSuperStore">
+      <el-form
+        :model="superstore_form"
+        ref="superstore_form"
+        v-loading="edit_loadding"
+        label-width="80px"
+        :rules="rules"
+      >
+        <el-form-item label="商圈名称" prop="superstore_name">
+          <el-input v-model="superstore_form.superstore_name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商圈类型">
-          <el-select v-model="superstore_form.type" placeholder="请选择商圈类型">
-            <!-- <el-option label="区域一" :for="(type, index) in types" :key="index" value="{{type}}"></el-option> -->
-          </el-select>
+        <el-form-item label="商圈类型" prop="type">
+          <el-col :span="26">
+            <el-select v-model="superstore_form.type" placeholder="请选择商圈类型">
+              <el-option
+                v-for="(item, index) in types"
+                :key="index"
+                :value="item.key"
+                :label="item.value"
+              ></el-option>
+            </el-select>
+          </el-col>
         </el-form-item>
-        <el-form-item label="人气值">
+
+        <el-form-item label="是否上架" prop="type">
+          <el-col :span="26">
+            <el-select v-model="superstore_form.status" placeholder="是否上架">
+              <el-option value="1" >上架</el-option>
+              <el-option value="2">下架</el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
+
+        <el-form-item label="人气值" prop="popularity">
           <el-input v-model="superstore_form.popularity"></el-input>
         </el-form-item>
-        <el-form-item label="经度">
-          <el-input v-model="superstore_form.longitude"></el-input>
+        <el-form-item label="经纬度" :inline="true" prop="longitude_latitude">
+          <el-col :span="8">
+            <el-input v-model="superstore_form.longitude"></el-input>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="8">
+            <el-input v-model="superstore_form.latitude"></el-input>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="3">
+            <el-button type="primary" @click="onAddress">选址</el-button>
+          </el-col>
         </el-form-item>
-        <el-form-item label="纬度">
-          <el-input v-model="superstore_form.latitude"></el-input>
-        </el-form-item>
-        <el-form-item label="营业时间">
+
+        <el-form-item label="营业时间" prop="do_business">
           <el-input v-model="superstore_form.do_business"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
+        <el-form-item label="地址" prop="address">
           <el-input v-model="superstore_form.address"></el-input>
         </el-form-item>
-
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cacheEdit = false">取 消</el-button>
-        <el-button type="primary" @click="confirmUpdate = false">确 定</el-button>
+        <el-button type="primary" v-if="inputSuperStoreTitle == '更新商圈'"  @click="confirmUpdate('superstore_form')">创建</el-button>
+        <el-button type="primary" v-if="inputSuperStoreTitle == '添加商圈'"  @click="confirmCreate('superstore_form')">创建</el-button>
       </div>
     </el-dialog>
 
-
+    <el-dialog title="地图" :visible.sync="amap" class="amap-body">
+      <div class="dialog-content amap-content">
+        <el-amap vid="amapDemo" :center="center" :zoom="zoom" class="amap-demo" :events="events"></el-amap>
+        <span style="color: red;">
+          {{superstore_form.longitude}} - {{superstore_form.latitude}}
+          <br>
+          {{superstore_form.address}}
+        </span>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="amap = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
-  <script>
+<script>
+import myHeader from "./common/Header";
+
 export default {
   name: "SuperStore",
   mounted() {
     this.getList();
   },
+  components: {
+    myHeader
+  },
   data() {
+    var self = this;
     return {
+      id: 0,
+      title: "商圈详情",
+      inputSuperStoreTitle: '编辑商圈',
       table_loading: true,
       simple_loading: true,
       edit_loadding: true,
@@ -134,24 +241,112 @@ export default {
       current_page: 1,
       simpleData: {},
       simpleVisible: false,
-      editSuperStore: false,
+      inputSuperStore: false,
+      amap: false,
+      visible: false,
       superstore_form: {},
-      types: []
+      // 搜索表单的数据
+      search_superstore_name: "",
+      // 商圈类型  0：未分类 1：大型商城 2：购物中心
+      types: [
+        {
+          key: 0,
+          value: "未分类"
+        },
+        {
+          key: 1,
+          value: "大型商城"
+        },
+        {
+          key: 2,
+          value: "购物中心"
+        }
+      ],
+      rules: {
+        superstore_name: [
+          {
+            required: true,
+            message: "请输入商圈名称",
+            trigger: "blur"
+          },
+          {
+            mix: 2,
+            max: 100,
+            message: "输入的字符串在2-100个之间",
+            trigger: "blur"
+          }
+        ],
+        longitude_latitude: [
+            {
+              required: true,
+              message: "请输入经纬度",
+              trigger: "blur"
+            }
+        ],
+        popularity: [
+            {
+              required: true,
+              message: "人气值",
+              trigger: "blur"
+            }
+        ],
+        do_business: [
+          {
+            required: true,
+            message: "请输入营业时间",
+            trigger: "blur"
+          }
+        ],
+        address: [
+          {
+            required: true,
+            message: "请输入地址",
+            trigger: "blur"
+          }
+        ]
+      },
+      zoom: 12,
+      center: [114.12593, 22.649967],
+      events: {
+        click(e) {
+          let { lng, lat } = e.lnglat;
+          self.superstore_form.longitude = lng;
+          self.superstore_form.latitude = lat;
+
+          // 这里通过高德 SDK 完成。
+          var geocoder = new AMap.Geocoder({
+            radius: 1000,
+            extensions: "all"
+          });
+
+          var auto = new AMap.Autocomplete({
+            input: "amap_search"
+          });
+
+          geocoder.getAddress([lng, lat], function(status, result) {
+            if (status === "complete" && result.info === "OK") {
+              if (result && result.regeocode) {
+                self.superstore_form.address =
+                  result.regeocode.formattedAddress;
+                  self.$nextTick();
+              }
+            }
+          });
+        }
+      },
+      lng: 0,
+      lat: 0
     };
-  },
-  watch: {
-    current_page: function() {
-      console.log("222");
-    }
   },
   methods: {
     // 编辑商圈
     edit(id) {
-      this.editSuperStore = true
-      this.edit_loadding = false
-      this.superstore_form = this.simpleData 
-      console.log(this.simpleData)
-      console.log(this.superstore_form)
+      this.inputSuperStoreTitle = "编辑商圈"
+      this.inputSuperStore = true;
+      this.getSimple(id);
+      this.edit_loadding = false;
+      console.log(this.simpleData);
+      console.log(this.superstore_form);
     },
     // 获取商圈列表
     getList() {
@@ -188,9 +383,11 @@ export default {
     },
     // 获取商圈详情
     getSimple(id) {
+      this.id = id;
       this.$get(`/api/superstore/${id}`).then(response => {
         if (response.code == 200) {
           this.simpleData = response.data;
+          this.superstore_form = response.data;
         }
       });
     },
@@ -201,13 +398,151 @@ export default {
       console.log(e);
     },
     // 取消编辑
-    cacheEdit() {
-      
-    },
+    cacheEdit() {},
     // 确认更新
-    confirmUpdate() {
+    confirmUpdate(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          console.log(this.superstore_form);
+          this.edit_loadding = true;
+          this.updateData(this.superstore_form);
+        } else {
+          return false;
+        }
+      });
+    },
 
-    }
+    updateData(data) {
+      var postData = {
+        superstore_name: data.superstore_name,
+        longitude: data.longitude,
+        latitude: data.latitude,
+        type: data.type,
+        popularity: data.popularity,
+        do_business: data.do_business,
+        address: data.address,
+        status: data.status
+      };
+
+      this.$put(`/api/superstore/` + this.id, postData).then(response => {
+        if (response.code == 200) {
+          this.edit_loadding = false;
+
+          this.$success_("更新成功");
+
+          this.getList();
+        } else {
+          this.$error_(response.msg);
+        }
+      });
+    },
+
+    // 地图选址
+    onAddress() {
+      this.amap = true;
+      if(this.superstore_form.longitude) {
+        this.center = [
+          this.superstore_form.longitude,
+          this.superstore_form.latitude
+        ];
+      }
+    },
+
+    // 更多方法里面的操作
+    handTool(command, e) {
+      var id = e.$attrs["data-value"];
+      if (command == "lower") {
+        this.lower(id);
+      } else if (command == "delete") {
+        this.delete(id);
+      } else if (command == "onLine") {
+        this.onLine(id);
+      }
+    },
+
+    // 下架
+    lower() {
+      this.$success_("下架成功");
+    },
+
+    // 上架
+    onLine() {
+      this.$success_("上架成功");
+    },
+
+    // 删除
+    delete() {
+      this.$error_("删除失败");
+    },
+
+    tableRowClassName({ row }) {
+      if (row.status == 2) {
+        row.remark = "- 已下架";
+        return "color-lower";
+      }
+    },
+
+    // 搜索界面的方法
+    // 搜索
+    summit_search() {
+      // this.$post('')
+      this.$success_('搜索成功')
+    },
+
+    // 添加商圈
+    add_superstore() {
+      this.superstore_form = {}
+      this.inputSuperStore = true;
+      this.inputSuperStoreTitle = "添加商圈"
+      this.edit_loadding = false;
+
+      this.superstore_form.type = 1
+      this.superstore_form.status = 1
+      this.superstore_form.popularity = 5
+    },
+
+    // 创建商圈
+    confirmCreate() {
+       this.$refs[form].validate(valid => {
+        if (valid) {
+          console.log(this.superstore_form);
+          this.edit_loadding = true;
+          this.post_superstore(this.superstore_form);
+        } else {
+          return false;
+        }
+      });
+    },
+
+    post_superstore(data) {
+       var postData = {
+        superstore_name: data.superstore_name,
+        longitude: data.longitude,
+        latitude: data.latitude,
+        type: data.type,
+        popularity: data.popularity,
+        do_business: data.do_business,
+        address: data.address,
+        status: data.status
+      };
+
+       this.$post('/api/superstore', postData)
+          .then(function(response){
+            if(response.status == 1) {
+              this.$success_('创建成功')
+              this.getList()
+            }
+          })
+    },
+
+    // 上架
+    filter_online() {},
+
+    // 下架
+    filter_lower() {},
+
+    // 批量删除
+    filter_delete() {}
   }
 };
 </script>
@@ -257,6 +592,33 @@ export default {
   .param {
     width: 50%;
     text-align: left;
+  }
+}
+
+.amap-content {
+  height: 500px;
+  width: 100%;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+
+.color-lower {
+  color: #d0d0d0;
+}
+
+.filter-form {
+  padding-left: 30px;
+
+  .filter-tool {
+    .el-button {
+      float: left;
+    }
   }
 }
 </style>

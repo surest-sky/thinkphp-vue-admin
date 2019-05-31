@@ -18,10 +18,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100%;
+  box-sizing: border-box;
 }
 html, body{
     margin: 0;
-    height: 100%;
     width: 100%;
+    height: calc(100% + 50px);
 }
 </style>

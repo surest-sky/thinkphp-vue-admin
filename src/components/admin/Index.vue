@@ -84,10 +84,11 @@ export default {
 <style lang="less">
 .container {
   height: 100%;
+  box-sizing: border-box
 }
 
 .header {
-  height: 8%;
+  height: 5%;
   width: 100%;
   background-color: #545c64;
 
@@ -110,7 +111,7 @@ export default {
 }
 
 .content {
-  height: 92%;
+  height: 95%;
 
   .el-col {
     height: 100%;
