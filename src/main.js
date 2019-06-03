@@ -16,8 +16,8 @@ VueAMap.initAMapApiLoader({
   plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.PlaceSearch', 'AMap.MapType','AMap.Geocoder', 'AMap.Autocomplete'],
 })
 
-Vue.use(ElementUI)
 
+Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 Vue.prototype.$get = get

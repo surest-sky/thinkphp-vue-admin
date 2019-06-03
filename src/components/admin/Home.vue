@@ -1,12 +1,17 @@
 <template>
     <div>
-        <h1>首页</h1>    
+        首页
     </div>    
 </template>
 
 <script>
 export default {
-    name: 'Home'
+    name: 'Home',
+    data() {
+        return {
+            lists: ['a', 'b', 'v', 'd' ]
+        }
+    }
 }
 </script>
 

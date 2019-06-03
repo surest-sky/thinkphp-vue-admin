@@ -17,13 +17,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100%;
   box-sizing: border-box;
-    margin-bottom: 150px;
+  height: 100%;
 }
 html, body{
     margin: 0;
     width: 100%;
-    height: calc(100% + 50px);
+  height: 100%;
 }
 </style>
