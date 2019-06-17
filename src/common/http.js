@@ -15,7 +15,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
     response => {
         let res = {}
-        console.log(response.data)
+        console.log(222)
         res = response.data
         return res
     },

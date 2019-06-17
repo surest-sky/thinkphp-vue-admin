@@ -1,122 +1,98 @@
 <template>
-  <div>
-    <div class="container">
-      <el-form
-        :model="ruleForm2"
-        status-icon
-        :rules="rules"
-        ref="ruleForm2"
-        label-position="top"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="用户名" prop="account">
-          <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="用户名"></el-input>
-        </el-form-item>
-        <el-form-item label="" prop="pass">
-          <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="密码"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
-          <el-button @click="resetForm('ruleForm2')">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+  <div class="container">
+    <h1>后台登录</h1>
+  <el-col :xl="10" :lg="10" :md="14" class="form">
+    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px">
+    <el-form-item label="用户名" prop="user">
+      <el-input type="text" v-model="ruleForm.user" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="密码" prop="pass">
+      <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+      <el-button @click="resetForm('ruleForm')">重置</el-button>
+    </el-form-item>
+  </el-form>
+  </el-col>
   </div>
 </template>
 
 <script>
-
-export default {
-  name: "Login",
-  data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        callback();
-      }
-    };
-    var checkAccount = (rule, value, callback) => {
-        if(value === "") {
-          callback(new Error("请输入用户名"))
-        }else{
+  export default {
+    name: 'Login',
+    data() {
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('checkPass');
+          }
           callback();
         }
-    };
-
-    return {
-      ruleForm2: {
-        account: "",
-        pass: ""
+      };
+      var validateUser = (rule, value, callback) => {
+        if (value === '' || value === undefined) {
+          callback(new Error('请输入用户名'))
+        }else{
+          callback()
+        }
+      }
+      return {
+        ruleForm: {
+          pass: '',
+          user: ''
+        },
+        rules: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          user: [
+            { validator: validateUser, trigger: 'blur'}
+          ]
+        }
+      };
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if(this.ruleForm.user == 'admin' && this.ruleForm.pass == '2012Dibaba') {
+              this.$router.push({'path': '/admin'})
+              localStorage.setItem('d88_user', JSON.stringify(this.ruleForm))
+            }else{
+              this.$error_('账号密码错误')
+            }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
-      rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        account: [{ validator: checkAccount, trigger: "blur"}]
-      },
-      title: "登录发生错误"
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
     }
-  },
-
-
-  created: () => {
-    console.log(process.env.API_HOST)
-  },
-
-  methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.login_()
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    login_() {
-      var data = this.ruleForm2
-      this.$post('/api/login', {
-        name: data.account,
-        password: data.pass
-      })
-      .then((response) => {
-        if(response.code !== 200) {
-          this.$message.error(response.msg)
-          // return
-        }
-        this.$router.push({path: '/admin'})
-      })
-      .catch((response)=>{
-        console.log(response)
-      })
-    },
-    
   }
-};
 </script>
 
-<style lang="less">
-  .container{
-    max-width: 30%;
-    margin: 0px auto;
-    margin-top: 200px;
-  }
+<style lang="less" scoped>
+  .container {
+    width: 100%;
+    height: 100%;
+    padding-top: 150px;
+    box-sizing: border-box;
+    padding-left: 10px;
+    padding-right: 10px;
 
-  body {
-    /* background: url('../../static/image/desktop.jpg') no-repeat; */
-    background-size:100%;
-  }
-
-  @media screen and (max-width: 800px){
-    .container{
-      max-width: 100%;
+    .form {
+      margin: 0px auto;
+      float: none;
     }
-    body {
-    background-size:100% 100%;
-  }
   }
 </style>
+
+
+
 
