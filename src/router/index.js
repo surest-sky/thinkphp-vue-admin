@@ -63,13 +63,21 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  let data = localStorage.getItem('d88_user')
-  data = JSON.parse(data)
-  console.log(data)
-  if(data.user == 'admin' && data.pass == '2012Dibaba') {
-    next()
+  if(to.path !== '/login') {
+    let data = localStorage.getItem('d88_user')
+    if(!data) {
+      next('/login')
+    }else {
+      data = JSON.parse(data)
+      console.log(data)
+      if(data.user == 'admin' && data.pass == '2012Dibaba') {
+        next()
+      }else{
+        next('/login')
+      }
+    }
   }else{
-    next('/login')
+    next()
   }
 })
 

@@ -6,6 +6,15 @@ const service = axios.create()
 
 const http = {}
 
+
+// dev 开发版
+// production 生产环境
+// const host = "http://store.ink"
+// const host = "http://test-offline.d88.ink"
+const host = "http://192.168.2.199:96/admin/"
+
+
+
 service.interceptors.request.use(config => {
     return config
 }), error => {
@@ -15,7 +24,6 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
     response => {
         let res = {}
-        console.log(222)
         res = response.data
         return res
     },
@@ -29,8 +37,10 @@ service.interceptors.response.use(
 )
 export function get(url, params = {}) {
     params.t = new Date().getTime(); //get方法加一个时间参数,解决ie下可能缓存问题.
+    var new_url = url.replace('/\api/', host);
+    console.log(new_url)
     return service({
-      url: url,
+      url: new_url,
       method: 'get',
       headers: {     
       },
@@ -38,7 +48,7 @@ export function get(url, params = {}) {
     })
   }
 
- 
+
   //封装post请求
 export function post(url, data = {}) { 
     //默认配置 

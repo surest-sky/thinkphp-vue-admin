@@ -26,9 +26,6 @@
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (this.ruleForm.checkPass !== '') {
-            this.$refs.ruleForm.validateField('checkPass');
-          }
           callback();
         }
       };
@@ -58,7 +55,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.ruleForm.user == 'admin' && this.ruleForm.pass == '2012Dibaba') {
+            if((this.ruleForm.user == 'admin') && (this.ruleForm.pass == '2012Dibaba')) {
               this.$router.push({'path': '/admin'})
               localStorage.setItem('d88_user', JSON.stringify(this.ruleForm))
             }else{
