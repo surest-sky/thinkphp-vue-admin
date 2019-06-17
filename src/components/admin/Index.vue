@@ -18,7 +18,7 @@
               class="el-menu-vertical-demo"
               @open="handleOpen"
               @close="handleClose"
-              background-color="#545c64"
+              background-color="#001529"
               text-color="#fff"
               active-text-color="#ffd04b"
             >
@@ -114,7 +114,7 @@ export default {
 .header {
   height: 5%;
   width: 100%;
-  background-color: #545c64;
+  background-color: #001529;
 
   .title {
     line-height: 60px;

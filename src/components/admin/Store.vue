@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" v-loading.fullscreen.lock="fullscreenLoading">
     <my-header v-bind:title="title"></my-header>
 
     <div class="filter-tool">
@@ -53,7 +53,7 @@
         <el-table-column prop="id" label="id"></el-table-column>
         <el-table-column prop="store_name" label="店铺名称"></el-table-column>
         <el-table-column prop="house_info" label="楼层-门牌"></el-table-column>
-        <el-table-column prop="content" label="折扣内容" label-width="180px"></el-table-column>
+        <el-table-column prop="content" label="折扣内容" width="680"></el-table-column>
         <el-table-column prop="start_time" label="开始时间"></el-table-column>
         <el-table-column prop="end_time" label="结束时间"></el-table-column>
         <el-table-column prop="focus_count" label="粉丝数量"></el-table-column>
@@ -63,7 +63,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column fixed="right" label="操作">
+        <el-table-column fixed="right" width="200" label="操作">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
             <!-- 弹出更多 -->
@@ -79,7 +79,7 @@
                   v-if="scope.row.status == 1"
                 >下架</el-dropdown-item>
                 <el-dropdown-item
-                  command="onLine"
+                  command="online"
                   :data-value="scope.row.id"
                   v-if="scope.row.status == 2"
                 >上架</el-dropdown-item>
@@ -109,7 +109,7 @@
     <!-- 编辑更新表单 -->
     <div class="store-from">
       <el-dialog :title="storeFromTitle" :visible.sync="storeFromShow">
-        <el-form label-position="left" label-width="80px" :model="store">
+        <el-form label-position="left" label-width="80px" :model="store" v-loading="store_from_loading">
           <el-form-item label="当前商圈">
             <el-select v-model="store.superstore_id" class="select_" filterable>
               <el-option
@@ -182,6 +182,7 @@
 <script>
 import myHeader from "./common/Header";
 import moment from "moment";
+import { jsonRemove } from '@/components/unitls'
 
 export default {
   name: "Store",
@@ -196,6 +197,7 @@ export default {
         storename: "",
         type: "全部"
       },
+      fullscreenLoading: false,
       store_loading: true,
       stores: [],
       superstores: [],
@@ -204,11 +206,7 @@ export default {
       total: 100,
       current_page: 1,
       simpleData: {},
-      store: {
-        discount_content: '',
-        discount_type: '',
-        discount_content: '',
-      },
+      store: {},
       storeFromTitle: "编辑店铺",
       storeFromShow: false,
       store_statuses: [{
@@ -250,7 +248,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
+              start.setTime(start.getTime() + 3600 * 1000 * 24 * 3);
               picker.$emit('pick', [start, end]);
             }
           }, {
@@ -290,13 +288,15 @@ export default {
         },{
           key: 2,
           value: "已过期"
-        }]
+        }],
+        store_from_loading: true
     };
   },
   mounted() {
     this.getList();
     this.getSuperStoresList();
   },
+  
   methods: {
     search() {
       var superstore_id = this.store_filter.superstore_id
@@ -315,6 +315,7 @@ export default {
       })
     },
 
+    // 变更折扣状态
     changeType(status) {
       this.store_loading = true;
       var superstore_id = localStorage.getItem('superstore_id')
@@ -367,7 +368,63 @@ export default {
     },
     
     // 下拉菜单选项
-    handTool() {},
+    handTool(command, component) {
+      let id = component.$attrs['data-value']
+      this.store_loading = true;
+      switch(command) {
+        case "lower" :
+          this.lower(id);break
+        case "online" :
+          this.online(id);break
+        case "delete" :
+          this.delete(id);break
+        default:
+          this.$error_('操作非法')
+      }
+    },
+
+    // 上架
+    online(id) {
+      this.$post('/api/store/online/'+id).then((r) => {
+        if(r.code == 200) {
+          this.getList()
+          this.$success_('上架成功')
+        }else{
+          this.$error_(r.msg)
+        }
+
+      this.store_loading = false;
+      })
+    },
+
+    // 下架
+    lower(id) {
+      this.$deletes('/api/store/lower/'+id).then((r) => {
+        if(r.code == 200) {
+          this.getList()
+          this.$success_('下架成功')
+        }else{
+          this.$error_(r.msg)
+        }
+
+        this.store_loading = false
+      })
+    },
+
+    // 删除
+    delete(id) {
+      this.$deletes('/api/store/'+id).then((r) => {
+        if(r.code == 200) {
+          this.$success_('删除成功')
+          this.stores = jsonRemove(this.stores, 'id', id)
+          console.log(this.stores)
+        }else{
+          this.$error_(r.msg)
+        }
+    
+        this.store_loading = false;
+      })
+    },
 
     // 处理数据
     tableDatahandle(row) {
@@ -417,13 +474,17 @@ export default {
         this.store.discount_type = 1
         this.store.status = 1
         this.storeFromTitle = "创建店铺"
+
+        this.store_from_loading = false
     },
 
     // 获取编辑数据
     getSimpleStore(id) {
+      this.store_from_loading = true
       this.$get('/api/store/' + id)
           .then((response) => {
             this.setData(response.data)
+            this.store_from_loading = false
           })
     },
 
@@ -433,7 +494,7 @@ export default {
       this.store.status = parseInt(this.store.status)
       this.id = data.id
 
-      if(Object.keys(data.discount).length > 0) {
+      if(data.discount) {
         this.store.discount_status = data.discount.status,
         this.store.discount_type = data.discount.type,
         this.store.discount_content = data.discount.content
@@ -448,6 +509,7 @@ export default {
       }
     },
     
+    // 变更商圈需要做的事情
     changeSuperstore(id) {
       this.store_loading = true
       localStorage.setItem('superstore_id', id)
@@ -455,6 +517,7 @@ export default {
       
     },
 
+    // 更新或者创建数据
     updateOrCreate(id) {
       var data = {
         start_time: moment(this.time[0]).format().substr(0,10),
@@ -468,8 +531,6 @@ export default {
         superstore_id: this.store.superstore_id,
         type: this.store.discount_type
       }
-
-      console.log(data)
 
       if(id) {
         this.$put('/api/store/' + this.id, data)

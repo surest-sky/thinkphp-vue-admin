@@ -13,10 +13,10 @@ module.exports = {
     autoOpenBrowser: true,
     proxyTable: {
       '/api' : {
-        target: 'http://test-offline.d88.ink',
+        target: 'http://store.ink',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': 'http://test-offline.d88.ink/admin'
+          '^/api': 'http://store.ink/admin'
         }
       }
     },
