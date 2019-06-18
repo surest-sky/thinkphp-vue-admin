@@ -39,10 +39,12 @@
     </div>
 
     <el-table
+      ref="multipleTable"
       :data="list"
       style="width: 100%;"
       v-loading="table_loading"
       :row-class-name="tableRowClassName"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column
         type="selection"
@@ -258,6 +260,8 @@ export default {
       store_total: 0,
       discount_total: 0,
       today_discount: 0,
+      multipleSelection: '',
+      multipleSelectionIds: [],
       yesterdat_discount: 0,
       // 搜索表单的数据
       search_superstore_name: "",
@@ -565,13 +569,39 @@ export default {
     },
 
     // 上架
-    filter_online() {},
+    filter_online() {
+      this.getSelected()
+      let ids = this.multipleSelectionIds.join(',')
+      this.$post(`/api/superstore/batch_online?ids=${ids}`).then((r) => {
+        if(r.code == 200) {
+          this.$success_('上架成功')
+          this.getList()
+        }else{
+          this.$error_(r.msg)
+        }
+      })
+
+    },
 
     // 下架
-    filter_lower() {},
+    filter_lower() {
+      this.getSelected()
+      let ids = this.multipleSelectionIds.join(',')
+      this.$post(`/api/superstore/batch_lower?ids=${ids}`).then((r) => {
+        if(r.code == 200) {
+          this.$success_('下架成功')
+          this.getList()
+        }else{
+          this.$error_(r.msg)
+        }
+      })
+
+    },
 
     // 批量删除
-    filter_delete() {},
+    filter_delete() {
+      this.$error_('暂时关闭批量删除接口')
+    },
 
     // 跳转到店铺
     go_store(id) {
@@ -590,6 +620,22 @@ export default {
           this.yesterdat_discount = r.data.yesterdat_discount
         }
       })
+    },
+
+    // 选中的事件
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+      this.getSelected()
+    },
+
+    // 获取选中的列表
+    getSelected() {
+      var data = this.multipleSelection
+      var ids = []
+      data.forEach((row) => {
+          ids.push(row.id)
+      })
+      this.multipleSelectionIds = ids
     }
    }
 };
