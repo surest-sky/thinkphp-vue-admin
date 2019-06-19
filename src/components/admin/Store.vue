@@ -1,5 +1,5 @@
 <template>
-  <div class="content" v-loading.fullscreen.lock="fullscreenLoading">
+  <div class="content">
     <my-header v-bind:title="title"></my-header>
 
     <div class="filter-tool">
@@ -36,52 +36,11 @@
         </el-form-item>
       </el-form>
 
-      <!-- ------表格内容-------- -->
-      <el-table
-        :data="stores"
-        style="width:100%"
-        :row-key="tableDatahandle"
-        v-loading="store_loading"
-      >
-        <el-table-column prop="id" label="id"></el-table-column>
-        <el-table-column prop="store_name" label="店铺名称"></el-table-column>
-        <el-table-column prop="house_info" label="楼层-门牌"></el-table-column>
-        <el-table-column prop="content" label="折扣内容" width="680"></el-table-column>
-        <el-table-column prop="start_time" label="开始时间"></el-table-column>
-        <el-table-column prop="end_time" label="结束时间"></el-table-column>
-        <el-table-column prop="focus_count" label="粉丝数量"></el-table-column>
-        <el-table-column prop="status_" label="状态">
-          <template slot-scope="scope">
-            <p v-html="scope.row.status_"></p>
-          </template>
-        </el-table-column>
-
-        <el-table-column fixed="right" width="200" label="操作">
-          <template slot-scope="scope">
-            <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
-            <!-- 弹出更多 -->
-            <el-dropdown @command="handTool">
-              <el-button type="text" size="small">
-                更多
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  command="lower"
-                  :data-value="scope.row.id"
-                  v-if="scope.row.status == 1"
-                >下架</el-dropdown-item>
-                <el-dropdown-item
-                  command="online"
-                  :data-value="scope.row.id"
-                  v-if="scope.row.status == 2"
-                >上架</el-dropdown-item>
-                <el-dropdown-item command="delete" :data-value="scope.row.id">删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </template>
-        </el-table-column>
-      </el-table>
+      <my-table
+        :tableData="stores"
+        :columns="columns"
+        :loading="store_loading"
+      ></my-table>
 
       <!-- 分页 -->
       <Pagination 
@@ -194,11 +153,17 @@ import moment from "moment";
 import { jsonRemove } from "@/components/unitls";
 import Pagination from "@/components/From/Pagination";
 
+import MyTable from "@/components/From/Table";
+import MyDropDown from "@/components/From/MyDropDown";
+import {statusToText} from "@/components/unitls";
+
 export default {
   name: "Store",
   components: {
     myHeader,
-    Pagination
+    Pagination,
+    MyTable,
+    MyDropDown
   },
   data() {
     return {
@@ -208,14 +173,69 @@ export default {
         storename: "",
         type: "全部"
       },
-      fullscreenLoading: false,
+      // 表格列数据
+      columns: [
+        { prop: "id", label: "ID" },
+        { prop: "store_name", label: "店铺名称" },
+        { prop: "house_info", label: "楼层-门牌",},
+        { prop: "content", label: "折扣内容", width: "860" },
+        { prop: "start_time", label: "开始时间" },
+        { prop: "end_time", label: "结束时间" },
+        { prop: "focus_count", label: "粉丝数量" },
+        {
+          prop: "status",
+          label: "状态",
+          render: function(h, param) {
+            let html = statusToText(param.row.status)
+            return h('span', html)
+          }
+        },
+        {
+          prop: "",
+          label: "操作",
+          fixed: "right",
+          render: (createElement, param) => {
+            let dropDownData = {
+              label: "操作"
+            };
+            let buttons = [
+              {label: "编辑", func: { func: "edit", id: param.row.id}}
+            ]
+
+            if(param.row.status == 1) {
+              dropDownData.items = [
+                {label: "下架", func: { func: "lower", id: param.row.id}},
+                {label: "删除", func: { func: "delete", id: param.row.id}}
+              ]
+            }else {
+               dropDownData.items = [
+                {label: "上架", func: { func: "online", id: param.row.id}},
+                {label: "删除", func: { func: "delete", id: param.row.id}}
+              ]
+            }
+
+            // 触发MyDropDown的update和del事件
+            return createElement(MyDropDown, {
+              props: { dropDownData: dropDownData, buttons: buttons},
+              on: { 
+                  lower: this.lower, 
+                  delete: this.delete,
+                  online: this.online,
+                  edit: this.edit
+                }
+            });
+          }
+        }
+      ],
       store_loading: true,
       stores: [],
       superstores: [],
+      // 分页数据 ------ 
       pagesize: 10,
       pageSizes: [5, 10, 15, 20],
       total: 100,
       current_page: 1,
+      // end    ------ 
       simpleData: {},
       store: {},
       storeFromTitle: "编辑店铺",
@@ -318,6 +338,11 @@ export default {
       store_from_loading: true
     };
   },
+  watch: {
+    stores(val) {
+      this.tableDatahandle()
+    }
+  },
   mounted() {
     this.getList();
     this.getSuperStoresList();
@@ -348,6 +373,7 @@ export default {
       this.storeFromShow = true;
       this.getSimpleStore(id);
     },
+
     search() {
       var superstore_id = this.store_filter.superstore_id;
 
@@ -399,6 +425,28 @@ export default {
           this.store_loading = false;
         }
       });
+    },
+
+
+    // 处理数据
+    tableDatahandle() {
+      let data = []
+      this.stores.forEach((item, index) => {
+        let simple = item
+        if (simple.discount) {
+          simple.start_time = simple.discount.start_time.substr(0, 10);
+          simple.end_time = simple.discount.end_time.substr(0, 10);
+          simple.content = simple.discount.content;
+        } else {
+          simple.start_time = "未开始";
+          simple.end_time = "未开始";
+          simple.content = "";
+        }
+
+        data.push(simple)
+      })
+
+      
     },
 
     getSuperStoresList() {
@@ -471,18 +519,6 @@ export default {
       });
     },
 
-    // 处理数据
-    tableDatahandle(row) {
-      if (row.discount) {
-        row.start_time = row.discount.start_time.substr(0, 10);
-        row.end_time = row.discount.end_time.substr(0, 10);
-        row.content = row.discount.content;
-      } else {
-        row.start_time = "未开始";
-        row.end_time = "未开始";
-        row.content = "";
-      }
-    },
 
     // 添加一个店铺
     addStore() {

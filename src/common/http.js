@@ -37,10 +37,9 @@ service.interceptors.response.use(
 )
 export function get(url, params = {}) {
     params.t = new Date().getTime(); //get方法加一个时间参数,解决ie下可能缓存问题.
-    var new_url = url.replace('/\api/', host);
-    console.log(new_url)
+    var url = url.replace('/\api/', host);
     return service({
-      url: new_url,
+      url: url,
       method: 'get',
       headers: {     
       },
@@ -51,12 +50,13 @@ export function get(url, params = {}) {
 
   //封装post请求
 export function post(url, data = {}) { 
+    var url = url.replace('/\api/', host);
     //默认配置 
     let sendObject={
       url: url,
       method: 'post',
       headers: {
-        'Content-Type':'application/json;charset=UTF-8'       
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       data:data
     };
@@ -66,17 +66,19 @@ export function post(url, data = {}) {
   
   //封装put方法 (resfulAPI常用)
   export function put(url,data = {}){
+    var url = url.replace('/\api/', host);
     return service({
       url: url,
       method: 'put',
       headers: {
-        'Content-Type':'application/json;charset=UTF-8'       
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       data:JSON.stringify(data)
     }) 
   }
   //删除方法(resfulAPI常用)
   export function deletes(url){
+    var url = url.replace('/\api/', host);
     return service({
       url: url,
       method: 'delete',

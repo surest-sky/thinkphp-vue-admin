@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import myHeader from "./common/Header";
+import myHeader from "@/components/admin/common/Header";
 import { jsonRemove } from '@/components/unitls'
 
 export default {

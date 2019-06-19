@@ -6,7 +6,7 @@ import Admin from '@/components/admin/Index'
 import Home from '@/components/admin/Home'
 import SuperStore from '@/components/admin/SuperStore'
 import App from '@/components/admin/App'
-import Message from '@/components/admin/Message'
+import Message from '@/components/admin/Message/Index'
 import Store from '@/components/admin/Store'
 import VueRouter from 'vue-router';
 
@@ -15,8 +15,7 @@ Vue.use(Router)
 const routes = [
   {
     path: '/',
-    name: 'HelloWorld',
-    component: HelloWorld
+    redirect: '/admin'
   },
   {
     path: '/login',
@@ -69,7 +68,6 @@ router.beforeEach((to, from, next) => {
       next('/login')
     }else {
       data = JSON.parse(data)
-      console.log(data)
       if(data.user == 'admin' && data.pass == '2012Dibaba') {
         next()
       }else{

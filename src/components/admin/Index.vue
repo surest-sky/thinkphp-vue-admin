@@ -57,17 +57,13 @@ export default {
   },
   created() {
     this.readRouters()
-    console.log(this.routers)
   },
   methods: {
     handleOpen(key, path) {
-      console.log(arguments)
     },
     handleClose(key, path) {
-      console.log(arguments)
     },
     swich_(path){
-      console.log(path);
       this.$router.push(path)
     },
     readRouters() {
@@ -89,7 +85,6 @@ export default {
         }
       }
       this.routers = routers
-      console.log(this.routers)
     },
     
     changeFold() {
@@ -99,7 +94,6 @@ export default {
       }else{
         this.fold_icon = 'el-icon-s-fold'
       }
-      console.log(this.collapse)
     }
   }
 };

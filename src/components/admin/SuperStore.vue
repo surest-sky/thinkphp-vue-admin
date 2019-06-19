@@ -413,17 +413,6 @@ export default {
     },
     // 取消编辑
     cacheEdit() {},
-    // 确认更新
-    confirmUpdate(form) {
-      this.$refs[form].validate(valid => {
-        if (valid) {
-          this.edit_loadding = true;
-          this.updateData(this.superstore_form);
-        } else {
-          return false;
-        }
-      });
-    },
 
     updateData(data) {
       var postData = {
@@ -535,12 +524,25 @@ export default {
     },
 
     // 创建商圈
-    confirmCreate() {
+    confirmCreate(form) {
        this.$refs[form].validate(valid => {
         if (valid) {
           console.log(this.superstore_form);
           this.edit_loadding = true;
           this.post_superstore(this.superstore_form);
+        } else {
+          return false;
+        }
+      });
+    },
+
+
+    // 确认更新
+    confirmUpdate(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          this.edit_loadding = true;
+          this.updateData(this.superstore_form);
         } else {
           return false;
         }
