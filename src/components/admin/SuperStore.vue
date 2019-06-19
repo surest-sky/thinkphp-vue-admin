@@ -38,76 +38,24 @@
       </el-row>
     </div>
 
-    <el-table
-      ref="multipleTable"
-      :data="list"
-      style="width: 100%;"
-      v-loading="table_loading"
-      :row-class-name="tableRowClassName"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column
-        type="selection"
-        width="55"
-        :default-sort="{prop: 'name', order: 'descending'}"
-      ></el-table-column>
-      <el-table-column prop="id" label="ID"></el-table-column>
+  
 
-      <el-table-column prop="superstore_name" label="商圈名称"></el-table-column>
 
-      <el-table-column prop="type_" label="商圈类型" sortable>
-        <template slot-scope="scope">
-          <el-tag size="medium">{{ scope.row.type_ }}</el-tag>
-        </template>
-      </el-table-column>
+      <my-table
+        :tableData="list"
+        :columns="columns"
+        :loading="table_loading"
+      ></my-table>
 
-      <el-table-column prop="store_num" label="店铺数量"></el-table-column>
-
-      <el-table-column prop="discount_num" label="折扣数量"></el-table-column>
-
-      <el-table-column prop="remark" label="备注"></el-table-column>
-
-      <el-table-column fixed="right" label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="showDetail(scope.row.id)">详情</el-button>
-          <el-button @click="edit(scope.row.id)" type="text" size="small">编辑</el-button>
-          <el-button @click="go_store(scope.row.id)" type="text" size="small">所有店铺</el-button>
-          <!-- 弹出更多 -->
-          <el-dropdown @command="handTool">
-            <el-button type="text" size="small">
-              更多
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                command="lower"
-                :data-value="scope.row.id"
-                v-if="scope.row.status == 1"
-              >下架</el-dropdown-item>
-              <el-dropdown-item
-                command="onLine"
-                :data-value="scope.row.id"
-                v-if="scope.row.status == 2"
-              >上架</el-dropdown-item>
-              <el-dropdown-item command="delete" :data-value="scope.row.id">删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="pagination">
-      <el-pagination
-        class="page"
-        @current-change="changeCurrentPage"
-        @size-change="changeSizePage"
-        :current-page="current_page"
-        :page-sizes="pageSizes"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
+      <!-- 分页 -->
+      <Pagination 
+        :pagesize="pagesize"
+        :current_page="current_page"
+        :pageSizes="pageSizes"
         :total="total"
-      ></el-pagination>
-    </div>
+        @changeCurrentPage="changeCurrentPage"
+        @changeSizePage="changeSizePage"
+      ></Pagination>
 
     <!-- 商圈详情 -->
     <div class="message">
@@ -226,6 +174,10 @@
 
 <script>
 import myHeader from "./common/Header";
+import myTag from "@/components/From/Tag";
+import MyDropDown from "@/components/From/MyDropDown";
+import MyTable from "@/components/From/Table";
+import Pagination from "@/components/From/Pagination";
 
 export default {
   name: "SuperStore",
@@ -234,7 +186,11 @@ export default {
     this.getDataInfo()
   },
   components: {
-    myHeader
+    myHeader,
+    myTag,
+    MyTable,
+    MyDropDown,
+    Pagination
   },
   data() {
     var self = this;
@@ -265,6 +221,58 @@ export default {
       yesterdat_discount: 0,
       // 搜索表单的数据
       search_superstore_name: "",
+      columns: [
+        { prop: "id", label: "ID" },
+        { prop: "superstore_name", label: "商圈名称" },
+        { prop: "type_", label: "商圈类型" ,
+          render: (h, params) =>  {
+            h(myTag, {
+              props: {
+                size: "medium",
+                text: params.row.type_
+              }
+            })
+          }
+        },
+        { prop: "store_num", label: "店铺数量" },
+        { prop: "discount_num", label: "折扣数量" },
+        { prop: "remark", label: "备注" },
+        { prop: "", fiexed: "right", label: "操作",
+          render: (h, param) => {
+            let dropDownData = {
+              label: "更多"
+            };
+            let buttons = [
+              {label: "详情", func: { func: "showDetail", id: param.row.id}},
+              {label: "编辑", func: { func: "edit", id: param.row.id}},
+              {label: "所有店铺", func: { func: "go_store", id: param.row.id}}
+            ]
+
+            if(param.row.status == 1) {
+              dropDownData.items = [
+                {label: "下架", func: { func: "lower", id: param.row.id}},
+                {label: "删除", func: { func: "delete", id: param.row.id}}
+              ]
+            }else {
+               dropDownData.items = [
+                {label: "上架", func: { func: "online", id: param.row.id}},
+                {label: "删除", func: { func: "delete", id: param.row.id}}
+              ]
+            }
+
+            // 触发MyDropDown的update和del事件
+            return h(MyDropDown, {
+              props: { dropDownData: dropDownData, buttons: buttons},
+              on: { 
+                  lower: this.lower, 
+                  delete: this.delete,
+                  online: this.online,
+                  edit: this.edit
+                }
+            });
+          }
+        }
+      ],
       // 商圈类型  0：未分类 1：大型商城 2：购物中心
       types: [
         {
@@ -448,17 +456,6 @@ export default {
       }
     },
 
-    // 更多方法里面的操作
-    handTool(command, e) {
-      var id = e.$attrs["data-value"];
-      if (command == "lower") {
-        this.lower(id);
-      } else if (command == "delete") {
-        this.delete(id);
-      } else if (command == "onLine") {
-        this.onLine(id);
-      }
-    },
 
     // 下架
     lower(id) {

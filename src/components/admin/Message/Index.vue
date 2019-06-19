@@ -2,33 +2,11 @@
     <div class="content" >
     <my-header v-bind:title="title"></my-header>
 
-    <el-table
-        :data="data"
-        style="width:100%"
-        v-loading="loading"
-      >
-        <el-table-column prop="id" label="id"></el-table-column>
-        <el-table-column prop="content" label="消息内容"></el-table-column>
-        <el-table-column prop="title" label="消息标题"></el-table-column>
-        <el-table-column prop="type_" label="消息类型" width="680"></el-table-column>
-        <el-table-column prop="create_time" label="创建时间"></el-table-column>
-        <el-table-column prop="send_time" label="发送时间"></el-table-column>
-        <el-table-column prop="status_" label="发送状态">
-            <template slot-scope="scope">
-                <el-tag
-                    effect="dark">
-                    {{scope.row.status_}}
-                </el-tag>
-            </template>
-        </el-table-column>
-
-        <el-table-column fixed="right" width="200" label="操作">
-          <template slot-scope="scope">
-            <el-button @click="send(scope.row.id)" type="text" size="small">立即发送</el-button>
-            <el-button @click="with_draw(scope.row.id)" type="text" size="small">撤回发送</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+    <my-table
+        :tableData="data"
+        :columns="columns"
+        :loading="loading_"
+      ></my-table>
 
     </div>
 </template>
@@ -36,6 +14,11 @@
 <script>
 import myHeader from "@/components/admin/common/Header";
 import { jsonRemove } from '@/components/unitls'
+import myTag from "@/components/From/Tag";
+import Button from "@/components/From/Button";
+import MyDropDown from "@/components/From/MyDropDown";
+import MyTable from "@/components/From/Table";
+import Pagination from "@/components/From/Pagination";
 
 export default {
     name: 'Message',
@@ -43,7 +26,37 @@ export default {
         return {
             title: '消息管理',
             data: [],
-            loading: false
+            loading_: false,
+            columns: [
+                { prop: "id", label:"ID" },
+                { prop: "content", label:"消息内容" },
+                { prop: "title", label:"消息标题" },
+                { prop: "type_", label:"消息类型" },
+                { prop: "create_time", label:"创建时间" },
+                { prop: "send_time", label:"发送时间" },
+                { prop: "status_", label:"发送状态", 
+                    render: (h, param) => {
+                        return h(myTag, {
+                            prop: {effect: "dark", text: param.row.id}
+                        })
+                    }
+                },
+                { prop: "", label:"操作", fixed:"right", width: "200",
+                    render: (h, param) => {
+                        const buttons = [
+                            {func: "send", id: param.row.id, text: "立即发送", size: "small" },
+                            {func: "with_draw", id: param.row.id, text: "撤回发送", size: "small"},
+                        ]
+                        return h(Button, {
+                            props: { buttons: buttons },
+                            on: {
+                                send: this.send,
+                                send: this.with_draw,
+                            } 
+                        })
+                    }
+                },
+            ]
         }
     },
 
@@ -52,7 +65,9 @@ export default {
     },
 
     components: {
-        myHeader
+        myHeader,
+        MyTable,
+        Button
     },
 
     methods: {

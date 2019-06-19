@@ -15,7 +15,7 @@
       </el-button>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item
-          :command="item.func"
+        :command="item.func"
           v-text="item.label"
           v-for="(item,index) in dropDownData.items"
           :key="index"
@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     handleCommand(command) {
+      console.log(command)
       this.$emit(command.func, command.id);
     },
     run_(method, id) {
