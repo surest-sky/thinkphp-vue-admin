@@ -178,6 +178,7 @@ import myTag from "@/components/From/Tag";
 import MyDropDown from "@/components/From/MyDropDown";
 import MyTable from "@/components/From/Table";
 import Pagination from "@/components/From/Pagination";
+import {page} from "@/mixins/page";
 
 export default {
   name: "SuperStore",
@@ -192,6 +193,7 @@ export default {
     MyDropDown,
     Pagination
   },
+  mixins: [page],
   data() {
     var self = this;
     return {
@@ -202,10 +204,6 @@ export default {
       simple_loading: true,
       edit_loadding: true,
       list: [],
-      pagesize: 10,
-      pageSizes: [5, 10, 15, 20],
-      total: 100,
-      current_page: 1,
       simpleData: {},
       simpleVisible: false,
       inputSuperStore: false,
@@ -226,7 +224,7 @@ export default {
         { prop: "superstore_name", label: "商圈名称" },
         { prop: "type_", label: "商圈类型" ,
           render: (h, params) =>  {
-            h(myTag, {
+            return h(myTag, {
               props: {
                 size: "medium",
                 text: params.row.type_
@@ -267,7 +265,9 @@ export default {
                   lower: this.lower, 
                   delete: this.delete,
                   online: this.online,
-                  edit: this.edit
+                  edit: this.edit,
+                  go_store: this.go_store,
+                  showDetail: this.showDetail 
                 }
             });
           }
@@ -376,22 +376,6 @@ export default {
         this.table_loading = false;
       });
     },
-    // 设置分页
-    setPage(data) {
-      console.log(data);
-      this.current_page = data.page;
-      this.total = data.total;
-      this.pagesize = parseInt(data.pagesize);
-    },
-    // 监听分页地址改变
-    changeCurrentPage(page) {
-      this.current_page = page;
-      this.getList();
-    },
-    changeSizePage(pagesize) {
-      this.pagesize = pagesize;
-      this.getList();
-    },
     // 显示商圈详情
     showDetail(id) {
       this.getSimple(id);
@@ -470,7 +454,8 @@ export default {
     },
 
     // 上架
-    onLine(id) {
+    online(id) {
+      console.log(id);
       this.$post(`/api/superstore/online/${id}`).then((r) => {
         if(r.code == 200) {
           this.$success_("上架成功");
@@ -546,6 +531,7 @@ export default {
       });
     },
 
+    // 创建商圈
     post_superstore(data) {
        var postData = {
         superstore_name: data.superstore_name,
@@ -558,11 +544,18 @@ export default {
         status: data.status
       };
 
+      let that = this
+
        this.$post('/api/superstore', postData)
           .then(function(response){
-            if(response.status == 1) {
-              this.$success_('创建成功')
-              this.getList()
+            if(response.code == 200) {
+              that.$success_('创建成功')
+              that.getList()
+              that.edit_loadding = false;
+              that.inputSuperStore = false
+            }else{
+              that.edit_loadding = false;
+              that.$error_(response.msg)
             }
           })
     },
@@ -709,6 +702,7 @@ export default {
   padding-left: 30px;
 
   .filter-tool {
+    margin-left: 0;
     .el-button {
       float: left;
     }

@@ -1,6 +1,7 @@
 <template>
     <div class="pagination">
         <el-pagination
+          v-show="show"
           class="page"
           @current-change="changeCurrentPage"
           @size-change="changeSizePage"
@@ -16,6 +17,11 @@
 <script>
 export default {
     name: 'Pagination',
+    data() {
+        return {
+            show: false
+        }
+    },
     props: {
       pagesize: {
           type: [Number, String],
@@ -47,7 +53,19 @@ export default {
         changeSizePage(pagesize) {
             this.$emit('changeSizePage', pagesize) // 触发父组件的更新列表事件
         },
+    },
+    created() {
+        if(this.total > 5) {
+            this.$nextTick(() => {
+                this.show = true
+            })
+        }
     }
 }
 </script>
+<style>
+    .pagination {
+        margin-top: 20px;
+    }
+</style>
 

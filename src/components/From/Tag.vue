@@ -11,7 +11,7 @@ export default {
         text: String,
         effect: {
             type: String,
-            default: ""
+            default: "dark"
         }
     }
 }

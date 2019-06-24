@@ -35,10 +35,10 @@ export default {
   },
   methods: {
     handleCommand(command) {
-      console.log(command)
       this.$emit(command.func, command.id);
     },
     run_(method, id) {
+      console.log(arguments)
       this.$emit(method, id);
     }
   }

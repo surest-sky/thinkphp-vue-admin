@@ -1,27 +1,30 @@
 <template>
-  <my-table
-    :tableData="tableData"
-    :columns="columns"
-    :totalPage="totalPage"
-    @currentChange="currentChange"
-  ></my-table>
+  <div>
+    <my-header :title="title"></my-header>
+    <my-table :tableData="tableData" :columns="columns" :totalPage="totalPage"></my-table>
+  </div>
 </template>
 
 <script>
 import MyTable from "@/components/From/Table";
+import myHeader from "./common/Header";
+import { page } from "@/mixins/page";
 import MyDropDown from "@/components/From/MyDropDown";
 
 export default {
   name: "App",
   components: {
     MyTable,
-    MyDropDown
+    MyDropDown,
+    myHeader
   },
+  mixins: [page],
   data() {
     return {
+      title: "App管理",
       tableData: [
         {
-          id: '2',
+          id: "2",
           title: "aaa",
           create_name: "vvv",
           item_name: "vvv",
@@ -61,49 +64,54 @@ export default {
                   label: "修改",
                   func: { func: "update", id: param.row.id }
                 },
-                { 
-                  label: "删除", 
-                  func: { func: "del", id: param.row.id } 
+                {
+                  label: "删除",
+                  func: { func: "del", id: param.row.id }
                 }
               ],
               buttons: [
-                  {size: "small", type: 'text', text: '编辑', func: { func: 'edit_', id: param.row.id}},
-                  {size: "small", type: 'text', text: '删除', func: { func: 'del_', id: param.row.id}},
+                {
+                  size: "small",
+                  type: "text",
+                  text: "编辑",
+                  func: { func: "edit_", id: param.row.id }
+                },
+                {
+                  size: "small",
+                  type: "text",
+                  text: "删除",
+                  func: { func: "del_", id: param.row.id }
+                }
               ]
             };
             // 触发MyDropDown的update和del事件
             return createElement(MyDropDown, {
               props: { dropDownData: dropDownData },
-              on: { 
-                  update: this.update, 
-                  del: this.del,
-                  edit_: this.edit_,
-                  del_: this.del_
-                }
+              on: {
+                update: this.update,
+                del: this.del,
+                edit_: this.edit_,
+                del_: this.del_
+              }
             });
           }
         }
-      ],
+      ]
     };
   },
 
   methods: {
-      currentChange() {
+    update(id) {
+      console.log(id);
+    },
 
-      },
-      update(id) {
-          console.log(id)
-      },
-
-      del() {
-
-      },
-      edit_() {
-          console.log('edit_2')
-      },
-      del_() {
-          console.log('del_2')
-      }
+    del() {},
+    edit_() {
+      console.log("edit_2");
+    },
+    del_() {
+      console.log("del_2");
+    }
   }
 };
 </script>

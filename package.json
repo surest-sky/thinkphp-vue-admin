@@ -15,7 +15,9 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.8.2",
+    "momen": "0.0.1-security",
     "moment": "^2.24.0",
+    "qs": "^6.7.0",
     "vue": "^2.5.2",
     "vue-amap": "^0.5.9",
     "vue-router": "^3.0.1"

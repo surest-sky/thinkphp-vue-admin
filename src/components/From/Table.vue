@@ -1,10 +1,17 @@
 <template>
   <!-- ------表格内容-------- -->
   <el-table 
+  ref="multipleTable"
   :data="tableData" 
   v-loading="store_loading"
   :row-class-name="tableRowClassName"
-  style="width:100%">
+  style="width:100%;"
+  class="table_"
+  >
+  <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
     <el-table-column
       v-for="(column, index) in columns"
       :prop="column.prop"
@@ -32,6 +39,11 @@ export default {
         type: Boolean,
     }
   },
+  watch: {
+    columns(val) {
+      this.updateColumns()
+    }
+  },
   methods: {
     headerStyle() {
       return { "text-align": "center" };
@@ -41,10 +53,21 @@ export default {
         return "color-lower";
       }
     },
+    updateColumns() {
+      let columns = { prop: "title", label: "标题", type: "selection" }
+      this.columns = Object.assign({}, columns, this.columns)
+    }
   },
   components: {
     MyRender
   }
 };
 </script>
+
+<style>
+  .table_ {
+    padding-left: 20px;
+  }
+</style>
+
 

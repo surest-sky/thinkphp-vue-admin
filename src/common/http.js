@@ -1,6 +1,7 @@
 import { resolve } from "url";
 
 import axios from "axios"
+import QS from "qs"
 
 const service = axios.create()
 
@@ -9,9 +10,9 @@ const http = {}
 
 // dev 开发版
 // production 生产环境
-// const host = "http://store.ink"
-// const host = "http://test-offline.d88.ink"
-const host = "http://192.168.2.199:96/admin/"
+// const host = "http://store.ink/admin/"
+const host = "http://test-offline.d88.ink/admin/"
+// const host = "http://192.168.2.199:96/admin/"
 
 
 
@@ -41,8 +42,6 @@ export function get(url, params = {}) {
     return service({
       url: url,
       method: 'get',
-      headers: {     
-      },
       params
     })
   }
@@ -56,25 +55,31 @@ export function post(url, data = {}) {
       url: url,
       method: 'post',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
-      data:data
+      data:QS.stringify(data)
     };
-    sendObject.data=JSON.stringify(data);
+
+    console.log(sendObject)
     return service(sendObject)
   }
   
   //封装put方法 (resfulAPI常用)
   export function put(url,data = {}){
     var url = url.replace('/\api/', host);
-    return service({
+    let sendObject = {
       url: url,
       method: 'put',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
       data:JSON.stringify(data)
-    }) 
+    }
+
+
+    console.log(sendObject)
+
+    return service(sendObject)
   }
   //删除方法(resfulAPI常用)
   export function deletes(url){

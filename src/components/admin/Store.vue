@@ -76,6 +76,9 @@
           <el-form-item label="店铺名称">
             <el-input type="text" v-model="store.store_name"></el-input>
           </el-form-item>
+          <!-- <el-form-item label="折扣d"> -->
+            <el-input type="hidden" v-model="store.discount_id"></el-input>
+          <!-- </el-form-item> -->
           <el-form-item label="楼层-门牌">
             <el-col :span="8">
               <el-input v-model="store.floor"></el-input>
@@ -156,6 +159,7 @@ import Pagination from "@/components/From/Pagination";
 import MyTable from "@/components/From/Table";
 import MyDropDown from "@/components/From/MyDropDown";
 import {statusToText} from "@/components/unitls";
+import {page} from "@/mixins/page";
 
 export default {
   name: "Store",
@@ -165,6 +169,7 @@ export default {
     MyTable,
     MyDropDown
   },
+  mixins:[page],
   data() {
     return {
       title: "店铺管理",
@@ -184,9 +189,22 @@ export default {
         { prop: "focus_count", label: "粉丝数量" },
         {
           prop: "status",
-          label: "状态",
+          label: "店铺状态",
           render: function(h, param) {
             let html = statusToText(param.row.status)
+            return h('span', html)
+          }
+        },
+        {
+          prop: "status",
+          label: "折扣状态",
+          render: function(h, param) {
+            let html = ""
+            if(param.row.discount) {
+              html = statusToText(param.row.discount.status)
+            }else {
+              html = "已下架"
+            }
             return h('span', html)
           }
         },
@@ -230,12 +248,6 @@ export default {
       store_loading: true,
       stores: [],
       superstores: [],
-      // 分页数据 ------ 
-      pagesize: 10,
-      pageSizes: [5, 10, 15, 20],
-      total: 100,
-      current_page: 1,
-      // end    ------ 
       simpleData: {},
       store: {},
       storeFromTitle: "编辑店铺",
@@ -332,7 +344,7 @@ export default {
         },
         {
           key: 2,
-          value: "已过期"
+          value: "已下架/已过期"
         }
       ],
       store_from_loading: true
@@ -349,27 +361,9 @@ export default {
   },
 
   methods: {
-    // 设置分页
-    setPage(data) {
-      this.current_page = data.page;
-      this.total = data.total;
-      this.pagesize = parseInt(data.pagesize);
-    },
-    // 监听分页地址改变
-    changeCurrentPage(page) {
-      this.current_page = page;
-      console.log(page)
-      this.getList();
-    },
-
-    changeSizePage(pagesize) {
-      this.pagesize = pagesize;
-      console.log(pagesize)
-      this.getList();
-    },
-    
     // 编辑
     edit(id) {
+      this.storeFromTitle = "编辑店铺"
       this.storeFromShow = true;
       this.getSimpleStore(id);
     },
@@ -555,20 +549,29 @@ export default {
 
     // 设置数据
     setData(data) {
-      this.store = data;
-      this.store.status = parseInt(this.store.status);
-      this.id = data.id;
+      this.$nextTick(() => {
+        this.store = data;
+        this.store.status = parseInt(this.store.status);
+        this.id = data.id;
 
-      if (data.discount) {
-        (this.store.discount_status = data.discount.status),
-          (this.store.discount_type = data.discount.type),
-          (this.store.discount_content = data.discount.content);
-        this.time = [data.discount.start_time, data.discount.end_time];
-      } else {
-        (this.store.discount_status = 1),
-          (this.store.discount_type = 0),
-          (this.store.discount_content = "");
-      }
+        if (data.discount) {
+          this.store = Object.assign({}, this.store, {
+            discount_content: data.discount.content,
+            discount_status :data.discount.status,
+            discount_type : data.discount.type,
+            discount_content : data.discount.content,
+            discount_id : data.discount.discount_id,
+          })
+          this.time = [data.discount.start_time, data.discount.end_time]
+        } else {
+          this.store = Object.assign({}, this.store, {
+            discount_status : 1,
+            discount_type : 0,
+            discount_content : ""
+          })
+        }
+      })
+      
     },
 
     // 变更商圈需要做的事情
@@ -594,23 +597,27 @@ export default {
         status: this.store.status,
         store_name: this.store.store_name,
         superstore_id: this.store.superstore_id,
-        type: this.store.discount_type
+        type: this.store.discount_type,
       };
 
       if (id) {
+        data.discount_id = this.store.discount.id
+        var that = this
         this.$put("/api/store/" + this.id, data)
-          .then(response => {
+          .then((response) => {
             if (response.code == 200) {
-              this.getList();
-              this.$success_("更新成功");
+              that.$success_("更新成功");
+              that.getList();
+              
+              that.storeFromShow = false;
             } else {
-              this.$error_(response.msg);
+              that.$error_(response.msg);
             }
           })
           .catch(response => {});
       } else {
         this.$post("/api/store", data)
-          .then(response => {
+          .then((response) => {
             if (response.code == 200) {
               this.getList();
               this.$success_("创建成功");
