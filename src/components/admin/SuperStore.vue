@@ -18,11 +18,26 @@
           </el-form>
         </el-col>
         <el-col :span="10">
-          <span>商圈总数: <font class="font-title">{{ superstore_total }}</font> | </span>  
-          <span>店铺总数: <font class="font-title">{{ store_total }}</font> | </span> 
-          <span>当前在线折扣总数: <font class="font-title">{{ discount_total }}</font> | </span>
-          <span>昨日上线折扣总数: <font class="font-title">{{ today_discount }}</font> | </span>
-          <span>今日上线折扣总数: <font class="font-title">{{ yesterdat_discount }}</font> | </span>
+          <span>
+            商圈总数:
+            <font class="font-title">{{ superstore_total }}</font> |
+          </span>
+          <span>
+            店铺总数:
+            <font class="font-title">{{ store_total }}</font> |
+          </span>
+          <span>
+            当前在线折扣总数:
+            <font class="font-title">{{ discount_total }}</font> |
+          </span>
+          <span>
+            昨日上线折扣总数:
+            <font class="font-title">{{ today_discount }}</font> |
+          </span>
+          <span>
+            今日上线折扣总数:
+            <font class="font-title">{{ yesterdat_discount }}</font> |
+          </span>
         </el-col>
       </el-row>
       <el-row>
@@ -38,24 +53,17 @@
       </el-row>
     </div>
 
-  
+    <my-table :tableData="list" :columns="columns" :loading="table_loading"></my-table>
 
-
-      <my-table
-        :tableData="list"
-        :columns="columns"
-        :loading="table_loading"
-      ></my-table>
-
-      <!-- 分页 -->
-      <Pagination 
-        :pagesize="pagesize"
-        :current_page="current_page"
-        :pageSizes="pageSizes"
-        :total="total"
-        @changeCurrentPage="changeCurrentPage"
-        @changeSizePage="changeSizePage"
-      ></Pagination>
+    <!-- 分页 -->
+    <Pagination
+      :pagesize="pagesize"
+      :current_page="current_page"
+      :pageSizes="pageSizes"
+      :total="total"
+      @changeCurrentPage="changeCurrentPage"
+      @changeSizePage="changeSizePage"
+    ></Pagination>
 
     <!-- 商圈详情 -->
     <div class="message">
@@ -76,7 +84,10 @@
             </li>
             <li>
               <span class="sueper_name">经纬度:</span>
-              <span class="param" :title="simpleData.longitude">{{simpleData.longitude}} , {{simpleData.latitude}}</span>
+              <span
+                class="param"
+                :title="simpleData.longitude"
+              >{{simpleData.longitude}} , {{simpleData.latitude}}</span>
             </li>
             <li @mouseenter="show_(2,$event)" @mouseover="hidden_(2,$event)">
               <span class="sueper_name">营业时间:</span>
@@ -151,8 +162,16 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cacheEdit = false">取 消</el-button>
-        <el-button type="primary" v-if="inputSuperStoreTitle == '编辑商圈'"  @click="confirmUpdate('superstore_form')">更新</el-button>
-        <el-button type="primary" v-if="inputSuperStoreTitle == '添加商圈'"  @click="confirmCreate('superstore_form')">创建</el-button>
+        <el-button
+          type="primary"
+          v-if="inputSuperStoreTitle == '编辑商圈'"
+          @click="confirmUpdate('superstore_form')"
+        >更新</el-button>
+        <el-button
+          type="primary"
+          v-if="inputSuperStoreTitle == '添加商圈'"
+          @click="confirmCreate('superstore_form')"
+        >创建</el-button>
       </div>
     </el-dialog>
 
@@ -178,13 +197,13 @@ import myTag from "@/components/From/Tag";
 import MyDropDown from "@/components/From/MyDropDown";
 import MyTable from "@/components/From/Table";
 import Pagination from "@/components/From/Pagination";
-import {page} from "@/mixins/page";
+import { page } from "@/mixins/page";
 
 export default {
   name: "SuperStore",
   mounted() {
-    this.getList()
-    this.getDataInfo()
+    this.getList();
+    this.getDataInfo();
   },
   components: {
     myHeader,
@@ -199,7 +218,7 @@ export default {
     return {
       id: 0,
       title: "商圈详情",
-      inputSuperStoreTitle: '编辑商圈',
+      inputSuperStoreTitle: "编辑商圈",
       table_loading: true,
       simple_loading: true,
       edit_loadding: true,
@@ -214,61 +233,69 @@ export default {
       store_total: 0,
       discount_total: 0,
       today_discount: 0,
-      multipleSelection: '',
+      multipleSelection: "",
       multipleSelectionIds: [],
       yesterdat_discount: 0,
       // 搜索表单的数据
       search_superstore_name: "",
       columns: [
-        { prop: "id", label: "ID" },
+        { prop: "id", label: "ID", width: "55" },
         { prop: "superstore_name", label: "商圈名称" },
-        { prop: "type_", label: "商圈类型" ,
-          render: (h, params) =>  {
+        {
+          prop: "type_",
+          label: "商圈类型",
+          render: (h, params) => {
             return h(myTag, {
               props: {
                 size: "medium",
                 text: params.row.type_
               }
-            })
+            });
           }
         },
-        { prop: "store_num", label: "店铺数量" },
-        { prop: "discount_num", label: "折扣数量" },
+        { prop: "store_num", label: "店铺数量", width: "105" },
+        { prop: "discount_num", label: "折扣数量", width: "135" },
         { prop: "remark", label: "备注" },
-        { prop: "", fiexed: "right", label: "操作",
+        {
+          prop: "",
+          fiexed: "right",
+          label: "操作",
           render: (h, param) => {
             let dropDownData = {
               label: "更多"
             };
             let buttons = [
-              {label: "详情", func: { func: "showDetail", id: param.row.id}},
-              {label: "编辑", func: { func: "edit", id: param.row.id}},
-              {label: "所有店铺", func: { func: "go_store", id: param.row.id}}
-            ]
+              { label: "详情", func: { func: "showDetail", id: param.row.id } },
+              { label: "编辑", func: { func: "edit", id: param.row.id } },
+              {
+                label: "所有店铺",
+                func: { func: "go_store", id: param.row.id }
+              }
+            ];
 
-            if(param.row.status == 1) {
+            if (param.row.status == 1) {
               dropDownData.items = [
-                {label: "下架", func: { func: "lower", id: param.row.id}},
-                {label: "删除", func: { func: "delete", id: param.row.id}}
-              ]
-            }else {
-               dropDownData.items = [
-                {label: "上架", func: { func: "online", id: param.row.id}},
-                {label: "删除", func: { func: "delete", id: param.row.id}}
-              ]
+                { label: "下架", func: { func: "lower", id: param.row.id } },
+                { label: "删除", func: { func: "delete", id: param.row.id } }
+              ];
+            } else {
+              dropDownData.items = [
+                { label: "上架", func: { func: "online", id: param.row.id } },
+                { label: "删除", func: { func: "delete", id: param.row.id } }
+              ];
             }
 
             // 触发MyDropDown的update和del事件
             return h(MyDropDown, {
-              props: { dropDownData: dropDownData, buttons: buttons},
-              on: { 
-                  lower: this.lower, 
-                  delete: this.delete,
-                  online: this.online,
-                  edit: this.edit,
-                  go_store: this.go_store,
-                  showDetail: this.showDetail 
-                }
+              props: { dropDownData: dropDownData, buttons: buttons },
+              on: {
+                lower: this.lower,
+                delete: this.delete,
+                online: this.online,
+                edit: this.edit,
+                go_store: this.go_store,
+                showDetail: this.showDetail
+              }
             });
           }
         }
@@ -303,11 +330,11 @@ export default {
           }
         ],
         popularity: [
-            {
-              required: true,
-              message: "人气值",
-              trigger: "blur"
-            }
+          {
+            required: true,
+            message: "人气值",
+            trigger: "blur"
+          }
         ],
         do_business: [
           {
@@ -347,7 +374,7 @@ export default {
               if (result && result.regeocode) {
                 self.superstore_form.address =
                   result.regeocode.formattedAddress;
-                  self.$nextTick();
+                self.$nextTick();
               }
             }
           });
@@ -360,7 +387,7 @@ export default {
   methods: {
     // 编辑商圈
     edit(id) {
-      this.inputSuperStoreTitle = "编辑商圈"
+      this.inputSuperStoreTitle = "编辑商圈";
       this.inputSuperStore = true;
       this.getSimple(id);
       this.edit_loadding = false;
@@ -387,12 +414,12 @@ export default {
       this.id = id;
       this.$get(`/api/superstore/${id}`).then(response => {
         if (response.code == 200) {
-          this.simpleData = response.data
-          this.superstore_form = response.data
-          if(this.superstore_form.status == 1) {
-            this.superstore_form.status = "上架"
-          }else{
-            this.superstore_form.status = "下架"
+          this.simpleData = response.data;
+          this.superstore_form = response.data;
+          if (this.superstore_form.status == 1) {
+            this.superstore_form.status = "上架";
+          } else {
+            this.superstore_form.status = "下架";
           }
         }
       });
@@ -415,10 +442,10 @@ export default {
         popularity: data.popularity,
         do_business: data.do_business,
         address: data.address,
-        status: data.status == '上架' ? 1 : 2
+        status: data.status == "上架" ? 1 : 2
       };
 
-      this.$put(`/api/superstore/` + this.id, postData).then((response) => {
+      this.$put(`/api/superstore/` + this.id, postData).then(response => {
         if (response.code == 200) {
           this.edit_loadding = false;
           this.$success_("更新成功");
@@ -432,7 +459,7 @@ export default {
     // 地图选址
     onAddress() {
       this.amap = true;
-      if(this.superstore_form.longitude) {
+      if (this.superstore_form.longitude) {
         this.center = [
           this.superstore_form.longitude,
           this.superstore_form.latitude
@@ -440,43 +467,47 @@ export default {
       }
     },
 
-
     // 下架
     lower(id) {
-      this.$post(`/api/superstore/lower/${id}`).then((r) => {
-        if(r.code == 200) {
+      this.$post(`/api/superstore/lower/${id}`).then(r => {
+        if (r.code == 200) {
           this.$success_("下架成功");
-          this.getList()
-        }else{
+          this.getList();
+        } else {
           this.$error_(r.msg);
         }
-      })
+      });
     },
 
     // 上架
     online(id) {
       console.log(id);
-      this.$post(`/api/superstore/online/${id}`).then((r) => {
-        if(r.code == 200) {
+      this.$post(`/api/superstore/online/${id}`).then(r => {
+        if (r.code == 200) {
           this.$success_("上架成功");
-          this.getList()
-        }else{
+          this.getList();
+        } else {
           this.$error_(r.msg);
         }
-      })
+      });
     },
 
     // 删除
     delete(id) {
-      this.$deletes(`/api/superstore/${id}`).then((r) => {
-        if(r.code == 200) {
-          this.$success_("删除成功");
-          this.getList()
-        }else{
-          this.$error_(r.msg);
-        }
-      })
-      this.$error_("删除失败");
+      this.$confirm("是否删除当前商圈,请谨慎", "是否删除", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$deletes(`/api/superstore/${id}`).then(r => {
+          if (r.code == 200) {
+            this.$success_("删除成功");
+            this.getList();
+          } else {
+            this.$error_(r.msg);
+          }
+        });
+      });
     },
 
     tableRowClassName({ row }) {
@@ -490,24 +521,24 @@ export default {
     // 搜索
     summit_search() {
       // this.$post('')
-      this.$success_('搜索成功')
+      this.$success_("搜索成功");
     },
 
     // 添加商圈
     add_superstore() {
-      this.superstore_form = {}
+      this.superstore_form = {};
       this.inputSuperStore = true;
-      this.inputSuperStoreTitle = "添加商圈"
+      this.inputSuperStoreTitle = "添加商圈";
       this.edit_loadding = false;
 
-      this.superstore_form.type = 1
-      this.superstore_form.status = 1
-      this.superstore_form.popularity = 5
+      this.superstore_form.type = 1;
+      this.superstore_form.status = 1;
+      this.superstore_form.popularity = 5;
     },
 
     // 创建商圈
     confirmCreate(form) {
-       this.$refs[form].validate(valid => {
+      this.$refs[form].validate(valid => {
         if (valid) {
           console.log(this.superstore_form);
           this.edit_loadding = true;
@@ -517,7 +548,6 @@ export default {
         }
       });
     },
-
 
     // 确认更新
     confirmUpdate(form) {
@@ -533,7 +563,7 @@ export default {
 
     // 创建商圈
     post_superstore(data) {
-       var postData = {
+      var postData = {
         superstore_name: data.superstore_name,
         longitude: data.longitude,
         latitude: data.latitude,
@@ -544,92 +574,89 @@ export default {
         status: data.status
       };
 
-      let that = this
+      let that = this;
 
-       this.$post('/api/superstore', postData)
-          .then(function(response){
-            if(response.code == 200) {
-              that.$success_('创建成功')
-              that.getList()
-              that.edit_loadding = false;
-              that.inputSuperStore = false
-            }else{
-              that.edit_loadding = false;
-              that.$error_(response.msg)
-            }
-          })
+      this.$post("/api/superstore", postData).then(function(response) {
+        if (response.code == 200) {
+          that.$success_("创建成功");
+          that.getList();
+          that.edit_loadding = false;
+          that.inputSuperStore = false;
+        } else {
+          that.edit_loadding = false;
+          that.$error_(response.msg);
+        }
+      });
     },
 
     // 上架
     filter_online() {
-      this.getSelected()
-      let ids = this.multipleSelectionIds.join(',')
-      this.$post(`/api/superstore/batch_online?ids=${ids}`).then((r) => {
-        if(r.code == 200) {
-          this.$success_('上架成功')
-          this.getList()
-        }else{
-          this.$error_(r.msg)
+      this.getSelected();
+      let ids = this.multipleSelectionIds.join(",");
+      this.$post(`/api/superstore/batch_online?ids=${ids}`).then(r => {
+        if (r.code == 200) {
+          this.$success_("上架成功");
+          this.getList();
+        } else {
+          this.$error_(r.msg);
         }
-      })
-
+      });
     },
 
     // 下架
     filter_lower() {
-      this.getSelected()
-      let ids = this.multipleSelectionIds.join(',')
-      this.$post(`/api/superstore/batch_lower?ids=${ids}`).then((r) => {
-        if(r.code == 200) {
-          this.$success_('下架成功')
-          this.getList()
-        }else{
-          this.$error_(r.msg)
+      this.getSelected();
+      let ids = this.multipleSelectionIds.join(",");
+      this.$post(`/api/superstore/batch_lower?ids=${ids}`).then(r => {
+        if (r.code == 200) {
+          this.$success_("下架成功");
+          this.getList();
+        } else {
+          this.$error_(r.msg);
         }
-      })
-
+      });
     },
 
     // 批量删除
     filter_delete() {
-      this.$error_('暂时关闭批量删除接口')
+      this.$error_("暂时关闭批量删除接口");
     },
 
     // 跳转到店铺
     go_store(id) {
       localStorage.setItem("superstore_id", id);
-      this.$router.push({'path': '/admin/store'})
+      this.$router.push({ path: "/admin/store" });
     },
 
     // 获取一些数据信息
     getDataInfo() {
-      this.$get('/api/gather').then((r) => {
-        if(r.code == 200) {
-          this.superstore_total = r.data.superstore_total
-          this.store_total = r.data.store_total
-          this.discount_total = r.data.discount_total
-          this.today_discount = r.data.today_discount
-          this.yesterdat_discount = r.data.yesterdat_discount
+      this.$get("/api/gather").then(r => {
+        if (r.code == 200) {
+          this.superstore_total = r.data.superstore_total;
+          this.store_total = r.data.store_total;
+          this.discount_total = r.data.discount_total;
+          this.today_discount = r.data.today_discount;
+          this.yesterdat_discount = r.data.yesterdat_discount;
         }
-      })
+      });
     },
 
     // 选中的事件
     handleSelectionChange(val) {
-      this.multipleSelection = val
-      this.getSelected()
+      this.multipleSelection = val;
+      this.getSelected();
     },
 
     // 获取选中的列表
     getSelected() {
-      var data = this.multipleSelection
-      var ids = []
-      data.forEach((row) => {
-          ids.push(row.id)
-      })
-      this.multipleSelectionIds = ids
+      var data = this.multipleSelection;
+      var ids = [];
+      data.forEach(row => {
+        ids.push(row.id);
+      });
+      this.multipleSelectionIds = ids;
     }
-   }
+  }
 };
 </script>
 
@@ -708,7 +735,7 @@ export default {
     }
   }
 }
-.font-title{
-  color: red
+.font-title {
+  color: red;
 }
 </style>

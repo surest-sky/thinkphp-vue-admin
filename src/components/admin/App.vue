@@ -1,7 +1,47 @@
 <template>
   <div>
     <my-header :title="title"></my-header>
-    <my-table :tableData="tableData" :columns="columns" :totalPage="totalPage"></my-table>
+
+    <el-form class="filter" :model="filter" :inline="true">
+      <el-form-item>
+        <el-button type="primary" @click="add">创建</el-button>
+      </el-form-item>
+    </el-form>
+
+    <my-table :tableData="lists" :columns="columns"></my-table>
+
+    <el-dialog :title="formTitle" :visible.sync="formShow">
+      <el-form :label-position="formTitle" label-width="80px" v-model="form">
+        <my-select
+          :select.sync="form.type"
+          label="版本类型"
+          :prop="select"
+          :options="options"
+          :labelWidth="labelWidth"
+        ></my-select>
+        <el-form-item label="下载链接" :label-width="labelWidth">
+          <el-input v-model="form.dowload_url"></el-input>
+        </el-form-item>
+        <el-form-item label="版本号码" :label-width="labelWidth">
+          <el-input v-model="form.edition"></el-input>
+        </el-form-item>
+        <el-form-item label="版本编号/唯一" :label-width="labelWidth">
+          <el-input v-model="form.number"></el-input>
+        </el-form-item>
+        <el-form-item label="版本更新描述" :label-width="labelWidth">
+          <el-input v-model="form.update_info"></el-input>
+        </el-form-item>
+        <el-form-item label="是否强制更新" prop="updated" :label-width="labelWidth">
+          <el-radio-group v-model="form.updated">
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item size="large">
+          <el-button type="primary" @click="createOrUpdate">编辑</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -10,47 +50,59 @@ import MyTable from "@/components/From/Table";
 import myHeader from "./common/Header";
 import { page } from "@/mixins/page";
 import MyDropDown from "@/components/From/MyDropDown";
+import myTag from "@/components/From/Tag";
+import MySelect from "@/components/admin/common/Select";
 
 export default {
   name: "App",
   components: {
     MyTable,
     MyDropDown,
-    myHeader
+    myHeader,
+    myTag,
+    MySelect
   },
   mixins: [page],
   data() {
     return {
+      filter: {},
       title: "App管理",
-      tableData: [
-        {
-          id: "2",
-          title: "aaa",
-          create_name: "vvv",
-          item_name: "vvv",
-          create_time: "vvv",
-          weight: "vvv",
-          isoriginal: "vvv"
-        }
-      ],
-      totalPage: 20,
+      lists: [],
       columns: [
-        { prop: "title", label: "标题" },
-        { prop: "create_name", label: "发布人" },
-        { prop: "item_name", label: "栏目" },
-        { prop: "create_time", label: "创建时间" },
-        { prop: "weight", label: "权重" },
+        { prop: "id", label: "ID" },
+        { prop: "type", label: "类型" },
         {
-          prop: "isoriginal",
-          label: "原创",
+          prop: "dowload_url",
+          label: "下载地址",
+          render: function(h, param) {
+            return h(
+              "span",
+              {
+                domProps: {
+                  innerHTML: `<a href="${param.row.dowload_url}">${
+                    param.row.dowload_url
+                  }</a>`
+                }
+              },
+              []
+            );
+          }
+        },
+        { prop: "edition", label: "版本号码" },
+        { prop: "number", label: "版本编码" },
+        {
+          prop: "updated",
+          label: "是否强制更新",
           render: function(h, param) {
             let html = "";
-            if (param.row.isoriginal == "201") {
-              html = "原创";
+            if (param.row.updated == "1") {
+              html = "是";
             } else {
-              html = "非原创";
+              html = "否";
             }
-            return html;
+            return h(myTag, {
+              props: { size: "small", text: html }
+            });
           }
         },
         {
@@ -62,7 +114,7 @@ export default {
               items: [
                 {
                   label: "修改",
-                  func: { func: "update", id: param.row.id }
+                  func: { func: "edit_", id: param.row.id }
                 },
                 {
                   label: "删除",
@@ -96,8 +148,23 @@ export default {
             });
           }
         }
-      ]
+      ],
+      options: [
+        { key: "ios", value: "ios" },
+        { key: "android", value: "android" }
+      ],
+      formTitle: "编辑",
+      form: {},
+      select: "ios",
+      placeholder_: "版本类型",
+      formShow: false,
+      labelWidth: "100px",
+      id: null
     };
+  },
+
+  created() {
+    this.getList();
   },
 
   methods: {
@@ -105,13 +172,121 @@ export default {
       console.log(id);
     },
 
-    del() {},
-    edit_() {
-      console.log("edit_2");
+    setData(val) {
+      val.updated = val.updated == 0 ? "否" : "是";
+      this.form = val;
     },
+
+    getData() {
+      this.form.updated = this.form.updated == "是" ? 1 : 0;
+    },
+
+    del(id) {
+      this.$confirm("是否删除,请谨慎", "是否删除", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$deletes(`/api/app/${id}`).then(r => {
+          if (r.code == 200) {
+            this.$success_("删除成功");
+            this.getList();
+          } else {
+            this.$error_(r.msg);
+          }
+        });
+      });
+    },
+
+    add() {
+      this.id = null
+      this.formShow = true;
+      this.formTitle = "创建"
+    },
+
+    edit_(id) {
+      this.formShow = true;
+      this.id = id;
+      this.$get("/api/app/" + this.id).then(r => {
+        if (r.code == 200) {
+          this.form = r.data;
+          this.setData(r.data);
+        } else {
+          this.$success_(r.msg);
+        }
+      });
+    },
+
+    createOrUpdate() {
+      this.getData();
+      let data = this.form;
+      if(this.id) {
+        this.$put("/api/app/" + this.id, data).then(r => {
+          if (r.code == 200) {
+            this.$success_(r.msg);
+            this.formShow = false;
+            this.getList();
+          } else {
+            this.$success_(r.msg);
+          }
+        });
+      }else {
+        this.$post("/api/app", data).then(r => {
+          if (r.code == 200) {
+            this.$success_(r.msg);
+            this.formShow = false;
+            this.getList();
+          } else {
+            this.$success_(r.msg);
+          }
+        });
+      }
+      
+    },
+
+    updateOrCreate() {
+      this.postData(id);
+    },
+
+    postData(id) {
+      this.$put("/api/app/" + id).then(r => {
+        if (r.code == 200) {
+          console.log(r);
+        } else {
+          this.$success_(r.msg);
+        }
+      });
+    },
+
     del_() {
       console.log("del_2");
+    },
+
+    getList() {
+      this.$get("/api/app", {
+        page: this.current_page,
+        pagesize: this.pagesize
+      }).then(response => {
+        if (response.code == 200) {
+          this.lists = response.data.list;
+          this.setPage(response.data);
+          this.store_loading = false;
+        }
+      });
     }
   }
 };
 </script>
+
+<style lang="less">
+.filter {
+  padding-left: 30px;
+  div {
+    float: left;
+  }
+}
+.el-radio-group {
+  margin-left: 10px;
+}
+</style>
+

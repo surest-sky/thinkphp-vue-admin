@@ -39,8 +39,8 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" v-if="true" @click="updateOrCreate(2)">更新</el-button>
-              <el-button type="primary" v-if="!true" @click="updateOrCreate(null)">新建</el-button>
+              <!-- <el-button type="primary" v-if="true" @click="updateOrCreate(2)">更新</el-button> -->
+              <el-button type="primary" @click="updateOrCreate(null)">新建</el-button>
               <el-button @click="addFormShow = !addFormShow">取消</el-button>
             </el-form-item>
           </el-form>
@@ -319,6 +319,8 @@ export default {
         this.$success_(title);
         this.getList();
         this.loading_ = false;
+
+        this.form = {}
         this.addFormShow = false;
       } else {
         this.$error_(r.msg);
@@ -328,7 +330,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .filter {
   padding-left: 30px;
   div {

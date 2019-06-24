@@ -19,6 +19,7 @@
       :label="column.label"
       :fixed="column.fixed"
       :width="column.width"
+      :show-overflow-tooltip="true"
     >
       <template slot-scope="scope">
         <my-render v-if="column.render" :row="scope.row" :render="column.render"></my-render>
@@ -39,10 +40,8 @@ export default {
         type: Boolean,
     }
   },
-  watch: {
-    columns(val) {
-      this.updateColumns()
-    }
+  mounted(){
+    
   },
   methods: {
     headerStyle() {
@@ -52,10 +51,6 @@ export default {
       if (row.status == 2) {
         return "color-lower";
       }
-    },
-    updateColumns() {
-      let columns = { prop: "title", label: "标题", type: "selection" }
-      this.columns = Object.assign({}, columns, this.columns)
     }
   },
   components: {
