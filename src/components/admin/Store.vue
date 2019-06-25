@@ -265,7 +265,7 @@ export default {
       discount_statuses: [
         {
           key: 0,
-          value: "未上线"
+          value: "审核中"
         },
         {
           key: 1,
@@ -273,6 +273,10 @@ export default {
         },
         {
           key: 2,
+          value: "已下架"
+        },
+        {
+          key: 3,
           value: "已拒绝"
         }
       ],
