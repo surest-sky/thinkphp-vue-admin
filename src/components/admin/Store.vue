@@ -175,13 +175,14 @@ export default {
       },
       // 表格列数据
       columns: [
-        { prop: "id", label: "ID" },
+        { prop: "id", label: "ID", width: "100" },
         { prop: "store_name", label: "店铺名称" },
         { prop: "house_info", label: "楼层-门牌" },
         { prop: "content", label: "折扣内容", width: "330" },
         { prop: "start_time", label: "开始时间" },
         { prop: "end_time", label: "结束时间" },
         { prop: "focus_count", label: "粉丝数量" },
+        { prop: "superstore_name", label: "商圈名称" },
         {
           prop: "status",
           label: "店铺状态",
