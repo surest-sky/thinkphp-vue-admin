@@ -284,6 +284,10 @@ export default {
         {
           key: 1,
           value: "特价"
+        },
+        {
+           key: 2,
+           value: "新品"
         }
       ],
 
