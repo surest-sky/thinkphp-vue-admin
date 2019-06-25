@@ -36,14 +36,10 @@
         </el-form-item>
       </el-form>
 
-      <my-table
-        :tableData="stores"
-        :columns="columns"
-        :loading="store_loading"
-      ></my-table>
+      <my-table :tableData="stores" :columns="columns" :loading="store_loading"></my-table>
 
       <!-- 分页 -->
-      <Pagination 
+      <Pagination
         :pagesize="pagesize"
         :current_page="current_page"
         :pageSizes="pageSizes"
@@ -51,7 +47,6 @@
         @changeCurrentPage="changeCurrentPage"
         @changeSizePage="changeSizePage"
       ></Pagination>
-
     </div>
 
     <!-- 编辑更新表单 -->
@@ -77,7 +72,7 @@
             <el-input type="text" v-model="store.store_name"></el-input>
           </el-form-item>
           <!-- <el-form-item label="折扣d"> -->
-            <el-input type="hidden" v-model="store.discount_id"></el-input>
+          <el-input type="hidden" v-model="store.discount_id"></el-input>
           <!-- </el-form-item> -->
           <el-form-item label="楼层-门牌">
             <el-col :span="8">
@@ -158,8 +153,8 @@ import Pagination from "@/components/From/Pagination";
 
 import MyTable from "@/components/From/Table";
 import MyDropDown from "@/components/From/MyDropDown";
-import {statusToText} from "@/components/unitls";
-import {page} from "@/mixins/page";
+import { statusToText } from "@/components/unitls";
+import { page } from "@/mixins/page";
 
 export default {
   name: "Store",
@@ -169,7 +164,7 @@ export default {
     MyTable,
     MyDropDown
   },
-  mixins:[page],
+  mixins: [page],
   data() {
     return {
       title: "店铺管理",
@@ -182,7 +177,7 @@ export default {
       columns: [
         { prop: "id", label: "ID" },
         { prop: "store_name", label: "店铺名称" },
-        { prop: "house_info", label: "楼层-门牌",},
+        { prop: "house_info", label: "楼层-门牌" },
         { prop: "content", label: "折扣内容", width: "330" },
         { prop: "start_time", label: "开始时间" },
         { prop: "end_time", label: "结束时间" },
@@ -191,21 +186,21 @@ export default {
           prop: "status",
           label: "店铺状态",
           render: function(h, param) {
-            let html = statusToText(param.row.status)
-            return h('span', html)
+            let html = statusToText(param.row.status);
+            return h("span", html);
           }
         },
         {
           prop: "status",
           label: "折扣状态",
           render: function(h, param) {
-            let html = ""
-            if(param.row.discount) {
-              html = statusToText(param.row.discount.status)
-            }else {
-              html = "已下架"
+            let html = "";
+            if (param.row.discount) {
+              html = statusToText(param.row.discount.status);
+            } else {
+              html = "已下架";
             }
-            return h('span', html)
+            return h("span", html);
           }
         },
         {
@@ -217,30 +212,30 @@ export default {
               label: "操作"
             };
             let buttons = [
-              {label: "编辑", func: { func: "edit", id: param.row.id}}
-            ]
+              { label: "编辑", func: { func: "edit", id: param.row.id } }
+            ];
 
-            if(param.row.status == 1) {
+            if (param.row.status == 1) {
               dropDownData.items = [
-                {label: "下架", func: { func: "lower", id: param.row.id}},
-                {label: "删除", func: { func: "delete", id: param.row.id}}
-              ]
-            }else {
-               dropDownData.items = [
-                {label: "上架", func: { func: "online", id: param.row.id}},
-                {label: "删除", func: { func: "delete", id: param.row.id}}
-              ]
+                { label: "下架", func: { func: "lower", id: param.row.id } },
+                { label: "删除", func: { func: "delete", id: param.row.id } }
+              ];
+            } else {
+              dropDownData.items = [
+                { label: "上架", func: { func: "online", id: param.row.id } },
+                { label: "删除", func: { func: "delete", id: param.row.id } }
+              ];
             }
 
             // 触发MyDropDown的update和del事件
             return createElement(MyDropDown, {
-              props: { dropDownData: dropDownData, buttons: buttons},
-              on: { 
-                  lower: this.lower, 
-                  delete: this.delete,
-                  online: this.online,
-                  edit: this.edit
-                }
+              props: { dropDownData: dropDownData, buttons: buttons },
+              on: {
+                lower: this.lower,
+                delete: this.delete,
+                online: this.online,
+                edit: this.edit
+              }
             });
           }
         }
@@ -352,7 +347,7 @@ export default {
   },
   watch: {
     stores(val) {
-      this.tableDatahandle()
+      this.tableDatahandle();
     }
   },
   mounted() {
@@ -363,7 +358,7 @@ export default {
   methods: {
     // 编辑
     edit(id) {
-      this.storeFromTitle = "编辑店铺"
+      this.storeFromTitle = "编辑店铺";
       this.storeFromShow = true;
       this.getSimpleStore(id);
     },
@@ -421,12 +416,11 @@ export default {
       });
     },
 
-
     // 处理数据
     tableDatahandle() {
-      let data = []
+      let data = [];
       this.stores.forEach((item, index) => {
-        let simple = item
+        let simple = item;
         if (simple.discount) {
           simple.start_time = simple.discount.start_time.substr(0, 10);
           simple.end_time = simple.discount.end_time.substr(0, 10);
@@ -437,10 +431,8 @@ export default {
           simple.content = "";
         }
 
-        data.push(simple)
-      })
-
-      
+        data.push(simple);
+      });
     },
 
     getSuperStoresList() {
@@ -493,26 +485,29 @@ export default {
         } else {
           this.$error_(r.msg);
         }
-
         this.store_loading = false;
       });
     },
 
     // 删除
     delete(id) {
-      this.$deletes("/api/store/" + id).then(r => {
-        if (r.code == 200) {
-          this.$success_("删除成功");
-          this.stores = jsonRemove(this.stores, "id", id);
-          console.log(this.stores);
-        } else {
-          this.$error_(r.msg);
-        }
+      this.$confirm("是否删除当前店铺", "是否删除", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+        this.$deletes("/api/store/" + id).then(r => {
+          if (r.code == 200) {
+            this.$success_("删除成功");
+            this.stores = jsonRemove(this.stores, "id", id);
+            console.log(this.stores);
+          } else {
+            this.$error_(r.msg);
+          }
 
-        this.store_loading = false;
+          this.store_loading = false;
+        });
       });
     },
-
 
     // 添加一个店铺
     addStore() {
@@ -557,21 +552,20 @@ export default {
         if (data.discount) {
           this.store = Object.assign({}, this.store, {
             discount_content: data.discount.content,
-            discount_status :data.discount.status,
-            discount_type : data.discount.type,
-            discount_content : data.discount.content,
-            discount_id : data.discount.discount_id,
-          })
-          this.time = [data.discount.start_time, data.discount.end_time]
+            discount_status: data.discount.status,
+            discount_type: data.discount.type,
+            discount_content: data.discount.content,
+            discount_id: data.discount.discount_id
+          });
+          this.time = [data.discount.start_time, data.discount.end_time];
         } else {
           this.store = Object.assign({}, this.store, {
-            discount_status : 1,
-            discount_type : 0,
-            discount_content : ""
-          })
+            discount_status: 1,
+            discount_type: 0,
+            discount_content: ""
+          });
         }
-      })
-      
+      });
     },
 
     // 变更商圈需要做的事情
@@ -597,18 +591,18 @@ export default {
         status: this.store.status,
         store_name: this.store.store_name,
         superstore_id: this.store.superstore_id,
-        type: this.store.discount_type,
+        type: this.store.discount_type
       };
 
       if (id) {
-        data.discount_id = this.store.discount.id
-        var that = this
+        data.discount_id = this.store.discount.id;
+        var that = this;
         this.$put("/api/store/" + this.id, data)
-          .then((response) => {
+          .then(response => {
             if (response.code == 200) {
               that.$success_("更新成功");
               that.getList();
-              
+
               that.storeFromShow = false;
             } else {
               that.$error_(response.msg);
@@ -617,7 +611,7 @@ export default {
           .catch(response => {});
       } else {
         this.$post("/api/store", data)
-          .then((response) => {
+          .then(response => {
             if (response.code == 200) {
               this.getList();
               this.$success_("创建成功");

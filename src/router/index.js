@@ -14,7 +14,8 @@ Vue.use(Router)
 const routes = [
   {
     path: '/',
-    redirect: '/admin'
+    redirect: '/admin',
+    meta: {index: 1, title: "后台管理"}
   },
   {
     path: '/login',
@@ -30,12 +31,12 @@ const routes = [
       {
         path: "/admin/home",
         name: '首页',
-        component: Home
+        component: Home,
       },
       {
         path: "/admin/store",
         name: '店铺管理',
-        component: Store
+        component: Store,
       },
       {
         path: "/admin/superstore",
@@ -61,6 +62,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  document.title = "后台管理 - " + to.name
+
   if(to.path !== '/login') {
     let data = localStorage.getItem('d88_user')
     if(!data) {

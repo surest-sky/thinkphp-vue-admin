@@ -51,24 +51,41 @@
         }
       };
     },
+    mounted() {
+      this.checkLogined()
+    },
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if((this.ruleForm.user == 'admin') && (this.ruleForm.pass == '2012Dibaba')) {
-              this.$router.push({'path': '/admin'})
+              this.$success_('登录成功');
               localStorage.setItem('d88_user', JSON.stringify(this.ruleForm))
+              setTimeout(() => {
+                this.$router.push('admin')
+              }, 1000)
             }else{
               this.$error_('账号密码错误')
             }
           } else {
-            console.log('error submit!!');
+            this.$error_('请重试')
             return false;
           }
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+
+      // 检查是否已经登录
+      checkLogined() {
+        let data = localStorage.getItem('d88_user')
+        if(data) {
+          data = JSON.parse(data)
+          if(data.user == 'admin' && data.pass == '2012Dibaba') {
+            this.$router.push('admin')
+          }
+        }
       }
     }
   }
