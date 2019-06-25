@@ -7,6 +7,7 @@
   :row-class-name="tableRowClassName"
   style="width:100%;"
   class="table_"
+  @selection-change="handleSelectionChange"
   >
   <el-table-column
       type="selection"
@@ -51,6 +52,9 @@ export default {
       if (row.status == 2) {
         return "color-lower";
       }
+    },
+    handleSelectionChange(val) {
+      this.$emit('handleSelectionChange', val)
     }
   },
   components: {

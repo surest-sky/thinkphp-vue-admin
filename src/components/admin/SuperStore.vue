@@ -53,7 +53,9 @@
       </el-row>
     </div>
 
-    <my-table :tableData="list" :columns="columns" :loading="table_loading"></my-table>
+    <my-table :tableData="list" :columns="columns" :loading="table_loading"
+              @handleSelectionChange="handleSelectionChange"
+    ></my-table>
 
     <!-- 分页 -->
     <Pagination
@@ -520,8 +522,14 @@ export default {
     // 搜索界面的方法
     // 搜索
     summit_search() {
-      // this.$post('')
-      this.$success_("搜索成功");
+      this.$get("/api/superstore?keyword=" + this.search_superstore_name)
+      .then(response => {
+        this.list = response.data.list;
+        this.setPage(response.data);
+        this.table_loading = false;
+        this.$success_("搜索成功");
+      });
+      
     },
 
     // 添加商圈
@@ -651,6 +659,7 @@ export default {
     getSelected() {
       var data = this.multipleSelection;
       var ids = [];
+
       data.forEach(row => {
         ids.push(row.id);
       });

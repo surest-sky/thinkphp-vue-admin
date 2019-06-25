@@ -23,6 +23,6 @@ export const page = {
         changeSizePage(pagesize) {
             this.pagesize = pagesize;
             this.getList();
-        },
+        }
     }
 }
