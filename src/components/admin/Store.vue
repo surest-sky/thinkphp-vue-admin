@@ -135,8 +135,8 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" v-if="id" @click="updateOrCreate(id)">更新</el-button>
-            <el-button type="primary" v-if="!id" @click="updateOrCreate(null)">新建</el-button>
+            <el-button type="primary" v-if="store.id" @click="updateOrCreate(id)">更新</el-button>
+            <el-button type="primary" v-if="!store.id" @click="updateOrCreate(null)">新建</el-button>
             <el-button @click="storeFromShow = !storeFromShow">取消</el-button>
           </el-form-item>
         </el-form>
@@ -302,7 +302,7 @@ export default {
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() + 3600 * 1000 * 24 * 3);
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 3);
               picker.$emit("pick", [start, end]);
             }
           },
@@ -604,9 +604,14 @@ export default {
       };
 
       if (id) {
-        data.discount_id = this.store.discount.id;
+        if( this.store.discount ) {
+          data.discount_id = this.store.discount.id ;
+        }else {
+          data.discount_id = 0;
+        }
+        
         var that = this;
-        this.$put("/api/store/" + this.id, data)
+        this.$put("/api/store/" + id, data)
           .then(response => {
             if (response.code == 200) {
               that.$success_("更新成功");
