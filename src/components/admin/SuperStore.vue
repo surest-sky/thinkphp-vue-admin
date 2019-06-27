@@ -32,11 +32,11 @@
           </span>
           <span>
             昨日上线折扣总数:
-            <font class="font-title">{{ today_discount }}</font> |
+            <font class="font-title">{{ yesterdat_discount }}</font> |
           </span>
           <span>
             今日上线折扣总数:
-            <font class="font-title">{{ yesterdat_discount }}</font> |
+            <font class="font-title">{{ today_discount }}</font>
           </span>
         </el-col>
       </el-row>
