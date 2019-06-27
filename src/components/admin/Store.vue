@@ -41,6 +41,12 @@
           <el-form-item>
             <el-button type="primary" @click="batch_del">删除</el-button>
           </el-form-item>
+          <el-form-item>
+            <el-button type="default" @click="batch_lower">下架</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="default" @click="batch_online">上架</el-button>
+          </el-form-item>
         </el-row>
       </el-form>
 
@@ -560,6 +566,7 @@ export default {
       let ids = this.multipleSelectionIds.join(",");
 
       this.$deletes(`/api/store/batch_delete?ids=${ids}`).then(r => {
+        console.log(r);
         if (r.code === 200) {
           this.$success_(`删除成功`);
           this.getList();
@@ -568,6 +575,37 @@ export default {
         }
       });
     },
+
+    // 批量上架
+    batch_online() {
+      this.getSelected();
+      let ids = this.multipleSelectionIds.join(",");
+
+      this.$post(`/api/store/batch_online?ids=${ids}`).then(r => {
+        if (r.code === 200) {
+          this.$success_(`上架成功`);
+          this.getList();
+        } else {
+          this.$success_(`上架失败, ${r.msg}`);
+        }
+      });
+    },
+
+    // 批量下架
+    batch_lower() {
+      this.getSelected();
+      let ids = this.multipleSelectionIds.join(",");
+
+      this.$post(`/api/store/batch_lower?ids=${ids}`).then(r => {
+        if (r.code === 200) {
+          this.$success_(`下架成功`);
+          this.getList();
+        } else {
+          this.$success_(`下架失败, ${r.msg}`);
+        }
+      });
+    },
+
 
     // 获取编辑数据
     getSimpleStore(id) {
