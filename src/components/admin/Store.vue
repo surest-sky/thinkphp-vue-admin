@@ -4,7 +4,8 @@
 
     <div class="filter-tool">
       <el-form :model="store_filter" label-position="left" :inline="true">
-        <el-form-item label="当前商圈">
+        <el-row>
+          <el-form-item label="当前商圈">
           <el-select @change="changeSuperstore" v-model="store_filter.superstore_id" filterable>
             <el-option
               v-for="(item, index) in superstores"
@@ -31,12 +32,24 @@
         <el-form-item>
           <el-button type="primary" @click="search">查询</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="addStore">添加一个店铺</el-button>
-        </el-form-item>
+        </el-row>
+
+        <el-row>
+          <el-form-item>
+            <el-button type="primary" @click="addStore">添加一个店铺</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="batch_del">删除</el-button>
+          </el-form-item>
+        </el-row>
       </el-form>
 
-      <my-table :tableData="stores" :columns="columns" :loading="store_loading"></my-table>
+      <my-table
+        :tableData="stores"
+        :columns="columns"
+        :loading="store_loading"
+        @handleSelectionChange="handleSelectionChange"
+      ></my-table>
 
       <!-- 分页 -->
       <Pagination
@@ -290,8 +303,8 @@ export default {
           value: "特价"
         },
         {
-           key: 2,
-           value: "新品"
+          key: 2,
+          value: "新品"
         }
       ],
 
@@ -374,19 +387,8 @@ export default {
 
     search() {
       var superstore_id = this.store_filter.superstore_id;
-
-      this.$get("/api/store/show/" + superstore_id, {
-        page: this.current_page,
-        pagesize: this.pagesize,
-        discount_status: status,
-        keyword: this.store_filter.storename.trim(),
-        type: this.store_filter.type
-      }).then(response => {
-        this.stores = response.data.list;
-        this.setPage(response.data);
-        this.store_loading = false;
-        this.$success_("搜索成功");
-      });
+      
+      this.getList()
     },
 
     // 变更折扣状态
@@ -408,15 +410,25 @@ export default {
     getList() {
       var superstore_id = localStorage.getItem("superstore_id");
       if (!superstore_id) {
-        superstore_id = 305;
-        localStorage.setItem("superstore_id", 305);
+        superstore_id = 0;
+        localStorage.setItem("superstore_id", 0);
       }
       this.store_filter.superstore_id = parseInt(superstore_id);
+      let params = {
+          page: this.current_page,
+          pagesize: this.pagesize,
+        }
 
-      this.$get("/api/store/show/" + superstore_id, {
-        page: this.current_page,
-        pagesize: this.pagesize
-      }).then(response => {
+      // 查询参数值
+      let search_params = {
+        discount_status: status,
+        keyword: this.store_filter.storename.trim(),
+        type: this.store_filter.type
+      }
+
+      params = Object.assign({}, params, search_params)
+
+      this.$get("/api/store/show/" + superstore_id, params).then(response => {
         if (response.code == 200) {
           this.stores = response.data.list;
           this.setPage(response.data);
@@ -542,6 +554,21 @@ export default {
       this.store_from_loading = false;
     },
 
+    // 批量删除
+    batch_del() {
+      this.getSelected();
+      let ids = this.multipleSelectionIds.join(",");
+
+      this.$deletes(`/api/store/batch_delete?ids=${ids}`).then(r => {
+        if (r.code === 200) {
+          this.$success_(`删除成功`);
+          this.getList();
+        } else {
+          this.$success_(`删除失败, ${r.msg}`);
+        }
+      });
+    },
+
     // 获取编辑数据
     getSimpleStore(id) {
       this.store_from_loading = true;
@@ -604,12 +631,12 @@ export default {
       };
 
       if (id) {
-        if( this.store.discount ) {
-          data.discount_id = this.store.discount.id ;
-        }else {
+        if (this.store.discount) {
+          data.discount_id = this.store.discount.id;
+        } else {
           data.discount_id = 0;
         }
-        
+
         var that = this;
         this.$put("/api/store/" + id, data)
           .then(response => {

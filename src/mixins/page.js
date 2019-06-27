@@ -2,9 +2,11 @@ export const page = {
     data() {
         return {
             pagesize: 10,
-            pageSizes: [5, 10, 15, 20],
+            pageSizes: [5, 10, 15, 20, 50, 100],
             total: 100,
             current_page: 1,
+            multipleSelection: "",
+            multipleSelectionIds: []
         }
     },
     methods: {
@@ -23,6 +25,23 @@ export const page = {
         changeSizePage(pagesize) {
             this.pagesize = pagesize;
             this.getList();
+        },
+
+        // 选中的事件
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+            this.getSelected();
+        },
+    
+        // 获取选中的列表
+        getSelected() {
+            var data = this.multipleSelection;
+            var ids = [];
+    
+            data.forEach(row => {
+                ids.push(row.id);
+            });
+            this.multipleSelectionIds = ids;
         }
     }
 }

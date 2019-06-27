@@ -72,7 +72,7 @@ export function post(url, data = {}) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
-      data:JSON.stringify(data)
+      data:QS.stringify(data)
     }
 
 
@@ -81,14 +81,15 @@ export function post(url, data = {}) {
     return service(sendObject)
   }
   //删除方法(resfulAPI常用)
-  export function deletes(url){
+  export function deletes(url, data){
     var url = url.replace('/\api/', host);
     return service({
       url: url,
       method: 'delete',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      }
+      },
+      data:QS.stringify(data)
     }) 
   }
 

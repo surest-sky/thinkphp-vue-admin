@@ -235,8 +235,6 @@ export default {
       store_total: 0,
       discount_total: 0,
       today_discount: 0,
-      multipleSelection: "",
-      multipleSelectionIds: [],
       yesterdat_discount: 0,
       // 搜索表单的数据
       search_superstore_name: "",
@@ -648,23 +646,6 @@ export default {
         }
       });
     },
-
-    // 选中的事件
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      this.getSelected();
-    },
-
-    // 获取选中的列表
-    getSelected() {
-      var data = this.multipleSelection;
-      var ids = [];
-
-      data.forEach(row => {
-        ids.push(row.id);
-      });
-      this.multipleSelectionIds = ids;
-    }
   }
 };
 </script>
