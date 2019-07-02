@@ -2,6 +2,8 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
+import { Message } from 'element-ui'
+
 const state = {
   token: getToken(),
   name: '',
@@ -30,13 +32,17 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        console.log(response)
-        const { data } = response
-        data.token = response.data.sid
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        if(response.code == 200) {
+          const { data } = response
+          data.token = response.data.sid
+          commit('SET_TOKEN', data.token)
+          setToken(data.token)
+        }else{
+          Message.error(response.msg)
+        }
         resolve()
       }).catch(error => {
+        console.log(error)
         reject(error)
       })
     })

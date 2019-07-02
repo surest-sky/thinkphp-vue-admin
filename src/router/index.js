@@ -124,6 +124,9 @@ export const constantRoutes = [
     ]
   },
 
+  // 最后匹配404页面
+  { path: '*', redirect: '/404', hidden: true }
+
 ]
 
 /**
@@ -141,9 +144,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
-  // 最后匹配404页面
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
