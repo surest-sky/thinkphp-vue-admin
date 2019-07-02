@@ -18,7 +18,7 @@
         <el-form-item label="关键字">
           <el-input v-model="store_filter.storename" placeholder="关键字"></el-input>
         </el-form-item>
-        <el-form-item label="选择框">
+        <el-form-item label="折扣状态">
           <el-select v-model="store_filter.type" @change="changeType">
             <el-option
               v-for="(item, index) in search_types"
@@ -28,6 +28,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
+
+       <el-form-item label="店铺状态">
+            <el-select v-model="store.status" class="select_">
+              <el-option
+                v-for="(item, index) in store_statuses"
+                :key="index"
+                :label="item.value"
+                :value="item.key"
+              ></el-option>
+            </el-select>
+      </el-form-item>
 
         <el-form-item>
           <el-button type="primary" @click="search">查询</el-button>

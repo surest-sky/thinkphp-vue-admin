@@ -6,32 +6,44 @@
       <el-form :model="store_filter" label-position="left" :inline="true">
         <el-row>
           <el-form-item label="当前商圈">
-          <el-select @change="changeSuperstore" v-model="store_filter.superstore_id" filterable>
-            <el-option
-              v-for="(item, index) in superstores"
-              :label="item.superstore_name"
-              :key="index"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="关键字">
-          <el-input v-model="store_filter.storename" placeholder="关键字"></el-input>
-        </el-form-item>
-        <el-form-item label="选择框">
-          <el-select v-model="store_filter.type" @change="changeType">
-            <el-option
-              v-for="(item, index) in search_types"
-              :label="item.value"
-              :key="index"
-              :value="item.key"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+            <el-select @change="changeSuperstore" v-model="store_filter.superstore_id" filterable>
+              <el-option
+                v-for="(item, index) in superstores"
+                :label="item.superstore_name"
+                :key="index"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="关键字">
+            <el-input v-model="store_filter.storename" placeholder="关键字"></el-input>
+          </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" @click="search">查询</el-button>
-        </el-form-item>
+          <el-form-item label="折扣状态">
+            <el-select v-model="store_filter.type" @change="changeType">
+              <el-option
+                v-for="(item, index) in search_types"
+                :label="item.value"
+                :key="index"
+                :value="item.key"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="店铺状态">
+            <el-select v-model="store_filter.store_status" class="select_">
+              <el-option
+                v-for="(item, index) in store_statuses"
+                :key="index"
+                :label="item.value"
+                :value="item.key"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="search">查询</el-button>
+          </el-form-item>
         </el-row>
 
         <el-row>
@@ -50,22 +62,22 @@
         </el-row>
       </el-form>
     </div>
-      <my-table
-        :tableData="stores"
-        :columns="columns"
-        :loading="store_loading"
-        @handleSelectionChange="handleSelectionChange"
-      ></my-table>
+    <my-table
+      :tableData="stores"
+      :columns="columns"
+      :loading="store_loading"
+      @handleSelectionChange="handleSelectionChange"
+    ></my-table>
 
-      <!-- 分页 -->
-      <Pagination
-        :pagesize="pagesize"
-        :current_page="current_page"
-        :pageSizes="pageSizes"
-        :total="total"
-        @changeCurrentPage="changeCurrentPage"
-        @changeSizePage="changeSizePage"
-      ></Pagination>
+    <!-- 分页 -->
+    <Pagination
+      :pagesize="pagesize"
+      :current_page="current_page"
+      :pageSizes="pageSizes"
+      :total="total"
+      @changeCurrentPage="changeCurrentPage"
+      @changeSizePage="changeSizePage"
+    ></Pagination>
 
     <!-- 编辑更新表单 -->
     <div class="store-from">
@@ -164,18 +176,17 @@
 </template>
 
 <script>
-
 import {
-    myHeader,
-    Pagination,
-    MyTable,
-    MyDropDown,
-    page,
-    MyTag,
-    statusToText
-} from '@/layout/components/index'
+  myHeader,
+  Pagination,
+  MyTable,
+  MyDropDown,
+  page,
+  MyTag,
+  statusToText
+} from "@/layout/components/index";
 
-import moment from "moment"
+import moment from "moment";
 
 export default {
   name: "index",
@@ -275,7 +286,7 @@ export default {
       store_statuses: [
         {
           key: 0,
-          value: "未上线"
+          value: "审核中"
         },
         {
           key: 1,
@@ -283,8 +294,13 @@ export default {
         },
         {
           key: 2,
+          value: "已下架"
+        },
+        {
+          key: 3,
           value: "已拒绝"
-        }
+        },
+
       ],
       discount_statuses: [
         {
@@ -302,7 +318,7 @@ export default {
         {
           key: 3,
           value: "已拒绝"
-        }
+        },
       ],
       discount_types: [
         {
@@ -398,8 +414,8 @@ export default {
 
     search() {
       var superstore_id = this.store_filter.superstore_id;
-      
-      this.getList()
+
+      this.getList();
     },
 
     // 变更折扣状态
@@ -426,18 +442,19 @@ export default {
       }
       this.store_filter.superstore_id = parseInt(superstore_id);
       let params = {
-          page: this.current_page,
-          pagesize: this.pagesize,
-        }
+        page: this.current_page,
+        pagesize: this.pagesize
+      };
 
       // 查询参数值
       let search_params = {
         discount_status: status,
         keyword: this.store_filter.storename.trim(),
-        type: this.store_filter.type
-      }
+        type: this.store_filter.type,
+        store_status: this.store_filter.store_status
+      };
 
-      params = Object.assign({}, params, search_params)
+      params = Object.assign({}, params, search_params);
 
       this.$get("/api/store/show/" + superstore_id, params).then(response => {
         if (response.code == 200) {
@@ -546,15 +563,18 @@ export default {
       this.storeFromShow = true;
 
       this.$nextTick(function() {
-        this.store = Object.assign({}, {
-          superstore_id: localStorage.getItem("superstore_id"),
-          discount_status: 1,
-          discount_type: 1,
-          status: 1,
-        }, this.store );
-      })
-      
-      
+        this.store = Object.assign(
+          {},
+          {
+            superstore_id: localStorage.getItem("superstore_id"),
+            discount_status: 1,
+            discount_type: 1,
+            status: 1
+          },
+          this.store
+        );
+      });
+
       this.id = null;
       this.time = [
         moment()
@@ -614,7 +634,6 @@ export default {
         }
       });
     },
-
 
     // 获取编辑数据
     getSimpleStore(id) {
