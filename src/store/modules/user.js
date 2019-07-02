@@ -32,6 +32,7 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         console.log(response)
         const { data } = response
+        data.token = response.data.sid
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()

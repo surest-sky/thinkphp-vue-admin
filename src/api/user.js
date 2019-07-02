@@ -1,28 +1,15 @@
 import request from '@/utils/request'
-import qs from 'qs'
+import {get, post, deletes, put} from '@/layout/components/http.js'
 
 export function login(data) {
-  return request({
-    url: 'http://store.ink/admin/login/login',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    },
-    data: qs.stringify(data)
-  })
+  return post('/api/login/login', data)
 }
 
 export function getInfo(token) {
-  return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
-  })
+  console.log(token)
+  return get('https://www.easy-mock.com/mock/5d0f3bcb811a0c1980e0a346/js/userInfo')
 }
 
 export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
-  })
+  return get('https://www.easy-mock.com/mock/5d0f3bcb811a0c1980e0a346/js/userInfo')
 }

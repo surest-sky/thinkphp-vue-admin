@@ -544,9 +544,16 @@ export default {
     // 添加一个店铺
     addStore() {
       this.storeFromShow = true;
-      this.store = Object.assign({}, {
-        superstore_id: localStorage.getItem("superstore_id")
-      }, this.store );
+
+      this.$nextTick(function() {
+        this.store = Object.assign({}, {
+          superstore_id: localStorage.getItem("superstore_id"),
+          discount_status: 1,
+          discount_type: 1,
+          status: 1,
+        }, this.store );
+      })
+      
       
       this.id = null;
       this.time = [
@@ -554,12 +561,9 @@ export default {
           .add(0, "days")
           .format(),
         moment()
-          .add(3, "days")
+          .add(15, "days")
           .format()
       ];
-      this.store.discount_status = 1;
-      this.store.discount_type = 1;
-      this.store.status = 1;
       this.storeFromTitle = "创建店铺";
 
       this.store_from_loading = false;
