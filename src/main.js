@@ -1,37 +1,53 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+
+import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import {get, post, deletes, put} from './common/http.js'
-import VueAMap from 'vue-amap';
-import {success_, error_} from './common/message.js'
+// import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
-Vue.use(VueAMap)
+import '@/styles/index.scss' // global css
 
-VueAMap.initAMapApiLoader({
-  key: 'f55794f39e0e0385fa42fdf0beb7b4df',
-  plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.PlaceSearch', 'AMap.MapType','AMap.Geocoder', 'AMap.Autocomplete'],
-})
+import App from './App'
+import store from './store'
+import router from './router'
+import {success_, error_} from '@/utils/message.js'
+import {get, post, deletes, put} from '@/layout/components/http.js'
+
+import '@/icons' // icon
+import '@/permission' // permission control
+
+/**
+ * If you don't want to use mock-server
+ * you want to use MockJs for mock api
+ * you can execute: mockXHR()
+ *
+ * Currently MockJs will be used in the production environment,
+ * please remove it before going online! ! !
+ */
+import { mockXHR } from '../mock'
+if (process.env.NODE_ENV === 'production') {
+  mockXHR()
+}
 
 
-Vue.use(ElementUI)
-Vue.config.productionTip = false
+Vue.prototype.$success_ = success_
+Vue.prototype.$error_ = error_
 
 Vue.prototype.$get = get
 Vue.prototype.$post = post
 Vue.prototype.$deletes = deletes
 Vue.prototype.$put = put
 
-Vue.prototype.$success_ = success_
-Vue.prototype.$error_ = error_
 
-/* eslint-disable no-new */
+// set ElementUI lang to EN
+Vue.use(ElementUI)
+
+Vue.config.productionTip = false
+
 new Vue({
   el: '#app',
   router,
-  components: { App },
-  template: '<App/>'
+  store,
+  render: h => h(App)
 })
