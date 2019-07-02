@@ -1,10 +1,14 @@
 import request from '@/utils/request'
+import qs from 'qs'
 
 export function login(data) {
   return request({
-    url: '/user/login',
+    url: 'http://store.ink/admin/login/login',
     method: 'post',
-    data
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+    data: qs.stringify(data)
   })
 }
 

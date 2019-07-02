@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 import {success_, error_} from '@/utils/message.js'
 import {get, post, deletes, put} from '@/layout/components/http.js'
+import md5 from 'js-md5';
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -38,6 +39,7 @@ Vue.prototype.$get = get
 Vue.prototype.$post = post
 Vue.prototype.$deletes = deletes
 Vue.prototype.$put = put
+Vue.prototype.$md5 = md5;
 
 
 // set ElementUI lang to EN
