@@ -257,8 +257,7 @@ export default {
           prop: "store_type",
           label: "店铺类型",
           render: function(h, param) {
-            let text = param.row.store_type;
-            text = storeStatusType(text);
+            let text = param.row.store_type_name.name;
             return h("el-tag", text);
           }
         },
@@ -440,7 +439,6 @@ export default {
     }
   },
   mounted() {
-    this.getList();
     this.getSuperStoresList();
     this.set_store_types_();
   },
@@ -466,6 +464,7 @@ export default {
 
     set_store_types(data) {
       this.store_types = data
+      this.getList();
     },
 
     search() {
