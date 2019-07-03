@@ -46,8 +46,8 @@
               <el-option
                 v-for="(item, index) in store_types"
                 :key="index"
-                :label="item.value"
-                :value="item.key"
+                :label="item.name"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -97,6 +97,7 @@
           label-position="left"
           label-width="80px"
           :model="store"
+          :append-to-body="true"
           v-loading="store_from_loading"
         >
           <el-form-item label="当前商圈">
@@ -131,6 +132,17 @@
                 :key="index"
                 :label="item.value"
                 :value="item.key"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="店铺类别">
+            <el-select v-model="store.store_type" class="select_">
+              <el-option
+                v-for="(item, index) in store_types"
+                :key="index"
+                :label="item.name"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -175,6 +187,10 @@
             </el-select>
           </el-form-item>
 
+          <el-form-item label="上传店铺图片">
+            <upload-simple @setImgSrc="setImgSrc" :imgSrc="store.store_img"></upload-simple>
+          </el-form-item>
+
           <el-form-item>
             <el-button type="primary" v-if="store.id" @click="updateOrCreate(id)">更新</el-button>
             <el-button type="primary" v-if="!store.id" @click="updateOrCreate(null)">新建</el-button>
@@ -195,7 +211,8 @@ import {
   page,
   MyTag,
   statusToText,
-  storeStatusType
+  storeStatusType,
+  UploadSimple
 } from "@/layout/components/index";
 
 import moment from "moment";
@@ -206,7 +223,8 @@ export default {
     myHeader,
     Pagination,
     MyTable,
-    MyDropDown
+    MyDropDown,
+    UploadSimple
   },
   mixins: [page],
   data() {
@@ -232,16 +250,16 @@ export default {
           label: "店铺状态",
           render: function(h, param) {
             let html = statusToText(param.row.status);
-            return h('el-tag', html)
+            return h("el-tag", html);
           }
         },
         {
           prop: "store_type",
           label: "店铺类型",
           render: function(h, param) {
-            let text = param.row.store_type
-            text = storeStatusType(text)
-            return h('el-tag', text)
+            let text = param.row.store_type;
+            text = storeStatusType(text);
+            return h("el-tag", text);
           }
         },
         {
@@ -254,7 +272,7 @@ export default {
             } else {
               html = "已下架";
             }
-            return h('el-tag', html)
+            return h("el-tag", html);
           }
         },
         {
@@ -320,28 +338,10 @@ export default {
         {
           key: 3,
           value: "已拒绝"
-        },
-
-      ],
-      // 1 : 购物 2:美食 3:休闲 4：亲子
-      store_types: [
-        {
-          key: 1,
-          value: "购物"
-        },
-        {
-          key: 2,
-          value: "美食"
-        },
-        {
-          key: 3,
-          value: "休闲"
-        },
-        {
-          key: 4,
-          value: "亲子"
         }
       ],
+      // 1 : 购物 2:美食 3:休闲 4：亲子
+      store_types: [],
       discount_statuses: [
         {
           key: 0,
@@ -358,7 +358,7 @@ export default {
         {
           key: 3,
           value: "已拒绝"
-        },
+        }
       ],
       discount_types: [
         {
@@ -442,14 +442,30 @@ export default {
   mounted() {
     this.getList();
     this.getSuperStoresList();
+    this.set_store_types_();
   },
 
   methods: {
+    setImgSrc(src) {
+      this.store.store_img = src;
+      console.log(src);
+    },
+
     // 编辑
     edit(id) {
       this.storeFromTitle = "编辑店铺";
-      this.storeFromShow = true;
       this.getSimpleStore(id);
+    },
+
+    // 获取所有的店铺类别
+    set_store_types_() {
+      this.$get("/api/storetype").then(r => {
+        this.set_store_types(r.data);
+      });
+    },
+
+    set_store_types(data) {
+      this.store_types = data
     },
 
     search() {
@@ -475,6 +491,8 @@ export default {
 
     // 获取列表
     getList() {
+      this.storeFromShow = false;
+      this.store = {};
       var superstore_id = localStorage.getItem("superstore_id");
       if (!superstore_id) {
         superstore_id = 0;
@@ -492,7 +510,7 @@ export default {
         keyword: this.store_filter.storename.trim(),
         type: this.store_filter.type,
         store_status: this.store_filter.store_status,
-        store_type: this.store_filter.store_type,
+        store_type: this.store_filter.store_type
       };
 
       params = Object.assign({}, params, search_params);
@@ -602,7 +620,6 @@ export default {
     // 添加一个店铺
     addStore() {
       this.storeFromShow = true;
-
       this.$nextTick(function() {
         this.store = Object.assign(
           {},
@@ -611,8 +628,7 @@ export default {
             discount_status: 1,
             discount_type: 1,
             status: 1
-          },
-          this.store
+          }
         );
       });
 
@@ -688,6 +704,7 @@ export default {
     // 设置数据
     setData(data) {
       this.$nextTick(() => {
+        this.store = {};
         this.store = data;
         this.store.status = parseInt(this.store.status);
         this.id = data.id;
@@ -698,17 +715,23 @@ export default {
             discount_status: data.discount.status,
             discount_type: data.discount.type,
             discount_content: data.discount.content,
-            discount_id: data.discount.discount_id
+            discount_id: data.discount.discount_id,
+            store_img: data.store_img,
+            store_type: data.store_type
           });
           this.time = [data.discount.start_time, data.discount.end_time];
         } else {
           this.store = Object.assign({}, this.store, {
             discount_status: 1,
             discount_type: 0,
-            discount_content: ""
+            discount_content: "",
+            store_img: data.store_img,
+            store_type: data.store_type
           });
         }
       });
+
+      this.storeFromShow = true;
     },
 
     // 变更商圈需要做的事情
@@ -734,7 +757,9 @@ export default {
         status: this.store.status,
         store_name: this.store.store_name,
         superstore_id: this.store.superstore_id,
-        type: this.store.discount_type
+        type: this.store.discount_type,
+        store_img: this.store.store_img,
+        store_type: this.store.store_type
       };
 
       if (id) {
@@ -750,7 +775,6 @@ export default {
             if (response.code == 200) {
               that.$success_("更新成功");
               that.getList();
-
               that.storeFromShow = false;
             } else {
               that.$error_(response.msg);
