@@ -10,9 +10,9 @@ export function login(data) {
 
 export function getInfo(token) {
   console.log(token)
-  return get('https://www.easy-mock.com/mock/5d0f3bcb811a0c1980e0a346/js/userInfo')
+  return get('/api/userinfo')
 }
 
 export function logout() {
-  return get('https://www.easy-mock.com/mock/5d0f3bcb811a0c1980e0a346/js/userInfo')
+  return get('/api/userinfo')
 }
