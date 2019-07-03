@@ -398,7 +398,7 @@ export default {
     },
     // 获取商圈列表
     getList() {
-      this.$get("/api/superstore", {
+      this.$get("/api/superstore?keyword=" + this.search_superstore_name, {
         page: this.current_page,
         pagesize: this.pagesize
       }).then(response => {
@@ -524,13 +524,7 @@ export default {
     // 搜索界面的方法
     // 搜索
     summit_search() {
-      this.$get("/api/superstore?keyword=" + this.search_superstore_name)
-      .then(response => {
-        this.list = response.data.list;
-        this.setPage(response.data);
-        this.table_loading = false;
-        this.$success_("搜索成功");
-      });
+      this.getList()
       
     },
 
