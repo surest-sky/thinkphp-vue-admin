@@ -28,3 +28,18 @@ export function statusToText(status){
       break;
   }
 }
+
+export function storeStatusType(status){
+  switch (parseInt(status)) {
+    case 1:
+      return "购物"
+    case 2:
+      return "美食"
+    case 3:
+      return "休闲"
+    case 4:
+      return "亲子"
+    default:
+      return "暂无"
+  }
+}

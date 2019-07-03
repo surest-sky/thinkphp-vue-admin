@@ -1,5 +1,5 @@
 <template>
-    <el-tag :size="size" :effect="effect">{{text}}</el-tag>
+    <el-tag :size="size" :type="type" :effect="effect">{{text}}</el-tag>
 </template>
 
 
@@ -7,8 +7,15 @@
 export default {
     name: 'Tag',
     props: {
-        size: String,
+        size: {
+            type: String,
+            default: "dark"
+        },
         text: String,
+        type: {
+            type: String,
+            default: "success"
+        },
         effect: {
             type: String,
             default: "dark"

@@ -41,6 +41,17 @@
             </el-select>
           </el-form-item>
 
+          <el-form-item label="店铺类别">
+            <el-select v-model="store_filter.store_type" class="select_">
+              <el-option
+                v-for="(item, index) in store_types"
+                :key="index"
+                :label="item.value"
+                :value="item.key"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="search">查询</el-button>
           </el-form-item>
@@ -183,7 +194,8 @@ import {
   MyDropDown,
   page,
   MyTag,
-  statusToText
+  statusToText,
+  storeStatusType
 } from "@/layout/components/index";
 
 import moment from "moment";
@@ -220,7 +232,16 @@ export default {
           label: "店铺状态",
           render: function(h, param) {
             let html = statusToText(param.row.status);
-            return h("span", html);
+            return h('el-tag', html)
+          }
+        },
+        {
+          prop: "store_type",
+          label: "店铺类型",
+          render: function(h, param) {
+            let text = param.row.store_type
+            text = storeStatusType(text)
+            return h('el-tag', text)
           }
         },
         {
@@ -233,7 +254,7 @@ export default {
             } else {
               html = "已下架";
             }
-            return h("span", html);
+            return h('el-tag', html)
           }
         },
         {
@@ -301,6 +322,25 @@ export default {
           value: "已拒绝"
         },
 
+      ],
+      // 1 : 购物 2:美食 3:休闲 4：亲子
+      store_types: [
+        {
+          key: 1,
+          value: "购物"
+        },
+        {
+          key: 2,
+          value: "美食"
+        },
+        {
+          key: 3,
+          value: "休闲"
+        },
+        {
+          key: 4,
+          value: "亲子"
+        }
       ],
       discount_statuses: [
         {
@@ -451,7 +491,8 @@ export default {
         discount_status: status,
         keyword: this.store_filter.storename.trim(),
         type: this.store_filter.type,
-        store_status: this.store_filter.store_status
+        store_status: this.store_filter.store_status,
+        store_type: this.store_filter.store_type,
       };
 
       params = Object.assign({}, params, search_params);
