@@ -257,7 +257,7 @@ export default {
           prop: "store_type",
           label: "店铺类型",
           render: function(h, param) {
-            let text = param.row.store_type_name.name;
+            let text = param.row.store_type_name ? param.row.store_type_name.name: "未知";
             return h("el-tag", text);
           }
         },

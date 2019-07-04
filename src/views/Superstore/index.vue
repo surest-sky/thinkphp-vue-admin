@@ -206,7 +206,7 @@ import {
 } from '@/layout/components/index'
 
 export default {
-  name: "SuperStore",
+  name: "index",
   mounted() {
     this.getList();
     this.getDataInfo();
@@ -264,41 +264,42 @@ export default {
           prop: "",
           fixed: "right",
           label: "操作",
+          width: 150,
           render: (h, param) => {
             let dropDownData = {
               label: "更多"
             };
-            let buttons = [
-              { label: "详情", func: { func: "showDetail", id: param.row.id } },
-              { label: "编辑", func: { func: "edit", id: param.row.id } },
-              {
-                label: "所有店铺",
-                func: { func: "go_store", id: param.row.id }
-              }
-            ];
 
             if (param.row.status == 1) {
               dropDownData.items = [
-                { label: "下架", func: { func: "lower", id: param.row.id } },
-                { label: "删除", func: { func: "delete", id: param.row.id } }
+                { label: "下架", func: { func: "lower", id: param.row.id } }
               ];
             } else {
               dropDownData.items = [
-                { label: "上架", func: { func: "online", id: param.row.id } },
-                { label: "删除", func: { func: "delete", id: param.row.id } }
+                { label: "上架", func: { func: "online", id: param.row.id } }
               ];
             }
 
+            dropDownData.items = dropDownData.items.concat([
+              { label: "删除", func: { func: "delete", id: param.row.id } },
+              { label: "审核", func: { func: "audit", id: param.row.id } },
+              { label: "编辑", func: { func: "edit", id: param.row.id } },
+              { label: "详情", func: { func: "showDetail", id: param.row.id } },
+              { label: "所有店铺",func: { func: "go_store", id: param.row.id }}
+            ])
+
+
             // 触发MyDropDown的update和del事件
             return h(MyDropDown, {
-              props: { dropDownData: dropDownData, buttons: buttons },
+              props: { dropDownData: dropDownData},
               on: {
                 lower: this.lower,
                 delete: this.delete,
                 online: this.online,
                 edit: this.edit,
                 go_store: this.go_store,
-                showDetail: this.showDetail
+                showDetail: this.showDetail,
+                audit: this.audit
               }
             });
           }
@@ -389,6 +390,13 @@ export default {
     };
   },
   methods: {
+    // 审核
+    audit(id) {
+      console.log(id)
+      this.$store.dispatch('superstore/setStoreId', id)
+      console.log(this.$store.state.superstore_id)
+    },
+
     // 编辑商圈
     edit(id) {
       this.inputSuperStoreTitle = "编辑商圈";
