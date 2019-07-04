@@ -57,7 +57,7 @@
     <my-table :tableData="list" :columns="columns" :loading="table_loading"
               @handleSelectionChange="handleSelectionChange"
     ></my-table>
-
+\
     <!-- 分页 -->
     <Pagination
       :pagesize="pagesize"
@@ -191,6 +191,15 @@
         <el-button type="primary" @click="amap = false">确 定</el-button>
       </div>
     </el-dialog>
+
+
+    <el-dialog 
+      title="商圈图片审核" 
+      :visible.sync="audit_on"
+      width="70%"
+    >
+      <audit-table :audit_on="audit_on"></audit-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -205,6 +214,8 @@ import {
     page
 } from '@/layout/components/index'
 
+import AuditTable from './Audit'
+
 export default {
   name: "index",
   mounted() {
@@ -216,7 +227,8 @@ export default {
     MyTag,
     MyTable,
     MyDropDown,
-    Pagination
+    Pagination,
+    AuditTable
   },
   mixins: [page],
   data() {
@@ -386,15 +398,16 @@ export default {
         }
       },
       lng: 0,
-      lat: 0
+      lat: 0,
+      audit_on: false
     };
   },
+
   methods: {
     // 审核
     audit(id) {
-      console.log(id)
       this.$store.dispatch('superstore/setStoreId', id)
-      console.log(this.$store.state.superstore_id)
+      this.audit_on = true
     },
 
     // 编辑商圈

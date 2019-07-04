@@ -11,20 +11,13 @@ const mutations = {
 
 const actions = { 
     setStoreId({ commit }, superstore_id) {
-        return new Promise((resolve, reject) => {
-            commit('SET_SUPERSTORE_ID', superstore_id)
-            resolve()
-        })
+        commit('SET_SUPERSTORE_ID', superstore_id)
     }
 }
 
-// 获取状态信息
-const getters = {
-}
-
 export default {
+    namespaced: true,
     state,
     mutations,
-    actions,
-    getters
+    actions
 }

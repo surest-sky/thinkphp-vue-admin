@@ -43,6 +43,7 @@ export default {
     columns: Array,
     store_loading: {
         type: Boolean,
+        default: false
     }
   },
   mounted(){
