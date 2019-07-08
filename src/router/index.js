@@ -130,6 +130,28 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/table',
+    name: 'Example',
+    meta: { title: 'Example', icon: 'example' },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/App/index'),
+        meta: { title: 'Table', icon: 'table' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/App/index'),
+        meta: { title: 'Tree', icon: 'tree' }
+      }
+    ]
+  },
+
   // 最后匹配404页面
   // { path: '*', redirect: '/404', hidden: true }
 

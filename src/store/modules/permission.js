@@ -6,15 +6,11 @@ import Storetype from "@/views/Storetype/index"
 
 const routeMap = [
   {
-    "path": "/storetype",
-    "url": "admin/storetype",
-    "redirect": '/message/index',
+    "path": "admin/storetype",
     "component": Storetype
   },
   {
-    "path": "/message",
-    "redirect": '/message/index',
-    "url": "admin/message",
+    "path": "admin/message",
     "component": Message,
   }
 ]
@@ -40,18 +36,18 @@ function filterRoutes(routes, son=false) {
       let r = {};
       if(!son) {
         r = {  // 路由
-          path: result.path,
+          path: "",
           component: Layout,
-          redirect: result,
           name: route.name,
           meta: { title: route.name, icon: route.icon }
         }
       }else{
         r = {
-          path: 'index',
-          name: route.name,
+          path: route.url,
           component: result.component,
-          meta: { title: route.name, icon: route.icon }
+          name: route.name,
+          meta: { title: route.name, icon: route.icon},
+          hidden: route.hidden
         }
       }
       
