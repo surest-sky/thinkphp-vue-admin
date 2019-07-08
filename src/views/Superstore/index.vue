@@ -13,11 +13,11 @@
             </el-form-item>
 
             <el-form-item label="图片审核筛选">
-               <el-switch
-                  v-model="filter.is_new_banner"
-                  active-text="有图片待审核"
-                  inactive-text="无图片待审核">
-                </el-switch>
+              <el-select v-model="filter.is_new_banner">
+                <el-option label="全部" value=""></el-option>
+                <el-option label="有图片待审核" value="1"></el-option>
+                <el-option label="无图片待审核" value="0"></el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item>

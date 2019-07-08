@@ -14,6 +14,7 @@ import router from './router'
 import {success_, error_} from '@/utils/message.js'
 import {get, post, deletes, put} from '@/layout/components/http.js'
 import md5 from 'js-md5';
+import VueAMap  from 'vue-amap';  //注意不要和 AMap原始名称覆盖
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -30,6 +31,16 @@ import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
+
+// Vue.use(VueAMap);
+// // 初始化vue-amap
+// VueAMap.initAMapApiLoader({
+//   // 高德的key
+//   key: 'you key',
+//   // 插件集合
+//   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor','AMap.Geolocation'],
+//   v: '1.4.4'
+// });
 
 
 Vue.prototype.$success_ = success_

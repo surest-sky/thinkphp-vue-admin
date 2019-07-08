@@ -8,7 +8,8 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  roles: []
+  roles: [],
+  permissions: ""
 }
 
 const mutations = {
@@ -23,6 +24,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  PERMISSIONS: (state, permissions) => {
+    state.permissions = permissions
   }
 }
 
@@ -57,18 +61,20 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-        console.log(data)
 
-        const { roles, name, avatar } = data
+        const { rules, name, avatar } = data
 
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
+        // if (!roles || roles.length <= 0) {
+        //   reject('getInfo: roles must be a non-null array!')
+        // }
 
-        commit('SET_ROLES', roles)
+        commit('SET_ROLES', 'admin')
+        // commit('PERMISSIONS', rules)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+
+        
         resolve(data)
       }).catch(error => {
         reject(error)

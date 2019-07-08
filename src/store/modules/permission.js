@@ -1,18 +1,75 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    console.log(route.meta)
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return false
+import Layout from '@/layout'
+import Message from "@/views/Message/index"
+import Storetype from "@/views/Storetype/index"
+
+const routeMap = [
+  {
+    "path": "/storetype",
+    "url": "admin/storetype",
+    "redirect": '/message/index',
+    "component": Storetype
+  },
+  {
+    "path": "/message",
+    "redirect": '/message/index',
+    "url": "admin/message",
+    "component": Message,
   }
+]
+
+
+
+
+// path: '/',
+// component: Layout,
+// redirect: '/index',
+// name: 'D88',
+// meta: { title: 'D88', icon: 'dashboard' },
+
+
+function filterRoutes(routes, son=false) {
+  const res = []
+
+  routes.forEach(route => {
+    let tmp = { ...route }
+    console.log(route)
+    let result = findRouter(route)
+    if(result || route.hidden || (route.url == "#")) {
+      let r = {};
+      if(!son) {
+        r = {  // 路由
+          path: result.path,
+          component: Layout,
+          redirect: result,
+          name: route.name,
+          meta: { title: route.name, icon: route.icon }
+        }
+      }else{
+        r = {
+          path: 'index',
+          name: route.name,
+          component: result.component,
+          meta: { title: route.name, icon: route.icon }
+        }
+      }
+      
+      if(tmp.children) {
+        r.children = filterRoutes(tmp.children, true)
+      }
+      
+      res.push(r)
+    }
+  })
+
+  return res
 }
+
+function findRouter(route) {
+  return routeMap.find((router) => { return (router.url == route.url) || true  })
+}
+
 
 /**
  * Filter asynchronous routing tables by recursion
@@ -35,6 +92,11 @@ export function filterAsyncRoutes(routes, roles) {
   return res
 }
 
+
+export function AddAsyncRoutes(permissions) {
+  return filterRoutes(permissions)
+}
+
 const state = {
   routes: [],
   addRoutes: []
@@ -47,16 +109,14 @@ const mutations = {
   }
 }
 
+
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, permissions) {
     return new Promise(resolve => {
       let accessedRoutes
-      // if (roles.includes('admin')) {
-      //   accessedRoutes = asyncRoutes || []
-      // } else {
-      //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      // }
-      accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      
+      accessedRoutes = AddAsyncRoutes(permissions) // 根据角色动态加载路由
+      
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

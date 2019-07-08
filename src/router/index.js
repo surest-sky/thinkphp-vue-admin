@@ -92,21 +92,21 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: '/message',
-    component: Layout,
-    redirect: '/message/index',
-    name: '消息管理',
-    meta: { title: '消息管理', icon: 'message' },
-    children: [
-      {
-        path: 'index',
-        name: '消息管理',
-        component: () => import('@/views/Message/index'),
-        meta: { title: '消息管理', icon: 'message' }
-      },
-    ]
-  },
+  // {
+  //   path: '/message',
+  //   component: Layout,
+  //   redirect: '/message/index',
+  //   name: '消息管理',
+  //   meta: { title: '消息管理', icon: 'message' },
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: '消息管理',
+  //       component: () => import('@/views/Message/index'),
+  //       meta: { title: '消息管理', icon: 'message' }
+  //     },
+  //   ]
+  // },
 
   {
     path: '/app',
@@ -121,11 +121,17 @@ export const constantRoutes = [
         component: () => import('@/views/App/index'),
         meta: { title: 'App管理', icon: 'app' }
       },
+      {
+        path: 'index2',
+        name: 'App管理',
+        component: () => import('@/views/App/index'),
+        meta: { title: 'App管理', icon: 'app' }
+      },
     ]
   },
 
   // 最后匹配404页面
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 
 ]
 
