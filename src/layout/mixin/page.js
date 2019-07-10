@@ -37,10 +37,10 @@ export const page = {
         getSelected() {
             var data = this.multipleSelection;
             var ids = [];
-    
-            data.forEach(row => {
-                ids.push(row.id);
-            });
+            
+            // data.forEach(row => {
+            //     ids.push(row.id);
+            // });
             this.multipleSelectionIds = ids;
         }
     }

@@ -1,22 +1,17 @@
 <template>
   <!-- ------表格内容-------- -->
-  <el-table 
-  ref="multipleTable"
-  :data="tableData" 
-  v-loading="store_loading"
-  :row-class-name="tableRowClassName"
-  style="width:100%;"
-  class="table_"
-  @selection-change="handleSelectionChange"
-
-      border
-      fit
-      highlight-current-row
+  <el-table
+    ref="multipleTable"
+    :data="tableData"
+    v-loading="loading"
+    :row-class-name="tableRowClassName"
+    style="width:100%;"
+    class="table_"
+    @selection-change="handleSelectionChange"
+    border
+    highlight-current-row
   >
-  <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
+    <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column
       v-for="(column, index) in columns"
       :prop="column.prop"
@@ -39,16 +34,21 @@ import MyRender from "@/layout/components/Table/MyRender";
 
 export default {
   props: {
-    tableData: Array,
+    tableData: {
+      type: Array,
+      default: []
+    },
     columns: Array,
     store_loading: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false
+    },
+    loading: {
+      type: String,
+      default: false
     }
   },
-  mounted(){
-    
-  },
+  mounted() {},
   methods: {
     headerStyle() {
       return { "text-align": "center" };
@@ -59,7 +59,7 @@ export default {
       }
     },
     handleSelectionChange(val) {
-      this.$emit('handleSelectionChange', val)
+      this.$emit("handleSelectionChange", val);
     }
   },
   components: {
@@ -69,10 +69,10 @@ export default {
 </script>
 
 <style>
-  .table_ {
-    margin-top: 20px;
-    margin-left: 30px;
-  }
+.table_ {
+  margin-top: 20px;
+  margin-left: 30px;
+}
 </style>
 
 

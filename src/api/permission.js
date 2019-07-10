@@ -1,0 +1,22 @@
+
+import {get, post, deletes, put} from '@/layout/components/http.js'
+
+export function getList() {
+    return get('/api/permission')
+}
+
+export function getSimple(id) {
+    return get('/api/permission/'+id)
+}
+
+export function getPermissionAll() {
+    return get('/api/permission/all')
+}
+
+export function update(id, params) {
+    return put('/api/permission/' + id, params)
+}
+
+export function create(params) {
+    return post('/api/permission', params)
+}

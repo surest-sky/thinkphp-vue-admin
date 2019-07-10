@@ -92,6 +92,38 @@ export const constantRoutes = [
     ]
   },
 
+  {
+      path: '/circle',
+      component: Layout,
+      redirect: '/circle/index',
+      name: '圈子管理',
+      meta: { title: '圈子管理', icon: 'circle' },
+      children: [
+        {
+          path: 'index',
+          name: '圈子管理',
+          component: () => import('@/views/Circle/index'),
+          meta: { title: '圈子管理', icon: 'circle' }
+        },
+    ]
+  },
+
+  {
+    path: '/auth',
+    component: Layout,
+    redirect: '/auth/index',
+    name: '权限管理',
+    meta: { title: '权限管理', icon: 'auth' },
+    children: [
+      {
+        path: 'index',
+        name: '权限管理',
+        component: () => import('@/views/Auth/index'),
+        meta: { title: '权限管理', icon: 'auth' }
+      },
+  ]
+},
+
   // {
   //   path: '/message',
   //   component: Layout,
