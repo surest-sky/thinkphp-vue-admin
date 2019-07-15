@@ -3,11 +3,18 @@ import { asyncRoutes, constantRoutes } from '@/router'
 import Layout from '@/layout'
 import Message from "@/views/Message/index"
 import Storetype from "@/views/Storetype/index"
+import Superstore from "@/views/Superstore/index"
+import Store from "@/views/Store/index"
+import Circle from "@/views/Circle/index"
+import App from "@/views/App/index"
+import Auth from "@/views/Auth/index"
+import Role from "@/views/Auth/Role/index"
+import AdminUser from "@/views/AdminUser/index"
 
 
 /**
  * 定义路由映射表
- * @param {String} path 对应的是路由跳转地址, 可以由后端进行控制,这里默认的是采用后端配置的url进行
+ * @param {String} path 对应的是路由跳转地址, 可以由后端进行控制,这里默认的是采用后端配置的rule进行
  */
 const routeMap = [
   {
@@ -17,6 +24,34 @@ const routeMap = [
   {
     "path": "admin/message",
     "component": Message,
+  },
+  {
+    "path": "admin/permission",
+    "component": Auth,
+  },
+  {
+    "path": "admin/superstore",
+    "component": Superstore,
+  },
+  {
+    "path": "admin/store/show/<id>",
+    "component": Store,
+  },
+  {
+    "path": "admin/circle",
+    "component": Circle,
+  },
+  {
+    "path": "admin/app",
+    "component": App,
+  },
+  {
+    "path": "admin/role",
+    "component": Role,
+  },
+  {
+    "path": "admin/admin-user",
+    "component": AdminUser,
   }
 ]
 
@@ -39,7 +74,7 @@ function filterRoutes(routes, son=false) {
     // 判断是否找到
     // 路由是否需要隐藏(例如表单类的控制是需要隐藏的)
     // 判断是否是根节点
-    if(result || route.hidden || (route.url == "#")) {
+    if(result || (route.rule == "#") || !route.hidden) {
       let r = {};
       // 渲染根节点(菜单导航)
       if(!son) {
@@ -50,10 +85,10 @@ function filterRoutes(routes, son=false) {
           meta: { title: route.name, icon: route.icon }
         }
       }else{
-        // 渲染子节点
+        
         r = {
-          path: route.url,
-          component: result.component, // 引入对应的component
+          path: route.rule,
+          component: result ? result.component : undefined, // 引入对应的component
           name: route.name,
           meta: { title: route.name, icon: route.icon},
           hidden: route.hidden // 用户确定是否需要在菜单栏中展开关闭
@@ -64,10 +99,17 @@ function filterRoutes(routes, son=false) {
       if(tmp.children) {
         r.children = filterRoutes(tmp.children, true)
       }
-      
+
       // 插入等待添加的路由中, 数组形式存在
-      res.push(r)
+      // 检查 r 是否存在子节点, 如果没有子节点, 就将其隐藏
+
+      if(result || r.children && r.children.length != 0) {
+        res.push(r)
+      }
+
+
     }
+
   })
 
   return res
@@ -78,7 +120,8 @@ function filterRoutes(routes, son=false) {
  * @param {*} route 
  */
 function findRouter(route) {
-  return routeMap.find((router) => { return (router.url == route.url) || true  })
+  
+  return routeMap.find((router) => { return (router.path == route.rule) })
 }
 
 

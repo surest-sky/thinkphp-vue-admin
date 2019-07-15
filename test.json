@@ -10,18 +10,37 @@
       "rules": [
         {
           "id": 1,
-          "url": "#",
+          "rule": "#",
           "name": "店铺类型",
           "pid": 0,
           "icon": "message",
           "children": [
             {
-              "url": "admin/storetype/2",
+              "rule": "admin/storetype/2",
               "method": "post",
               "name": "编辑店铺类型1"
             },
             {
-              "url": "admin/storetype/1",
+              "rule": "admin/storetype/1",
+              "method": "post",
+              "name": "编辑店铺类型2"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "rule": "#",
+          "name": "店铺类型",
+          "pid": 0,
+          "icon": "message",
+          "children": [
+            {
+              "rule": "admin/storetype/2",
+              "method": "post",
+              "name": "编辑店铺类型1"
+            },
+            {
+              "rule": "admin/storetype/1",
               "method": "post",
               "name": "编辑店铺类型2"
             }
@@ -29,26 +48,26 @@
         },
         {
           "id": 2,
-          "url": "admin/message",
+          "rule": "admin/message",
           "method": "get",
           "name": "消息管理#",
           "pid": 0,
           "icon": "fa fa-message",
           "children": [
             {
-              "url": "admin/message",
+              "rule": "admin/message",
               "method": "get",
               "name": "消息管理1",
               "hidden": false
             },
             {
-              "url": "admin/message/3",
+              "rule": "admin/message/3",
               "method": "post",
               "name": "消息管理2",
               "hidden": true
             },
             {
-              "url": "admin/message/4",
+              "rule": "admin/message/4",
               "method": "post",
               "name": "消息管理3",
               "hidden": true

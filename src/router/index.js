@@ -60,107 +60,107 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: '/superstore',
-    component: Layout,
-    redirect: '/superstore/index',
-    name: '商圈管理',
-    meta: { title: '商圈管理', icon: 'v' },
-    children: [
-      {
-        path: 'index',
-        name: '商圈管理',
-        component: () => import('@/views/Superstore/index'),
-        meta: { title: '商圈管理', icon: 'superstore' }
-      },
-    ]
-  },
+//   {
+//     path: '/superstore',
+//     component: Layout,
+//     redirect: '/superstore/index',
+//     name: '商圈管理',
+//     meta: { title: '商圈管理', icon: 'v' },
+//     children: [
+//       {
+//         path: 'index',
+//         name: '商圈管理',
+//         component: () => import('@/views/Superstore/index'),
+//         meta: { title: '商圈管理', icon: 'superstore' }
+//       },
+//     ]
+//   },
 
-  {
-    path: '/store',
-    component: Layout,
-    redirect: '/store/index',
-    name: '店铺管理',
-    meta: { title: '店铺管理', icon: 'store' },
-    children: [
-      {
-        path: 'index',
-        name: '店铺管理',
-        component: () => import('@/views/Store/index'),
-        meta: { title: '店铺管理', icon: 'store' }
-      },
-    ]
-  },
+//   {
+//     path: '/store',
+//     component: Layout,
+//     redirect: '/store/index',
+//     name: '店铺管理',
+//     meta: { title: '店铺管理', icon: 'store' },
+//     children: [
+//       {
+//         path: 'index',
+//         name: '店铺管理',
+//         component: () => import('@/views/Store/index'),
+//         meta: { title: '店铺管理', icon: 'store' }
+//       },
+//     ]
+//   },
 
-  {
-      path: '/circle',
-      component: Layout,
-      redirect: '/circle/index',
-      name: '圈子管理',
-      meta: { title: '圈子管理', icon: 'circle' },
-      children: [
-        {
-          path: 'index',
-          name: '圈子管理',
-          component: () => import('@/views/Circle/index'),
-          meta: { title: '圈子管理', icon: 'circle' }
-        },
-    ]
-  },
+//   {
+//       path: '/circle',
+//       component: Layout,
+//       redirect: '/circle/index',
+//       name: '圈子管理',
+//       meta: { title: '圈子管理', icon: 'circle' },
+//       children: [
+//         {
+//           path: 'index',
+//           name: '圈子管理',
+//           component: () => import('@/views/Circle/index'),
+//           meta: { title: '圈子管理', icon: 'circle' }
+//         },
+//     ]
+//   },
 
-  {
-    path: '/auth',
-    component: Layout,
-    redirect: '/auth/index',
-    name: '权限管理',
-    meta: { title: '权限管理', icon: 'auth' },
-    children: [
-      {
-        path: 'index',
-        name: '权限管理',
-        component: () => import('@/views/Auth/index'),
-        meta: { title: '权限管理', icon: 'auth' }
-      },
-  ]
-},
+//   {
+//     path: '/auth',
+//     component: Layout,
+//     redirect: '/auth/index',
+//     name: '权限管理',
+//     meta: { title: '权限管理', icon: 'auth' },
+//     children: [
+//       {
+//         path: 'index',
+//         name: '权限管理',
+//         component: () => import('@/views/Auth/index'),
+//         meta: { title: '权限管理', icon: 'auth' }
+//       },
+//   ]
+// },
 
-  // {
-  //   path: '/message',
-  //   component: Layout,
-  //   redirect: '/message/index',
-  //   name: '消息管理',
-  //   meta: { title: '消息管理', icon: 'message' },
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: '消息管理',
-  //       component: () => import('@/views/Message/index'),
-  //       meta: { title: '消息管理', icon: 'message' }
-  //     },
-  //   ]
-  // },
+//   // {
+//   //   path: '/message',
+//   //   component: Layout,
+//   //   redirect: '/message/index',
+//   //   name: '消息管理',
+//   //   meta: { title: '消息管理', icon: 'message' },
+//   //   children: [
+//   //     {
+//   //       path: 'index',
+//   //       name: '消息管理',
+//   //       component: () => import('@/views/Message/index'),
+//   //       meta: { title: '消息管理', icon: 'message' }
+//   //     },
+//   //   ]
+//   // },
 
-  {
-    path: '/app',
-    component: Layout,
-    redirect: '/app/index',
-    name: 'App管理',
-    meta: { title: 'App管理', icon: 'app' },
-    children: [
-      {
-        path: 'index',
-        name: 'App管理',
-        component: () => import('@/views/App/index'),
-        meta: { title: 'App管理', icon: 'app' }
-      },
-      {
-        path: 'index2',
-        name: 'App管理',
-        component: () => import('@/views/App/index'),
-        meta: { title: 'App管理', icon: 'app' }
-      },
-    ]
-  },
+//   {
+//     path: '/app',
+//     component: Layout,
+//     redirect: '/app/index',
+//     name: 'App管理',
+//     meta: { title: 'App管理', icon: 'app' },
+//     children: [
+//       {
+//         path: 'index',
+//         name: 'App管理',
+//         component: () => import('@/views/App/index'),
+//         meta: { title: 'App管理', icon: 'app' }
+//       },
+//       {
+//         path: 'index2',
+//         name: 'App管理',
+//         component: () => import('@/views/App/index'),
+//         meta: { title: 'App管理', icon: 'app' }
+//       },
+//     ]
+//   },
 
   {
     path: '/example',

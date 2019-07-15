@@ -197,8 +197,7 @@ export default {
       };
 
       let data = Object.assign({}, param, page)
-
-    console.log(param)
+      
       // 获取数据
       getList(data).then(r => {
         if (r.code == 200) {

@@ -15,6 +15,7 @@ export const page = {
             this.current_page = data.page;
             this.total = data.total;
             this.pagesize = parseInt(data.pagesize);
+            this.loading = false
         },
         // 监听分页地址改变
         changeCurrentPage(page) {

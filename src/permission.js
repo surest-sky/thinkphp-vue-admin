@@ -34,18 +34,17 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { rules } = await store.dispatch('user/getInfo')
+          const { permissions } = await store.dispatch('user/getInfo')
+
 
           // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', rules)
+          const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
 
-          console.log(accessRoutes)
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
           // 添加404页面
           router.addRoutes([{ path: '*', redirect: '/404', hidden: true }])
 
-          console.log(router)
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })

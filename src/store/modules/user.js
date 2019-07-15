@@ -38,9 +38,8 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         if(response.code == 200) {
           const { data } = response
-          data.token = response.data.sid
-          commit('SET_TOKEN', data.token)
-          setToken(data.token)
+          commit('SET_TOKEN', data.sid)
+          setToken(data.sid)
         }else{
           Message.error(response.msg)
         }
@@ -59,7 +58,7 @@ const actions = {
         const { data } = response
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('验证失败,请重新登录')
         }
 
         const { rules, name, avatar } = data

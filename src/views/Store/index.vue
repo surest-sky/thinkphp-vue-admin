@@ -779,7 +779,9 @@ export default {
               that.$error_(response.msg);
             }
           })
-          .catch(response => {});
+          .catch(response => {
+            console.log(arguments)
+          });
       } else {
         this.$post("/api/store", data)
           .then(response => {
@@ -790,7 +792,9 @@ export default {
               this.$error_(response.msg);
             }
           })
-          .catch(response => {});
+          .catch(response => {
+            console.log(arguments)
+          });
       }
     }
   }

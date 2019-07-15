@@ -18,7 +18,7 @@
 
           <el-form-item label="路由地址">
             <el-input type="text" v-model="form.rule">
-              <template slot="prepend">/admin/</template>
+              <template slot="prepend">/</template>
             </el-input>
           </el-form-item>
 
@@ -41,7 +41,7 @@
           </el-form-item>
 
           <el-form-item label="隐藏菜单">
-            <el-select v-model="form.status">
+            <el-select v-model="form.hidden">
               <el-option key="1" value="是"></el-option>
               <el-option key="0" value="否"></el-option>
             </el-select>
@@ -51,9 +51,13 @@
             <el-input type="text" v-model="form.remark"></el-input>
           </el-form-item>
 
+          <el-form-item label="图标">
+            <el-input type="text" v-model="form.icon"></el-input>
+          </el-form-item>
+
           <el-form-item>
             <!-- <el-button type="primary" v-if="true" @click="updateOrCreate(2)">更新</el-button> -->
-            <el-button type="primary" @click="updateOrCreate(null)">新建</el-button>
+            <el-button type="primary" @click="updateOrCreate(null)">{{ this.form.submit }}</el-button>
             <el-button @click="addFormShow = !addFormShow">取消</el-button>
           </el-form-item>
         </el-form>
@@ -116,27 +120,43 @@ export default {
 
     getValue(value){
       this.valueId = value
-      console.log(this.valueId);
+      this.form.p_id = value
     },
 
     setData() {
       let root = [
-        {id: 0, name: "根节点", p_id: '#', children: this.list}
+        {id: 0, name: "根节点", p_id: '0', children: this.list}
       ]
       this.list = root
     },
 
     updateOrCreate() {
-      this.form.hidden = this.form.hidden == "否" ? 0 : 1;
-      this.form.status = this.form.status == "启用" ? 1 : 0;
+      let data = Object.assign({}, this.form)
+      data.hidden = data.hidden == "否" ? 0 : 1;
+      data.status = data.status == "启用" ? 1 : 0;
       let that = this
       if(this.form.id) {
-        update(this.form.id, this.form).then(r => {
-          console.log(r)
+        update(this.form.id, data).then(r => {
+          if(r.code == 200) {
+            this.$success_('更新成功')
+            this.$emit('updated')
+          }else{
+            this.$error_(r.msg)
+            this.$emit('updated', false)
+          }
+        })
+      }else{
+        create(data).then(r => {
+          if(r.code == 200) {
+            this.$success_('创建成功')
+            this.$emit('updated', false)
+          }else{
+            this.$error_(r.msg)
+            this.$emit('updated', false)
+          }
         })
       }
-      this.setData()
-      console.log(this.form)
+      
     }
 
 
