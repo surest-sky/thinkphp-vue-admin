@@ -2,13 +2,13 @@
   <div>
     <el-form label-position="left" label-width="80px" :model="form">
       <el-form-item label="角色名称">
-        <el-input type="text" v-model="form.name"></el-input>
+        <el-input type="text" v-model="formData.name"></el-input>
       </el-form-item>
 
       <el-form-item label="选择权限">
         <el-tree
         ref="tree"
-          v-model="form.permissions"
+          v-model="formData.permissions"
           :data="tree"
           show-checkbox
           node-key="id"
@@ -18,7 +18,7 @@
       </el-form-item>
 
       <el-form-item label="备注">
-        <el-input type="text" v-model="form.remark"></el-input>
+        <el-input type="text" v-model="formData.remark"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -45,7 +45,8 @@ export default {
       props: {
         label: "name"
       },
-      actived: []
+      actived: [],
+      formData: {}
     };
   },
   props: {
@@ -71,7 +72,7 @@ export default {
         tmp.push(element.id);
       });
 
-      this.form = Object.assign({}, {
+      this.formData = Object.assign({}, {
           name: data.name,
           reamrk: data.reamrk,
       }, this.form)

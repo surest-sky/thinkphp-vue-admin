@@ -173,6 +173,7 @@ export default {
             user_nickname: data.user_nickname,
             isNotice: parseInt(data.isNotice),
             email: data.email,
+            roles: data.roles
           })  
           console.log(this.form)     
         }else{

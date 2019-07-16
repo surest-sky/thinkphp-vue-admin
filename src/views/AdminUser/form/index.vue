@@ -30,6 +30,13 @@
         <el-radio v-model="form.isNotice" label="2">否</el-radio>
       </el-form-item>
 
+
+      <el-form-item label="角色">
+        <el-checkbox-group v-model="checkList">
+        <el-checkbox v-for="(item, key) in roles" :key="key" :label="item.name"></el-checkbox>
+      </el-checkbox-group>
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -44,6 +51,7 @@
 <script>
 
 import { createOrUpdateRole } from "@/api/admin-user"
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'index',

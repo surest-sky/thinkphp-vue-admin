@@ -20,10 +20,10 @@
         
     </div>
 
-    <my-table :loading="loading" :tableData="list" :columns="columns"></my-table>
+    <my-table :loading="loading" :tableData="list" :columns="columns" ></my-table>
 
     <el-dialog :title="this.form.submit" :visible.sync="formShow">
-      <my-create :form="form" @updated="updated" :tree="tree" @submited="submited"></my-create>
+      <my-create :form="form" @updated="updated" :tree="tree" @submited="submited" ref="form"></my-create>
     </el-dialog>
   </div>
 </template>
@@ -143,8 +143,11 @@ export default {
             submit: "编辑"
         })
 
+        console.log(this.$refs);
+
+        // this.$refs.form.getActived()
         this.formShow = true
-        this.formTitle = "编辑权限"
+        this.formTitle = "编辑角色"
     },
 
 
@@ -169,6 +172,10 @@ export default {
     submited() {
         this.formShow = false
         this.getList()
+    },
+
+    search() {
+
     }
   }
 };
