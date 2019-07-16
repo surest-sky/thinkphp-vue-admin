@@ -10,7 +10,6 @@ const service = axios.create()
 
 const http = {}
 
-
 // dev 开发版
 // production 生产环境
 const host = "http://store.ink/admin/"
@@ -33,12 +32,10 @@ service.interceptors.request.use(config => {
         sid : getToken()
       }
     }
-    
-    
-
   }
 
   return config
+  
 }), error => {
     Promise.reject(error)
 }

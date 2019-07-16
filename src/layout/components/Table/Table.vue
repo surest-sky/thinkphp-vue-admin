@@ -5,7 +5,7 @@
     :data="tableData"
     v-loading="loading"
     :row-class-name="tableRowClassName"
-    style="width:100%; margin-top:50px"
+    style="width:100%; margin-top:20px"
     class="table_"
     @selection-change="handleSelectionChange"
     border

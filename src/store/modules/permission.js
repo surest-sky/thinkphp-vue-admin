@@ -10,6 +10,7 @@ import App from "@/views/App/index"
 import Auth from "@/views/Auth/index"
 import Role from "@/views/Auth/Role/index"
 import AdminUser from "@/views/AdminUser/index"
+import Data from "@/views/Data/index"
 
 
 /**
@@ -52,6 +53,9 @@ const routeMap = [
   {
     "path": "admin/admin-user",
     "component": AdminUser,
+  },{
+    "path": "admin/data",
+    "component": Data,
   }
 ]
 

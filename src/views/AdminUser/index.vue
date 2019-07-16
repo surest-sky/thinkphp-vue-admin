@@ -2,7 +2,7 @@
   <div>
     <my-header v-bind:title="title"></my-header>
 
-    <div class="filter">
+    <div class="filter-tool">
         <el-row :gutter="20">
             <el-col :span="4">
                 <el-input v-model="filter.nickname" placeholder="用户账户"></el-input>

@@ -9,6 +9,7 @@ export { default as MyDropDown } from "./Form/MyDropDown";
 export { default as Button } from "./Form/Button";
 export { default as UploadSimple } from "./Form/UploadSimple";
 export { default as MyDate } from "./Form/Date";
+export { default as MyDateSearch } from "./Form/DateSearch";
 export { default as MyTag } from "./Table/Tag";
 export { default as MyTags } from "./Table/Tags";
 export { default as MySelect } from "./Form/Select";

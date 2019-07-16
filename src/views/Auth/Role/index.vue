@@ -2,18 +2,22 @@
   <div>
     <my-header :title="title"></my-header>
 
-    <div class="filter">
+    <div class="filter-tool">
       <el-row :gutter="20">
-        <el-col :span="14">
+        <el-col :span="5">
           <el-input v-model="filter.rolename" placeholder="角色名称"></el-input>
         </el-col>
-        <!-- <el-col :span="4">
-          <el-button type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
-        </el-col> -->
         <el-col :span="4">
+          <el-button type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
+        </el-col>
+      </el-row>
+      <br>
+      <el-row>
+<el-col :span="4">
           <el-button type="primary" icon="el-icon-search" @click="add" @keyup.enter="add">添加角色</el-button>
         </el-col>
       </el-row>
+        
     </div>
 
     <my-table :loading="loading" :tableData="list" :columns="columns"></my-table>

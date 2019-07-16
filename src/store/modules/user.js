@@ -9,7 +9,7 @@ const state = {
   name: '',
   avatar: '',
   roles: [],
-  permissions: ""
+  permissions: "",
 }
 
 const mutations = {
@@ -61,7 +61,7 @@ const actions = {
           reject('验证失败,请重新登录')
         }
 
-        const { rules, name, avatar } = data
+        const { rules, username, avatar } = data
 
         // roles must be a non-empty array
         // if (!roles || roles.length <= 0) {
@@ -70,7 +70,7 @@ const actions = {
 
         commit('SET_ROLES', 'admin')
         // commit('PERMISSIONS', rules)
-        commit('SET_NAME', name)
+        commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
 
         

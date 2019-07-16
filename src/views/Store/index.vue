@@ -281,22 +281,32 @@ export default {
           width: "200",
           render: (createElement, param) => {
             let dropDownData = {
-              label: "操作"
+              label: "操作",
+              items: [
+                { label: "编辑", func: { func: "edit", id: param.row.id } }
+              ]
             };
             let buttons = [
               { label: "编辑", func: { func: "edit", id: param.row.id } }
             ];
 
             if (param.row.status == 1) {
-              dropDownData.items = [
+              dropDownData.items = dropDownData.items.concat([
                 { label: "下架", func: { func: "lower", id: param.row.id } },
                 { label: "删除", func: { func: "delete", id: param.row.id } }
-              ];
+              ])
             } else {
-              dropDownData.items = [
-                { label: "上架", func: { func: "online", id: param.row.id } },
-                { label: "删除", func: { func: "delete", id: param.row.id } }
-              ];
+
+              if(param.row.status != "0") {
+                dropDownData.items = dropDownData.items.concat([
+                  { label: "上架", func: { func: "online", id: param.row.id } },
+                  { label: "删除", func: { func: "delete", id: param.row.id } }
+                ]);
+              }else{
+                dropDownData.items = dropDownData.items.concat([{ label: "删除", func: { func: "delete", id: param.row.id } }])
+              }
+
+              
             }
 
             // 触发MyDropDown的update和del事件
