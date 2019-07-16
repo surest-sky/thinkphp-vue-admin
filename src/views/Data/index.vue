@@ -68,20 +68,20 @@ export default {
     // 获取列表数据
     getList(param = {}) {
         this.loading = false;
-      //   let page = {
-      //     page: this.current_page,
-      //     pagesize: this.pagesize
-      //   };
+        let page = {
+          page: this.current_page,
+          pagesize: this.pagesize
+        };
 
-      //   let data = Object.assign({}, param, page)
+        let data = Object.assign({}, param, page)
 
-      //   // 获取数据
-      //   getList(data).then(r => {
-      //     if (r.code == 200) {
-      //       this.list = r.data.list;
-      //       this.setPage(r.data);
-      //     }
-      //   });
+        // 获取数据
+        getList(data).then(r => {
+          if (r.code == 200) {
+            this.list = r.data;
+            this.setPage(r.data);
+          }
+        });
 
       this.list = [
         {
