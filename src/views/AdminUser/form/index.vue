@@ -25,14 +25,14 @@
         <el-input type="email" v-model="form.email"></el-input>
       </el-form-item>
 
-      <el-form-item label="是否开启邮件通知">
+      <el-form-item label="邮件通知">
         <el-radio v-model="form.isNotice" label="1">是</el-radio>
         <el-radio v-model="form.isNotice" label="2">否</el-radio>
       </el-form-item>
 
 
       <el-form-item label="角色">
-        <el-checkbox-group v-model="checkList">
+        <el-checkbox-group v-model="checkRoles">
         <el-checkbox v-for="(item, key) in roles" :key="key" :label="item.name"></el-checkbox>
       </el-checkbox-group>
       </el-form-item>
@@ -51,18 +51,29 @@
 <script>
 
 import { createOrUpdateRole } from "@/api/admin-user"
+import { getRoleList } from "@/api/role"
+
 import { mapGetters } from 'vuex'
 
 export default {
     name: 'index',
+    data() {
+      return {
+        roles: [],
+        checkRoles: []
+      }
+    },
     props: {
         form: Object,
         submit: String
     },
+    mounted() {
+      this.getRoleList()
+    },
     methods: {
         createOrUpdateRole() {
             let that = this
-            createOrUpdateRole(this.form.id, this.form).then((r) => {
+            createOrUpdateRole(that.form.id, this.form).then((r) => {
                 if(r.code == 200) {
                     this.$success_(r.msg)
                     this.$emit('submited', false)
@@ -70,6 +81,16 @@ export default {
                     this.$error_(r.msg)
                 }
             })
+        },
+
+        // 获取角色
+        getRoleList() {
+          let that = this
+          getRoleList().then(r => {
+            if(r.code == 200) {
+              this.roles = r.data
+            }
+          })
         }
     }
 }

@@ -53,6 +53,13 @@ export default {
     tree: Array,
     form: Object
   },
+  watch: {
+    form: {
+      handler(newValue, oldValue) {
+        this.getActived()
+      }
+    }
+  },
   mounted() {
     this.getActived();
   },
@@ -63,6 +70,9 @@ export default {
         getRoleInfo(this.form.id).then(function(r) {
           that.setData(r.data);
         });
+      }else{
+        this.formData = {}
+        this.actived = []
       }
     },
 
@@ -75,7 +85,7 @@ export default {
       this.formData = Object.assign({}, {
           name: data.name,
           reamrk: data.reamrk,
-      }, this.form)
+      })
 
       this.actived = tmp;
     },
@@ -92,8 +102,8 @@ export default {
 
       var data = Object.assign({}, {
             permission_ids: tmp,
-            name: this.form.name,
-            remark: this.form.remark
+            name: this.formData.name,
+            remark: this.formData.remark
       })
 
 

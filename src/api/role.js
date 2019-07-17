@@ -19,3 +19,7 @@ export function createOrUpdateRole(id = null, data) {
         return put('/api/role/' + id, data)
     }
 }
+
+export function getRoleList() {
+    return get('/api/role/all')
+}

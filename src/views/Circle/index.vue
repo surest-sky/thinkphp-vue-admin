@@ -2,7 +2,7 @@
   <div>
     <my-header v-bind:title="title"></my-header>
 
-    <div class="filter">
+    <div class="filter-tool">
         <el-row :gutter="20">
             <el-col :span="4">
                 <el-input v-model="filter.nickname" placeholder="用户名称"></el-input>
@@ -10,7 +10,7 @@
             <el-col :span="4">
                 <el-input v-model="filter.content" placeholder="帖子内容"></el-input>
             </el-col>
-            <el-col :span="2">
+            <el-col :span="6">
                 <el-select v-model="filter.status" placeholder="圈子状态">
                     <el-option
                     v-for="item in statuses"
@@ -189,12 +189,18 @@ export default {
 
   methods: {
     // 获取列表数据
-    getList(param = {}) {
+    getList() {
       this.loading = true;
       let page = {
         page: this.current_page,
         pagesize: this.pagesize
       };
+
+      let param = {
+            nickname: this.filter.nickname,
+            status: getStatus(this.filter.status),
+            content: this.filter.content,
+      }
 
       let data = Object.assign({}, param, page)
       
@@ -240,12 +246,7 @@ export default {
     },
 
     search() {
-        let data = {
-            nickname: this.filter.nickname,
-            status: getStatus(this.filter.status),
-            content: this.filter.content,
-        }
-        this.getList(data)
+        this.getList()
     }
   }
 };

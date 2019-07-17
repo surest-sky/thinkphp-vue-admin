@@ -140,12 +140,9 @@ export default {
         this.getTree()
         this.form = Object.assign({}, {
             id: id,
-            submit: "编辑"
+            submit: "更新"
         })
 
-        console.log(this.$refs);
-
-        // this.$refs.form.getActived()
         this.formShow = true
         this.formTitle = "编辑角色"
     },
