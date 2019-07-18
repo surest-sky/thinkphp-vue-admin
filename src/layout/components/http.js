@@ -12,11 +12,10 @@ const http = {}
 
 // dev 开发版
 // production 生产环境
-// const host = "http://store.ink/admin/"
+const host = "http://store.ink/admin/"
 // const host = "http://test-offline.d88.ink/admin/"
-const host = "https://offline.d88.ink/admin/"
+// const host = "https://offline.d88.ink/admin/"
 // const host = "http://192.168.2.199:96/admin/"
-
 
 
 service.interceptors.request.use(config => {

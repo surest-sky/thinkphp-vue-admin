@@ -12,5 +12,8 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false
+  sidebarLogo: false,
+
+  AdminApiUrl: 'http://store.ink' // 本地
+  // AdminApiUrl: 'http://test-offline.d88.ink/admin' // 线上
 }

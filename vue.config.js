@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Admin Template' // page title
+const name = defaultSettings.title || 'surest.cn' // page title
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
@@ -27,20 +27,12 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
-    port: port,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
     proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        target: `http://127.0.0.1:${port}/mock`,
+      '/api': {
+        target: defaultSettings.AdminApiUrl + '/admin',
         changeOrigin: true,
         pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
+          '^/api': ''
         }
       }
     },

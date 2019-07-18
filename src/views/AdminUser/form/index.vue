@@ -61,7 +61,7 @@ export default {
         roles: [],
         checkRoles: [],
         formData: {},
-        role_ids: []
+        role_ids: [],
       }
     },
     props: {
@@ -76,6 +76,9 @@ export default {
         handler() {
           this.formData = this.form
           this.role_ids = this.form.role_ids
+          this.formData.isNotice = this.formData.isNotice.toString()
+          console.log(this.formData)
+          console.log(this.formData.isNotice)
         }
       }
     },

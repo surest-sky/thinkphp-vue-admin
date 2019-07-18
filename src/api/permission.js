@@ -1,5 +1,4 @@
-
-import {get, post, deletes, put} from '@/layout/components/http.js'
+import { get, post, deletes, put } from '@/utils/request'
 
 export function getList() {
     return get('/api/permission')

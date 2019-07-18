@@ -3,23 +3,28 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-// create an axios instance
+// 创建一个axios
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  withCredentials: true, // send cookies when cross-domain requests
+  withCredentials: true, // 跨域请求时发送cookie
   timeout: 5000 // request timeout
 })
 
 // request interceptor
 service.interceptors.request.use(
   config => {
-    // do something before request is sent
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
 
     if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      
+      // 添加前置参数
+      if(config.params) {
+        config.params.sid = getToken()
+      }else{
+        config.params = {
+          sid : getToken()
+        }
+      }
     }
     return config
   },
@@ -30,22 +35,13 @@ service.interceptors.request.use(
   }
 )
 
-// response interceptor
+// 前置响应
 service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
 
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
   response => {
     const res = response.data
 
-    // if the custom code is not 20000, it is judged as an error.
+    // 这里设置的非请求成功的code
     if (res.code !== 200) {
       Message({
         message: res.message || 'Error',
@@ -53,9 +49,9 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
+      // 这里设置你请求出现异常, 例如超权限请求的地,告知他重新登录
       if (res.code === 403) {
-        // to re-login
+        // 提示
         MessageBox.confirm('您已注销，可以取消以留在此页，或重新登录。', '确认退出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
@@ -72,7 +68,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('err' + error) // 错误的提示
     Message({
       message: error.message,
       type: 'error',
@@ -82,4 +78,46 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+
+
+export function get(url, params = {}) {
+  return service({
+    url: url,
+    method: 'get',
+    params
+  })
+}
+
+  //封装post请求
+  export function post(url, data = {}) { 
+    var url = url.replace('/\api/', host);
+    //默认配置 
+    let sendObject={
+      url: url,
+      method: 'post',
+      data:QS.stringify(data)
+    };
+
+    return service(sendObject)
+  }
+  
+  //封装put方法 (resfulAPI常用)
+  export function put(url,data = {}){
+    var url = url.replace('/\api/', host);
+    let sendObject = {
+      url: url,
+      method: 'put',
+      data:QS.stringify(data)
+    }
+    return service(sendObject)
+  }
+  
+  //删除方法(resfulAPI常用)
+  export function deletes(url, data){
+    var url = url.replace('/\api/', host);
+    return service({
+      url: url,
+      method: 'delete',
+      data:QS.stringify(data)
+    }) 
+  }

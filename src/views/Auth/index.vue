@@ -21,6 +21,7 @@
         <my-create :form="form" @updated="updated"></my-create>
       </el-dialog>
     </div>
+    
   </div>
 </template>
 
@@ -60,7 +61,11 @@ export default {
       form: {},
       formShow: false,
       title: "权限管理",
-      show: false
+      show: false,
+      msg: 'Hello Vue.',
+    msg1: '',
+    msg2: '',
+    msg3: ''
     };
   },
   mounted() {
