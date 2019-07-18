@@ -24,3 +24,7 @@ export function create(params) {
 export function delete_(id) {
     return deletes('/api/permission/' + id)
 }
+
+export function init_permission(is_delete) {
+    return post('/api/permission/init_permission', {is_delete})
+}

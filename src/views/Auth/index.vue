@@ -1,16 +1,17 @@
 <template>
-  <div>
+  <div v-loading="show">
     <my-header :title="title"></my-header>
 
     <div class="filter">
       <el-button @click="add" type="primary">添加权限</el-button>
+      <el-button @click="init_permission" type="primary">初始化权限节点</el-button>
     </div>
 
     <div class="tree">
       <el-tree
         :data="list"
         node-key="id"
-        default-expand-all
+        :default-expand-all="false"
         :expand-on-click-node="false"
         :render-content="renderContent"
         :props="props"
@@ -35,7 +36,7 @@ import {
   MyTag
 } from "@/layout/components/index";
 
-import { getList, getSimple, delete_ } from "@/api/permission";
+import { getList, getSimple, delete_ , init_permission} from "@/api/permission";
 import myCreate from "./form/index";
 
 export default {
@@ -58,7 +59,8 @@ export default {
       },
       form: {},
       formShow: false,
-      title: "权限管理"
+      title: "权限管理",
+      show: false
     };
   },
   mounted() {
@@ -128,8 +130,6 @@ export default {
 
     delete_(id) {
       let that = this;
-      console.log(id);
-
       this.$confirm("此项操作子节点也会被删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -151,6 +151,32 @@ export default {
         }
       );
       this.formShow = true;
+    },
+
+    /**
+     * 重新生成节点
+     */
+    init_permission() {
+        let that = this
+        this.$confirm('是否清空之前的节点数据,重新生成节点', '初始化节点', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          that.show = true
+          init_permission(1).then(r => {
+              that.$success_('生成节点成功,请刷新查看')
+              that.show = false
+          })
+        }).catch(() => {
+          that.show = true
+             init_permission(0).then(r => {
+              that.$success_('生成节点成功,请刷新查看')
+              that.show = false
+            })
+        });
+
+        this.getList()
     }
   }
 };
