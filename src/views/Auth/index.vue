@@ -1,69 +1,25 @@
 <template>
   <div>
     <my-header :title="title"></my-header>
-    
-    <div class="filter">
 
+    <div class="filter">
       <el-button @click="add" type="primary">添加权限</el-button>
     </div>
 
-    <el-table
-      :data="tableData"
-      style="width: 100%;margin-bottom: 20px; margin-left: 30px"
-      row-key="id"
-      border
-      default-expand-all
-      v-loading="loading"
-      lazy
-      :load="load"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      :row-class-name="tableRowClassName"
-    >
-      <el-table-column prop="id" label="ID"></el-table-column>
-      <el-table-column prop="name" label="路由名称"></el-table-column>
-      <el-table-column prop="rule" label="路由地址"></el-table-column>
-      <el-table-column prop="method" label="请求方法">
-        <template slot-scope="scope">
-          <my-tag :text="v" v-for="(v, k) in scope.row.method" :key="k" style="margin-right: 5px"></my-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="create_time" label="创建时间"></el-table-column>
-      <el-table-column prop="status" label="状态">
-       <template slot-scope="scope">
-          <my-tag v-if="scope.row.status == 1" :text="`启用`"></my-tag>
-          <my-tag v-if="scope.row.status == 0" :text="`禁用`"></my-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="hidden" label="是否隐藏(菜单)">
-        <template slot-scope="scope">
-          <my-tag v-if="scope.row.hidden == 1" :text="`是`"></my-tag>
-          <my-tag v-if="scope.row.hidden == 0" :text="`否`"></my-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="icon" label="图标"></el-table-column>
-      <el-table-column
-        fixed="right"
-        label="操作"
-        width="150">
-        <template slot-scope="scope">
-          <el-dropdown  trigger="click">
-            <el-button type="primary">
-              更多<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="edit(scope.row.id)">编辑</el-dropdown-item>
-              <el-dropdown-item @click.native="delete_(scope.row.id)">删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-      <el-table-column prop="remark" label="备注信息"></el-table-column>
-    </el-table>
+    <div class="tree">
+      <el-tree
+        :data="list"
+        node-key="id"
+        default-expand-all
+        :expand-on-click-node="false"
+        :render-content="renderContent"
+        :props="props"
+      ></el-tree>
 
-
-    <el-dialog :title="this.form.submit" :visible.sync="formShow">
+      <el-dialog :title="this.form.submit" :visible.sync="formShow">
         <my-create :form="form" @updated="updated"></my-create>
-    </el-dialog>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -79,9 +35,8 @@ import {
   MyTag
 } from "@/layout/components/index";
 
-import { getList , getSimple} from "@/api/permission"
-import myCreate from "./form/form"
-import { link } from 'fs';
+import { getList, getSimple, delete_ } from "@/api/permission";
+import myCreate from "./form/index";
 
 export default {
   name: "index",
@@ -97,109 +52,118 @@ export default {
   },
   data() {
     return {
-      title: "权限管理",
-      tableData: [], 
-      loading: false,
-      form: {},
-      formTitle: "创建权限",
-      formShow: false,
       list: [],
+      props: {
+        label: "name"
+      },
+      form: {},
+      formShow: false,
+      title: "权限管理"
     };
   },
   mounted() {
-    this.getList()
+    this.getList();
   },
-
   methods: {
-    getList() {
-      let that = this
-      getList().then(function(r) {
-        that.tableData = r.data
-        that.setList()
-        that.loading = false
-      })
+    edit(data) {
+      let that = this;
+      getSimple(data.id).then(r => {
+        if (r.code == 200) {
+          that.formShow = true;
+          that.form = r.data;
+          that.form.id = data.id;
+          that.form.submit = "更新";
+          that.setData();
+        } else {
+          that.$error_(r.msg);
+        }
+      });
+      //   data.children.push(newChild);
     },
-    tableRowClassName(row) {
-      if(!row.row.children) {
-        return 'success-row'
-      }
-    },
+
     setData() {
-      this.form.status = this.form.status == 0 ? "禁用" : "启用"
-      this.form.hidden = this.form.hidden == 1 ? "是" : "否"
+      this.form.status = this.form.status == 0 ? "禁用" : "启用";
+      this.form.hidden = this.form.hidden == 1 ? "是" : "否";
 
-      console.log(this.form)
-    },
-    edit(id) {
-      let that = this
-      getSimple(id).then(r => {
-        if(r.code == 200) {
-          that.formShow = true
-          that.form = r.data
-          that.form.id = id
-          that.form.submit = "更新"
-          that.setData()
-        }else{
-          that.$error_(r.msg)
-        }
-      })
+      console.log(this.form);
     },
 
-    setList() {
-      let list = JSON.parse(JSON.stringify(this.tableData))
+    remove(node, data) {
+      this.delete_(data.id);
+    },
 
-      // -------- 删除其中的 chilren 属性
-      let new_data = []
-      this.tableData.forEach((r, index) => {
-        if(r.children) {
-          delete r.children
-          r = Object.assign({}, {
-            hasChildren: true
-          }, r)
-        }
-        new_data.push(r)
-      })
-      
-      this.list = list
-      this.tableData = new_data
+    renderContent(h, { node, data, store }) {
+      return (
+        <span class="custom-tree-node">
+          <span>{node.label}</span>
+          <span class="buuton-tool">
+            <el-button size="mini" type="text" on-click={() => this.edit(data)}>
+              编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              on-click={() => this.remove(node, data)}
+            >
+              删除
+            </el-button>
+          </span>
+        </span>
+      );
+    },
+
+    getList() {
+      let that = this;
+      getList().then(function(r) {
+        that.list = r.data;
+        console.log(that.list);
+      });
+    },
+
+    updated(bol = false) {
+      this.getList();
+      this.setData();
+      this.formShow = bol;
     },
 
     delete_(id) {
+      let that = this;
+      console.log(id);
 
+      this.$confirm("此项操作子节点也会被删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        delete_(id).then(r => {
+          that.$success_("删除成功");
+
+          this.getList();
+        });
+      });
     },
-    
+
     add() {
-      this.form = Object.assign({}, {
-          submit : "创建"
-      })
-      this.formShow = true
-    },
-
-    updated(bol=false) {
-      this.getList()
-      this.setData()
-      this.formShow = bol
-    },
-    
-    load(tree, treeNode, resolve) {
-      console.log(arguments)
-      let node = this.list.find((r) => {
-        return tree.id == r.id
-      })
-      console.log(this.tableData)
-      resolve(node.children)
-
-
+      this.form = Object.assign(
+        {},
+        {
+          submit: "创建"
+        }
+      );
+      this.formShow = true;
     }
   }
 };
 </script>
 
-<style>
-  .el-table .success-row {
-    background: #f0f9eb;
+<style lang="scss">
+.custom-tree-node {
+  .buuton-tool {
+    margin-left: 20px;
   }
-  .filter {
-    margin-bottom: 20px;
-  }
+}
+.tree {
+    margin-top: 20px;
+    padding-left: 50px;
+}
 </style>

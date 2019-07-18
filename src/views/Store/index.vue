@@ -212,7 +212,8 @@ import {
   MyTag,
   statusToText,
   storeStatusType,
-  UploadSimple
+  UploadSimple,
+  jsonRemove
 } from "@/layout/components/index";
 
 import moment from "moment";
@@ -616,7 +617,6 @@ export default {
           if (r.code == 200) {
             this.$success_("删除成功");
             this.stores = jsonRemove(this.stores, "id", id);
-            console.log(this.stores);
           } else {
             this.$error_(r.msg);
           }

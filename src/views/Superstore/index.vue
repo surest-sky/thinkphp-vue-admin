@@ -67,7 +67,7 @@
       :columns="columns"
       :loading="table_loading"
       @handleSelectionChange="handleSelectionChange"
-    ></my-table>\
+    ></my-table>
     <!-- 分页 -->
     <Pagination
       :pagesize="pagesize"
@@ -554,7 +554,8 @@ export default {
           }
         );
 
-        (this.inputSuperStore = true), (this.inputSuperStoreTitle = "添加商圈");
+        this.inputSuperStore = true
+        this.inputSuperStoreTitle = "添加商圈"
         this.edit_loadding = false;
       });
     },
@@ -564,7 +565,6 @@ export default {
       this.$refs[form].validate(valid => {
         if (valid) {
           console.log(this.superstore_form);
-          this.edit_loadding = true;
           this.post_superstore(this.superstore_form);
         } else {
           return false;
@@ -602,6 +602,7 @@ export default {
           this.$success_("更新成功");
           this.getList();
         } else {
+          this.edit_loadding = false;
           this.$error_(response.msg);
         }
       });
@@ -629,7 +630,8 @@ export default {
           that.edit_loadding = false;
           that.inputSuperStore = false;
         } else {
-          that.edit_loadding = false;
+          this.edit_loadding = false;
+          that.inputSuperStore = false;
           that.$error_(response.msg);
         }
       });

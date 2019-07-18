@@ -53,7 +53,7 @@ const routeMap = [
   {
     "path": "admin/admin-user",
     "component": AdminUser,
-  },{
+  }, {
     "path": "admin/data",
     "component": Data,
   }
@@ -66,7 +66,7 @@ const routeMap = [
  * @param {Boolean} son  用户判断子节点
  * @returns {Boolean} 权限路由
  */
-function filterRoutes(routes, son=false) {
+function filterRoutes(routes, son = false) {
   const res = []
 
   routes.forEach(route => {
@@ -78,36 +78,36 @@ function filterRoutes(routes, son=false) {
     // 判断是否找到
     // 路由是否需要隐藏(例如表单类的控制是需要隐藏的)
     // 判断是否是根节点
-    if(result || (route.rule == "#") || !route.hidden) {
+    if (result || (route.rule == "#") || !route.hidden) {
       let r = {};
       // 渲染根节点(菜单导航)
-      if(!son) {
+      if (!son) {
         r = {  // 路由
           path: "",
           component: Layout,
           name: route.name,
           meta: { title: route.name, icon: route.icon }
         }
-      }else{
-        
+      } else {
+
         r = {
           path: route.rule,
           component: result ? result.component : undefined, // 引入对应的component
           name: route.name,
-          meta: { title: route.name, icon: route.icon},
+          meta: { title: route.name, icon: route.icon },
           hidden: route.hidden // 用户确定是否需要在菜单栏中展开关闭
         }
       }
-      
+
       // 判断子节点是否存在, 存在即添加, 递归形式进行
-      if(tmp.children) {
+      if (tmp.children) {
         r.children = filterRoutes(tmp.children, true)
       }
 
       // 插入等待添加的路由中, 数组形式存在
       // 检查 r 是否存在子节点, 如果没有子节点, 就将其隐藏
 
-      if(result || r.children && r.children.length != 0) {
+      if (result || r.children && r.children.length != 0) {
         res.push(r)
       }
 
@@ -115,7 +115,6 @@ function filterRoutes(routes, son=false) {
     }
 
   })
-
   return res
 }
 
@@ -124,8 +123,44 @@ function filterRoutes(routes, son=false) {
  * @param {*} route 
  */
 function findRouter(route) {
-  
   return routeMap.find((router) => { return (router.path == route.rule) })
+}
+
+
+/**
+ * 重新规划节点菜单
+ * @param {*} rules 
+ */
+function renderRouter(rules) {
+  let new_rule = [] 
+  let tmp = []
+  rules.forEach(rule => {
+    
+    // 遍历菜单, 将菜单整理为合适的格式, 如 Example
+    rule.children.forEach((son_rule) => {
+      if(son_rule.children) {
+        son_rule.children.forEach(sson_rule => {
+          if(sson_rule.component) {
+            rule.children.push(sson_rule)
+          }
+        })
+      }
+    })
+    tmp = []
+
+    // 二次遍历菜单
+    // : 因为菜单中会包含一些 # 的菜单项, 将其剔除
+    rule.children.forEach((son_rule) => {
+      if(son_rule.component) {
+        tmp.push(son_rule)
+      }
+    })
+
+    delete rule.children
+    rule.children = tmp
+    new_rule.push(rule)
+  })
+  return new_rule
 }
 
 
@@ -134,8 +169,12 @@ function findRouter(route) {
  * @param {*} rules 
  */
 export function AddAsyncRoutes(rules) {
-  return filterRoutes(rules)
+  let rules_ = filterRoutes(rules)
+  rules_ = renderRouter(rules_)
+  return rules_
 }
+
+
 
 const state = {
   routes: [],
@@ -154,9 +193,9 @@ const actions = {
   generateRoutes({ commit }, rules) {
     return new Promise(resolve => {
       let accessedRoutes
-      
+
       accessedRoutes = AddAsyncRoutes(rules) // 根据角色动态加载路由
-      
+
       // 设置路由到vuex中
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

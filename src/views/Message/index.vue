@@ -60,7 +60,8 @@ import {
     MySelect,
     MyDate,
     page,
-    MyTag
+    MyTag,
+    jsonRemove
 } from '@/layout/components/index'
 
 export default {

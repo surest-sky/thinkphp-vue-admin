@@ -2,7 +2,7 @@
   <div>
     <my-header v-bind:title="title"></my-header>
 
-    <div class="filter-tool">
+    <!-- <div class="filter-tool">
       <el-row style="width: 100%" :gutter=2>
         <el-col :span="5">
           <el-input v-model="filter.nickname" placeholder="用户名称"></el-input>
@@ -14,7 +14,7 @@
           <el-button type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
         </el-col>
       </el-row>
-    </div>
+    </div> -->
 
     <my-table :loading="loading" :tableData="list" :columns="columns"></my-table>
   </div>

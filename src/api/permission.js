@@ -20,3 +20,7 @@ export function update(id, params) {
 export function create(params) {
     return post('/api/permission', params)
 }
+
+export function delete_(id) {
+    return deletes('/api/permission/' + id)
+}

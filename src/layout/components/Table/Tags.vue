@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- <el-tag v-for="(item, index) in tags" :key="index" :size="item.size" :type="item.type" :effect="item.effect">{{item.text}}</el-tag> -->
+        <el-tag class="tag" v-for="(item, index) in tags" :key="index" size="small" >{{item.text}}</el-tag>
     </div>
 </template>
 
@@ -16,6 +16,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    .tag + .tag {
+        margin-left: 5px;
+    }
 </style>

@@ -24,7 +24,6 @@ export default {
   },
   watch: {
       imgs(img) {
-        let len = count(img)
         let width = 100 / 3 
         document.querySelector('.img img').setAttribute('style', `width: ${width}%`)
       }
