@@ -218,6 +218,8 @@ import {
   MySelect
 } from "@/layout/components/index";
 
+import { get, post, deletes, put } from '@/utils/request'
+
 import AuditTable from "./Audit";
 
 export default {
@@ -435,12 +437,12 @@ export default {
         page: this.current_page,
         pagesize: this.pagesize
       })
-
-      this.$get("/api/superstore", params).then(response => {
-        this.list = response.data.list;
-        this.setPage(response.data);
-        this.table_loading = false;
-      });
+      let that = this
+        get("/api/superstore", params).then(response => {
+          this.list = response.data.list;
+          this.setPage(response.data);
+          this.table_loading = false;
+        });
     },
     // 显示商圈详情
     showDetail(id) {
@@ -451,7 +453,8 @@ export default {
     // 获取商圈详情
     getSimple(id) {
       this.id = id;
-      this.$get(`/api/superstore/${id}`).then(response => {
+      let that = this
+        get(`/api/superstore/${id}`).then(response => {
         if (response.code == 200) {
           this.simpleData = response.data;
           this.superstore_form = response.data;
@@ -485,7 +488,8 @@ export default {
 
     // 下架
     lower(id) {
-      this.$post(`/api/superstore/lower/${id}`).then(r => {
+      let that = this
+        post(`/api/superstore/lower/${id}`).then(r => {
         if (r.code == 200) {
           this.$success_("下架成功");
           this.getList();
@@ -498,7 +502,8 @@ export default {
     // 上架
     online(id) {
       console.log(id);
-      this.$post(`/api/superstore/online/${id}`).then(r => {
+      let that = this
+        post(`/api/superstore/online/${id}`).then(r => {
         if (r.code == 200) {
           this.$success_("上架成功");
           this.getList();
@@ -515,7 +520,8 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        this.$deletes(`/api/superstore/${id}`).then(r => {
+        let that = this
+        deletes(`/api/superstore/${id}`).then(r => {
           if (r.code == 200) {
             this.$success_("删除成功");
             this.getList();
@@ -595,7 +601,8 @@ export default {
         status: data.status == "上架" ? 1 : 2
       };
 
-      this.$put(`/api/superstore/` + this.id, postData).then(response => {
+      let that = this
+        put(`/api/superstore/` + this.id, postData).then(response => {
         if (response.code == 200) {
           this.edit_loadding = false;
           this.$success_("更新成功");
@@ -620,9 +627,9 @@ export default {
         status: data.status == "上架" ? 1 : 2
       };
 
-      let that = this;
-
-      this.$post("/api/superstore", postData).then(function(response) {
+      let that = this
+      
+        post("/api/superstore", postData).then(function(response) {
         if (response.code == 200) {
           that.$success_("创建成功");
           that.getList();
@@ -640,7 +647,8 @@ export default {
     filter_online() {
       this.getSelected();
       let ids = this.multipleSelectionIds.join(",");
-      this.$post(`/api/superstore/batch_online?ids=${ids}`).then(r => {
+      let that = this
+        post(`/api/superstore/batch_online?ids=${ids}`).then(r => {
         if (r.code == 200) {
           this.$success_("上架成功");
           this.getList();
@@ -654,7 +662,8 @@ export default {
     filter_lower() {
       this.getSelected();
       let ids = this.multipleSelectionIds.join(",");
-      this.$post(`/api/superstore/batch_lower?ids=${ids}`).then(r => {
+      let that = this
+        post(`/api/superstore/batch_lower?ids=${ids}`).then(r => {
         if (r.code == 200) {
           this.$success_("下架成功");
           this.getList();
@@ -677,7 +686,8 @@ export default {
 
     // 获取一些数据信息
     getDataInfo() {
-      this.$get("/api/gather").then(r => {
+      let that = this
+        get("/api/gather").then(r => {
         if (r.code == 200) {
           this.superstore_total = r.data.superstore_total;
           this.store_total = r.data.store_total;

@@ -1,6 +1,5 @@
 <template>
   <div class="content">
-
     <div class="filter-tool">
       <el-form :model="store_filter" label-position="left" :inline="true">
         <el-row>
@@ -215,6 +214,18 @@ import {
   jsonRemove
 } from "@/layout/components/index";
 
+import {
+  getList,
+  getSuperstoreAll,
+  getStoreType,
+  getSroreToSuperstore,
+  getStore,
+  updateStore,
+  createStore
+} from "@/api/store.js";
+
+import { get, post, deletes, put } from '@/utils/request'
+
 import moment from "moment";
 
 export default {
@@ -257,7 +268,9 @@ export default {
           prop: "store_type",
           label: "店铺类型",
           render: function(h, param) {
-            let text = param.row.store_type_name ? param.row.store_type_name.name: "未知";
+            let text = param.row.store_type_name
+              ? param.row.store_type_name.name
+              : "未知";
             return h("el-tag", text);
           }
         },
@@ -294,19 +307,18 @@ export default {
               dropDownData.items = dropDownData.items.concat([
                 { label: "下架", func: { func: "lower", id: param.row.id } },
                 { label: "删除", func: { func: "delete", id: param.row.id } }
-              ])
+              ]);
             } else {
-
-              if(param.row.status != "0") {
+              if (param.row.status != "0") {
                 dropDownData.items = dropDownData.items.concat([
                   { label: "上架", func: { func: "online", id: param.row.id } },
                   { label: "删除", func: { func: "delete", id: param.row.id } }
                 ]);
-              }else{
-                dropDownData.items = dropDownData.items.concat([{ label: "删除", func: { func: "delete", id: param.row.id } }])
+              } else {
+                dropDownData.items = dropDownData.items.concat([
+                  { label: "删除", func: { func: "delete", id: param.row.id } }
+                ]);
               }
-
-              
             }
 
             // 触发MyDropDown的update和del事件
@@ -467,13 +479,14 @@ export default {
 
     // 获取所有的店铺类别
     set_store_types_() {
-      this.$get("/api/storetype").then(r => {
-        this.set_store_types(r.data);
+      let that = this;
+      getStoreType().then(r => {
+        that.set_store_types(r.data);
       });
     },
 
     set_store_types(data) {
-      this.store_types = data
+      this.store_types = data;
       this.getList();
     },
 
@@ -487,14 +500,15 @@ export default {
     changeType(status) {
       this.store_loading = true;
       var superstore_id = localStorage.getItem("superstore_id");
-      this.$get("/api/store/show/" + superstore_id, {
-        page: this.current_page,
-        pagesize: this.pagesize,
+      let that = this;
+      getSroreToSuperstore(superstore_id, {
+        page: that.current_page,
+        pagesize: that.pagesize,
         discount_status: status
       }).then(response => {
-        this.stores = response.data.list;
-        this.setPage(response.data);
-        this.store_loading = false;
+        that.stores = response.data.list;
+        that.setPage(response.data);
+        that.store_loading = false;
       });
     },
 
@@ -524,11 +538,12 @@ export default {
 
       params = Object.assign({}, params, search_params);
 
-      this.$get("/api/store/show/" + superstore_id, params).then(response => {
+      let that = this;
+      getList(superstore_id, params).then(response => {
         if (response.code == 200) {
-          this.stores = response.data.list;
-          this.setPage(response.data);
-          this.store_loading = false;
+          that.stores = response.data.list;
+          that.setPage(response.data);
+          that.store_loading = false;
         }
       });
     },
@@ -553,9 +568,10 @@ export default {
     },
 
     getSuperStoresList() {
-      this.$get("/api/superstore/all").then(response => {
+      let that = this;
+      getSuperstoreAll().then(response => {
         if (response.code == 200) {
-          this.superstores = response.data;
+          that.superstores = response.data;
         }
       });
     },
@@ -581,46 +597,49 @@ export default {
 
     // 上架
     online(id) {
-      this.$post("/api/store/online/" + id).then(r => {
+      let that = this
+      post("/api/store/online/" + id).then(r => {
         if (r.code == 200) {
-          this.getList();
-          this.$success_("上架成功");
+          that.getList();
+          that.$success_("上架成功");
         } else {
-          this.$error_(r.msg);
+          that.$error_(r.msg);
         }
 
-        this.store_loading = false;
+        that.store_loading = false;
       });
     },
 
     // 下架
     lower(id) {
-      this.$deletes("/api/store/lower/" + id).then(r => {
+      let that = this
+      deletes("/api/store/lower/" + id).then(r => {
         if (r.code == 200) {
-          this.getList();
-          this.$success_("下架成功");
+          that.getList();
+          that.$success_("下架成功");
         } else {
-          this.$error_(r.msg);
+          that.$error_(r.msg);
         }
-        this.store_loading = false;
+        that.store_loading = false;
       });
     },
 
     // 删除
     delete(id) {
+      let that = this
       this.$confirm("是否删除当前店铺", "是否删除", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       }).then(() => {
-        this.$deletes("/api/store/" + id).then(r => {
+        deletes("/api/store/" + id).then(r => {
           if (r.code == 200) {
-            this.$success_("删除成功");
-            this.stores = jsonRemove(this.stores, "id", id);
+            that.$success_("删除成功");
+            that.stores = jsonRemove(that.stores, "id", id);
           } else {
-            this.$error_(r.msg);
+            that.$error_(r.msg);
           }
 
-          this.store_loading = false;
+          that.store_loading = false;
         });
       });
     },
@@ -674,23 +693,23 @@ export default {
     batch_online() {
       this.getSelected();
       let ids = this.multipleSelectionIds.join(",");
-
-      this.$post(`/api/store/batch_online?ids=${ids}`).then(r => {
-        if (r.code === 200) {
-          this.$success_(`上架成功`);
-          this.getList();
-        } else {
-          this.$success_(`上架失败, ${r.msg}`);
-        }
-      });
+      let that = this
+        post(`/api/store/batch_online?ids=${ids}`).then(r => {
+          if (r.code === 200) {
+            that.$success_(`上架成功`);
+            that.getList();
+          } else {
+            that.$success_(`上架失败, ${r.msg}`);
+          }
+        });
     },
 
     // 批量下架
     batch_lower() {
       this.getSelected();
       let ids = this.multipleSelectionIds.join(",");
-
-      this.$post(`/api/store/batch_lower?ids=${ids}`).then(r => {
+      let that = this
+        post(`/api/store/batch_lower?ids=${ids}`).then(r => {
         if (r.code === 200) {
           this.$success_(`下架成功`);
           this.getList();
@@ -703,9 +722,10 @@ export default {
     // 获取编辑数据
     getSimpleStore(id) {
       this.store_from_loading = true;
-      this.$get("/api/store/" + id).then(response => {
-        this.setData(response.data);
-        this.store_from_loading = false;
+      let that = this;
+      getStore(id).then(response => {
+        that.setData(response.data);
+        that.store_from_loading = false;
       });
     },
 
@@ -778,7 +798,8 @@ export default {
         }
 
         var that = this;
-        this.$put("/api/store/" + id, data)
+
+        updateStore(id, data)
           .then(response => {
             if (response.code == 200) {
               that.$success_("更新成功");
@@ -789,10 +810,10 @@ export default {
             }
           })
           .catch(response => {
-            console.log(arguments)
+            console.log(arguments);
           });
       } else {
-        this.$post("/api/store", data)
+        createStore(data)
           .then(response => {
             if (response.code == 200) {
               this.getList();
@@ -802,7 +823,7 @@ export default {
             }
           })
           .catch(response => {
-            console.log(arguments)
+            console.log(arguments);
           });
       }
     }

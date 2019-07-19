@@ -63,7 +63,7 @@ const routeMap = [
     "component": AdminUser,
     "icon": "admin-user",
   }, {
-    "path": "admin/data",
+    "path": "admin/info/data",
     "component": Data,
     "icon": "data",
   }

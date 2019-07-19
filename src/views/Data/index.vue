@@ -61,6 +61,7 @@ export default {
 
   created() {
     this.getList();
+    console.log(this.baseURL)
   },
 
   methods: {

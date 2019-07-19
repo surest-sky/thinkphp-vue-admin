@@ -63,6 +63,8 @@ import {
     jsonRemove
 } from '@/layout/components/index'
 
+import { get, post, deletes, put } from "@/utils/request";
+
 export default {
   name: "index",
   mixins: [page],
@@ -196,7 +198,8 @@ export default {
     // 获取列表数据
     getList() {
       this.loading = true;
-      this.$get("/api/message", {
+      let that = this
+      get("/api/message", {
         page: this.current_page,
         pagesize: this.pagesize
       }).then(r => {
@@ -222,7 +225,8 @@ export default {
     send(id) {
       this.loading = true;
 
-      this.$post("/api/message/send/" + id).then(r => {
+      let that = this
+      post("/api/message/send/" + id).then(r => {
         if (r.code == 200) {
           this.$success_(r.msg);
           this.getList();
@@ -238,7 +242,8 @@ export default {
     deleted(id) {
       this.loading = true;
 
-      this.$deletes("/api/message/" + id).then(r => {
+      let that = this
+      deletes("/api/message/" + id).then(r => {
         if (r.code == 200) {
           this.$success_(r.msg);
           this.getList();
@@ -252,7 +257,8 @@ export default {
 
     // 撤回发送消息
     with_draw(id) {
-      this.$post("/api/message/with_draw/" + id).then(r => {
+      let that = this
+      post("/api/message/with_draw/" + id).then(r => {
         if (r.code == 200) {
           this.$success_(r.msg);
           this.getList();
@@ -309,7 +315,8 @@ export default {
     postData() {
       this.form.type = this.form.type == "紧急通知" ? 1 : 2;
       this.loading_ = true;
-      this.$post("/api/message", this.form)
+      let that = this
+      post("/api/message", this.form)
         .then(r => this.msg(r))
         .catch(r => {});
     },

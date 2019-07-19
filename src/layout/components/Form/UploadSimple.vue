@@ -25,6 +25,7 @@
 <script>
 import md5 from "js-md5";
 import moment from "moment";
+import { getQiniuToken } from '@/api/common.js'
 
 export default {
   name: "UploadSimple",
@@ -120,12 +121,13 @@ export default {
     },
 
     getQiniuToken() {
-      this.$get("https://offline.d88.ink/qiniu/photo")
+      let that = this
+      getQiniuToken()
         .then(r => {
           if (r.code == 200) {
-            this.QiniuData.token = r.data.token;
+            that.QiniuData.token = r.data.token;
           } else {
-            this.$message.error(r.msg);
+            that.$message.error(r.msg);
           }
         })
         .catch();

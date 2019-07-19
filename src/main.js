@@ -12,8 +12,6 @@ import App from './App'
 import store from './store'
 import router from './router'
 import {success_, error_} from '@/utils/message.js'
-import {get, post, deletes, put} from '@/layout/components/http.js'
-import md5 from 'js-md5';
 import VueAMap  from 'vue-amap';  //注意不要和 AMap原始名称覆盖
 
 import '@/icons' // icon
@@ -32,12 +30,7 @@ import '@/permission' // permission control
 
 Vue.prototype.$success_ = success_
 Vue.prototype.$error_ = error_
-
-Vue.prototype.$get = get
-Vue.prototype.$post = post
-Vue.prototype.$deletes = deletes
-Vue.prototype.$put = put
-Vue.prototype.$md5 = md5;
+Vue.prototype.baseURL = process.env.NODE_ENV
 
 
 // set ElementUI lang to EN

@@ -11,6 +11,7 @@
 
 <script>
 import { MyTag, MyDropDown, MyTable } from "@/layout/components/index";
+import { get, post, deletes, put } from '@/utils/request'
 
 export default {
   name: "index",
@@ -101,7 +102,8 @@ export default {
   methods: {
     getList() {
       this.id = this.$store.state.superstore.superstore_id
-      this.$get("/api/superstore/feedbackbanner/" + this.id).then(r => {
+      let that = this
+      get("/api/superstore/feedbackbanner/" + this.id).then(r => {
         if (r.code == 200) {
           this.list = r.data.banner_list;
         }
@@ -111,16 +113,17 @@ export default {
     // 启用
     enable(id) {
         let banner_id = id
-        this.$put(`/api/superstore/feedbackbanner/${this.id}`, {
-            banner_id: banner_id
-        }).then((r) => {
-            if(r.code == 200) {
-                this.$success_('设置成功')
-                this.getList()
-            }else{
-                this.$error_(r.msg)
-            }
-        })
+        let that = this
+        put(`/api/superstore/feedbackbanner/${this.id}`, {
+              banner_id: banner_id
+          }).then((r) => {
+              if(r.code == 200) {
+                  this.$success_('设置成功')
+                  this.getList()
+              }else{
+                  this.$error_(r.msg)
+              }
+          })
     },
 
     // 图片展示

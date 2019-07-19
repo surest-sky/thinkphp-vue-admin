@@ -3,13 +3,12 @@
     <el-button
       v-for="(item, key) in buttons"
       :key="key"
-      type="text"
-      :size="item.size"
+      size="mini"
       @click="run_(`${item.func.func}`, `${item.func.id}`)"
     >{{item.label}}</el-button>
 
-    <el-dropdown size="small" trigger="click" @command="handleCommand" >
-      <el-button type="primary">
+    <el-dropdown trigger="click" @command="handleCommand" >
+      <el-button type="primary" size="small">
         <span v-text="dropDownData.label"></span>
         <i class="el-icon-arrow-down el-icon--right"></i>
       </el-button>
@@ -22,6 +21,7 @@
         ></el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+
   </div>
 </template>
 

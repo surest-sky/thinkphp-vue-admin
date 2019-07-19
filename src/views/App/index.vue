@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <el-form class="filter" :model="filter" :inline="true">
       <el-form-item>
         <el-button type="primary" @click="add">创建</el-button>
@@ -45,17 +44,18 @@
 </template>
 
 <script>
-
 import {
-    myHeader,
-    Pagination,
-    MyTable,
-    MyDropDown,
-    page,
-    MyTag,
-    Button,
-    MySelect
-} from '@/layout/components/index'
+  myHeader,
+  Pagination,
+  MyTable,
+  MyDropDown,
+  page,
+  MyTag,
+  Button,
+  MySelect
+} from "@/layout/components/index";
+
+import { get, post, deletes, put } from "@/utils/request";
 
 export default {
   name: "index",
@@ -83,9 +83,7 @@ export default {
               "span",
               {
                 domProps: {
-                  innerHTML: `<a href="${param.row.dowload_url}">${
-                    param.row.dowload_url
-                  }</a>`
+                  innerHTML: `<a href="${param.row.dowload_url}">${param.row.dowload_url}</a>`
                 }
               },
               []
@@ -192,7 +190,8 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        this.$deletes(`/api/app/${id}`).then(r => {
+        let that = this;
+        deletes(`/api/app/${id}`).then(r => {
           if (r.code == 200) {
             this.$success_("删除成功");
             this.getList();
@@ -204,15 +203,16 @@ export default {
     },
 
     add() {
-      this.id = null
+      this.id = null;
       this.formShow = true;
-      this.formTitle = "创建"
+      this.formTitle = "创建";
     },
 
     edit_(id) {
       this.formShow = true;
       this.id = id;
-      this.$get("/api/app/" + this.id).then(r => {
+      let that = this;
+      get("/api/app/" + this.id).then(r => {
         if (r.code == 200) {
           this.form = r.data;
           this.setData(r.data);
@@ -225,8 +225,9 @@ export default {
     createOrUpdate() {
       this.getData();
       let data = this.form;
-      if(this.id) {
-        this.$put("/api/app/" + this.id, data).then(r => {
+      if (this.id) {
+        let that = this;
+        put("/api/app/" + this.id, data).then(r => {
           if (r.code == 200) {
             this.$success_(r.msg);
             this.formShow = false;
@@ -235,8 +236,9 @@ export default {
             this.$success_(r.msg);
           }
         });
-      }else {
-        this.$post("/api/app", data).then(r => {
+      } else {
+        let that = this;
+        post("/api/app", data).then(r => {
           if (r.code == 200) {
             this.$success_(r.msg);
             this.formShow = false;
@@ -246,7 +248,6 @@ export default {
           }
         });
       }
-      
     },
 
     updateOrCreate() {
@@ -254,7 +255,8 @@ export default {
     },
 
     postData(id) {
-      this.$put("/api/app/" + id).then(r => {
+      let that = this;
+      put("/api/app/" + id).then(r => {
         if (r.code == 200) {
           console.log(r);
         } else {
@@ -268,7 +270,8 @@ export default {
     },
 
     getList() {
-      this.$get("/api/app", {
+      let that = this;
+      get("/api/app", {
         page: this.current_page,
         pagesize: this.pagesize
       }).then(response => {
