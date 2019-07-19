@@ -17,6 +17,6 @@ export function getUser(id) {
 }
 
 export function deleteUser(id) {
-    return delete('/api/admin-user/' + id)
+    return deletes('/api/admin-user/' + id)
 }
 

@@ -1,6 +1,5 @@
 <template>
   <div class="content">
-    <my-header v-bind:title="title"></my-header>
 
     <el-form class="filter" :model="filter" :inline="true">
       <el-form-item>

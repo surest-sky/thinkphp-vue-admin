@@ -1,6 +1,5 @@
 <template>
   <div>
-    <my-header :title="title"></my-header>
 
     <el-form class="filter" :model="filter" :inline="true">
       <el-form-item>

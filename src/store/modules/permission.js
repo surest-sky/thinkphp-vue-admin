@@ -20,42 +20,52 @@ import Data from "@/views/Data/index"
 const routeMap = [
   {
     "path": "admin/storetype",
-    "component": Storetype
+    "component": Storetype,
+    "icon": "type",
   },
   {
     "path": "admin/message",
     "component": Message,
+    "icon": "message",
   },
   {
     "path": "admin/permission",
     "component": Auth,
+    "icon": "auth",
   },
   {
     "path": "admin/superstore",
     "component": Superstore,
+    "icon": "superstore",
   },
   {
     "path": "admin/store/show/<id>",
     "component": Store,
+    "icon": "store",
   },
   {
     "path": "admin/circle",
     "component": Circle,
+    "icon": "circle",
   },
   {
     "path": "admin/app",
     "component": App,
+    "icon": "app",
   },
   {
     "path": "admin/role",
     "component": Role,
+    "icon": "role",
   },
   {
     "path": "admin/admin-user",
     "component": AdminUser,
+    "icon": "admin-user",
   }, {
     "path": "admin/data",
     "component": Data,
+    "icon": "data",
   }
 ]
 
@@ -80,21 +90,21 @@ function filterRoutes(routes, son = false) {
     // 判断是否是根节点
     if ((result || (route.rule == "#"))) {
       let r = {};
+      let icon = route.icon ? route.icon : (result ? result.icon : "")
       // 渲染根节点(菜单导航)
       if (!son) {
         r = {  // 路由
           path: "",
           component: Layout,
           name: route.name,
-          meta: { title: route.name, icon: route.icon }
+          meta: { title: route.name, icon: icon }
         }
       } else {
-
         r = {
           path: route.rule,
           component: result ? result.component : undefined, // 引入对应的component
           name: route.name,
-          meta: { title: route.name, icon: route.icon },
+          meta: { title: route.name, icon: icon },
           hidden: route.hidden // 用户确定是否需要在菜单栏中展开关闭
         }
       }

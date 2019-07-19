@@ -1,6 +1,5 @@
 <template>
   <div class="content">
-    <my-header v-bind:title="title"></my-header>
 
     <div class="filter-tool">
       <el-form :model="store_filter" label-position="left" :inline="true">

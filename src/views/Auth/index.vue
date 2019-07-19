@@ -1,6 +1,5 @@
 <template>
   <div v-loading="show">
-    <my-header :title="title"></my-header>
 
     <div class="filter">
       <el-button @click="add" type="primary">添加权限</el-button>

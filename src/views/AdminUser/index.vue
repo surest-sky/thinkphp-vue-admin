@@ -1,6 +1,5 @@
 <template>
   <div>
-    <my-header v-bind:title="title"></my-header>
 
     <div class="filter-tool">
       <el-row :gutter="20">
@@ -71,7 +70,8 @@ export default {
     MyDropDown,
     Imgs,
     createTable,
-    MyTags
+    MyTags,
+    MyTag
   },
   data() {
     return {
@@ -82,13 +82,12 @@ export default {
       submit: "创建",
       form: {},
       columns: [
-        { prop: "id", label: "Id" },
+        { prop: "id", label: "Id", width: "50"},
         { prop: "username", label: "账号" },
         { prop: "user_nickname", label: "用户名称" },
         {
           prop: "user_avatar",
           label: "用户头像",
-          width: "300px",
           render: (h, param) => {
             let avatar = [];
             if (param.row.user_avatar) {
@@ -101,7 +100,6 @@ export default {
             }
           }
         },
-        { prop: "loginip", label: "用户登录ip" },
         {
           prop: "to_roles",
           label: "用户角色",
@@ -147,7 +145,17 @@ export default {
               }
             });
           }
-        }
+        },
+        { prop: "loginip", label: "最近登录ip", render: (h, param) => {
+          return h(MyTag, {
+              props: { text: param.row.loginip }
+            });
+        }},
+        { prop: "logintime", label: "最近登录时间", render: (h, param) => {
+          return h(MyTag, {
+              props: { text: param.row.logintime }
+            });
+        }},
       ]
     };
   },
@@ -219,12 +227,10 @@ export default {
      * 删除
      */
     delete(id) {
+      let that = this
       deleteUser(id).then(r => {
-        if (r.code == 200) {
-          this.$success_(r.msg);
-        } else {
-          this.$error_(r.msg);
-        }
+        that.$success_(r.msg)
+        that.getList()
       });
     },
 

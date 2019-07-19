@@ -45,7 +45,6 @@ const actions = {
         }
         resolve()
       }).catch(error => {
-        console.log(error)
         reject(error)
       })
     })
@@ -61,17 +60,11 @@ const actions = {
           reject('验证失败,请重新登录')
         }
 
-        const { rules, username, avatar } = data
-
-        // roles must be a non-empty array
-        // if (!roles || roles.length <= 0) {
-        //   reject('getInfo: roles must be a non-null array!')
-        // }
+        const { rules, username, user_avatar } = data
 
         commit('SET_ROLES', 'admin')
-        // commit('PERMISSIONS', rules)
         commit('SET_NAME', username)
-        commit('SET_AVATAR', avatar)
+        commit('SET_AVATAR', user_avatar)
 
         
         resolve(data)
@@ -102,6 +95,31 @@ const actions = {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
+      resolve()
+    })
+  },
+
+  // dynamically modify permissions
+  changeRoles({ commit, dispatch }, role) {
+    return new Promise(async resolve => {
+      const token = role + '-token'
+
+      commit('SET_TOKEN', token)
+      setToken(token)
+
+      const { roles } = await dispatch('getInfo')
+
+      resetRouter()
+
+      // generate accessible routes map based on roles
+      const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
+
+      // dynamically add accessible routes
+      router.addRoutes(accessRoutes)
+
+      // reset visited views and cached views
+      dispatch('tagsView/delAllViews', null, { root: true })
+
       resolve()
     })
   }

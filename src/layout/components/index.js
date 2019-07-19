@@ -1,8 +1,9 @@
-export { default as Navbar } from './Navbar'
-export { default as Sidebar } from './Sidebar'
 export { default as AppMain } from './AppMain'
+export { default as Navbar } from './Navbar'
+export { default as Settings } from './Settings'
+export { default as Sidebar } from './Sidebar/index.vue'
+export { default as TagsView } from './TagsView/index.vue'
 
-export { default as myHeader } from "../Header";
 export { default as Pagination } from "./Table/Pagination";
 export { default as MyTable }  from "./Table/Table";
 export { default as MyDropDown } from "./Form/MyDropDown";

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <my-header v-bind:title="title"></my-header>
 
     <div class="filter-tool">
         <el-row :gutter="20">

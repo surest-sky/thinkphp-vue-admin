@@ -1,6 +1,5 @@
 <template>
   <div>
-    <my-header :title="title"></my-header>
     
     <div class="filter">
 

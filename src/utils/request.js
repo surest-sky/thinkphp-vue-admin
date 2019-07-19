@@ -2,6 +2,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import QS from "qs"
 
 // 创建一个axios
 const service = axios.create({
@@ -44,7 +45,7 @@ service.interceptors.response.use(
     // 这里设置的非请求成功的code
     if (res.code !== 200) {
       Message({
-        message: res.message || 'Error',
+        message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
@@ -62,7 +63,8 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+
+      return Promise.reject(new Error(res.msg || 'Error'))
     } else {
       return res
     }
@@ -90,7 +92,6 @@ export function get(url, params = {}) {
 
   //封装post请求
   export function post(url, data = {}) { 
-    var url = url.replace('/\api/', host);
     //默认配置 
     let sendObject={
       url: url,
@@ -103,7 +104,6 @@ export function get(url, params = {}) {
   
   //封装put方法 (resfulAPI常用)
   export function put(url,data = {}){
-    var url = url.replace('/\api/', host);
     let sendObject = {
       url: url,
       method: 'put',
@@ -114,7 +114,6 @@ export function get(url, params = {}) {
   
   //删除方法(resfulAPI常用)
   export function deletes(url, data){
-    var url = url.replace('/\api/', host);
     return service({
       url: url,
       method: 'delete',
