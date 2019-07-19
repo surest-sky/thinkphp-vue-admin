@@ -1,3 +1,5 @@
+import { MessageBox } from "element-ui";
+
 export function success_(title){
     this.$message({
         message: title,
@@ -7,4 +9,14 @@ export function success_(title){
 
 export function error_(title) {
     this.$message.error(title);
+}
+
+export function MessageConfirm(title, func) {
+    MessageBox.confirm('是否删除消息', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        func()
+      })
 }

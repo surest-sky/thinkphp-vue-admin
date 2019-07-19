@@ -4,7 +4,8 @@
       v-for="(item, index) in buttons"
       @click="run_(`${item.func}`, `${item.id}`)"
       :key="index"
-      type="text"
+      size="small"
+      :type="item.type"
     >{{item.text}}</el-button>
   </span>
 </template>

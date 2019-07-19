@@ -63,6 +63,8 @@ import {
     jsonRemove
 } from '@/layout/components/index'
 
+import { MessageConfirm } from '@/utils/message.js'
+
 import { get, post, deletes, put } from "@/utils/request";
 
 export default {
@@ -130,19 +132,19 @@ export default {
                   func: "send",
                   id: param.row.id,
                   text: "立即发送",
-                  size: "small"
+                  type: "success"
                 },
                 {
                   func: "with_draw",
                   id: param.row.id,
                   text: "撤回发送",
-                  size: "small"
+                  type: "danger"
                 },
                 {
                   func: "deleted",
                   id: param.row.id,
                   text: "删除消息",
-                  size: "small"
+                  type: "danger"
                 }
               ];
             } else if (parseInt(param.row.status) == 1) {
@@ -151,7 +153,7 @@ export default {
                   func: "deleted",
                   id: param.row.id,
                   text: "删除消息",
-                  size: "small"
+                  type: "danger"
                 }
               ];
             } else if (parseInt(param.row.status) == 2) {
@@ -160,13 +162,13 @@ export default {
                   func: "send",
                   id: param.row.id,
                   text: "重新发送",
-                  size: "small"
+                  type: "primary"
                 },
                 {
                   func: "deleted",
                   id: param.row.id,
                   text: "删除消息",
-                  size: "small"
+                  type: "danger"
                 }
               ];
             }
@@ -241,18 +243,19 @@ export default {
     // 删除消息
     deleted(id) {
       this.loading = true;
-
       let that = this
-      deletes("/api/message/" + id).then(r => {
-        if (r.code == 200) {
-          this.$success_(r.msg);
-          this.getList();
-        } else {
-          this.$error_(r.msg);
-        }
-        this.data = jsonRemove(this.data, "id", id);
-        this.loading = false;
-      });
+      MessageConfirm("是否删除消息", () => {
+        deletes("/api/message/" + id).then(r => {
+            if (r.code == 200) {
+              that.$success_(r.msg);
+              that.getList();
+            } else {
+              that.$error_(r.msg);
+            }
+            that.data = jsonRemove(that.data, "id", id);
+            that.loading = false;
+          });
+      })
     },
 
     // 撤回发送消息
