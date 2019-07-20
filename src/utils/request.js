@@ -82,10 +82,20 @@ service.interceptors.response.use(
   }
 )
 
+/**
+ * 转换一下 url
+ */
+function getUrl (url) {
+  if(URL) {
+    url = url.replace('/\api/', URL);
+  }
+
+  return url
+}
 
 
 export function get(url, params = {}) {
-  url = URL ? URL : url
+  url = getUrl(url)
   return service({
     url: url,
     method: 'get',
@@ -95,7 +105,7 @@ export function get(url, params = {}) {
 
   //封装post请求
   export function post(url, data = {}) { 
-    url = URL ? URL : url
+    url = getUrl(url)
     //默认配置 
     let sendObject={
       url: url,
@@ -108,6 +118,7 @@ export function get(url, params = {}) {
   
   //封装put方法 (resfulAPI常用)
   export function put(url,data = {}){
+    url = getUrl(url)
     let sendObject = {
       url: url,
       method: 'put',
@@ -118,6 +129,7 @@ export function get(url, params = {}) {
   
   //删除方法(resfulAPI常用)
   export function deletes(url, data){
+    url = getUrl(url)
     return service({
       url: url,
       method: 'delete',
