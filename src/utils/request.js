@@ -4,9 +4,11 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import QS from "qs"
 
+const URL = process.env.NODE_ENV === "development" ? "" : "http://vadmin.surest.cn/admin/"
+
 // 创建一个axios
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: URL , // url = base url + request url
   withCredentials: true, // 跨域请求时发送cookie
   timeout: 5000 // request timeout
 })
@@ -83,6 +85,7 @@ service.interceptors.response.use(
 
 
 export function get(url, params = {}) {
+  url = URL ? URL : url
   return service({
     url: url,
     method: 'get',
@@ -92,6 +95,7 @@ export function get(url, params = {}) {
 
   //封装post请求
   export function post(url, data = {}) { 
+    url = URL ? URL : url
     //默认配置 
     let sendObject={
       url: url,
