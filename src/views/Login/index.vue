@@ -89,6 +89,9 @@ export default {
       immediate: true
     }
   },
+  created() {
+    console.log(process.env)
+  },
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {

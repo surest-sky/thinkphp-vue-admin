@@ -1,9 +1,10 @@
 <template>
   <div v-loading="show">
-
     <div class="filter">
       <el-button @click="add" type="primary">添加权限</el-button>
       <el-button @click="init_permission" type="primary">初始化权限节点</el-button>
+      <el-radio v-model="is_delete" label="1">重建节点</el-radio>
+      <el-radio v-model="is_delete" label="0">更新节点</el-radio>
     </div>
 
     <div class="tree">
@@ -15,12 +16,11 @@
         :render-content="renderContent"
         :props="props"
       ></el-tree>
-
-      <el-dialog :title="this.form.submit" :visible.sync="formShow">
-        <my-create :form="form" @updated="updated"></my-create>
-      </el-dialog>
     </div>
-    
+
+    <el-dialog :title="this.form.submit" :visible.sync="formShow">
+      <my-create :form="form" @updated="updated"></my-create>
+    </el-dialog>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ import {
   MyTag
 } from "@/layout/components/index";
 
-import { getList, getSimple, delete_ , init_permission} from "@/api/permission";
+import { getList, getSimple, delete_, init_permission } from "@/api/permission";
 import myCreate from "./form/index";
 
 export default {
@@ -57,14 +57,15 @@ export default {
       props: {
         label: "name"
       },
+      is_delete: "0",
       form: {},
       formShow: false,
       title: "权限管理",
       show: false,
-      msg: 'Hello Vue.',
-    msg1: '',
-    msg2: '',
-    msg3: ''
+      msg: "Hello Vue.",
+      msg1: "",
+      msg2: "",
+      msg3: ""
     };
   },
   mounted() {
@@ -161,26 +162,22 @@ export default {
      * 重新生成节点
      */
     init_permission() {
-        let that = this
-        this.$confirm('是否清空之前的节点数据,重新生成节点', '初始化节点', {
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          type: 'warning'
-        }).then(() => {
-          that.show = true
-          init_permission(1).then(r => {
-              that.$success_('生成节点成功,请刷新查看')
-              that.show = false
-          })
-        }).catch(() => {
-          that.show = true
-             init_permission(0).then(r => {
-              that.$success_('生成节点成功,请刷新查看')
-              that.show = false
-            })
-        });
+      let that = this;
+      this.$confirm("生成节点", "初始化节点", {
+        confirmButtonText: "是",
+        cancelButtonText: "否",
+        type: "warning"
+      })
+        .then(() => {
+          that.show = true;
+          init_permission(that.is_delete).then(r => {
+            that.$success_("生成节点成功,请刷新查看");
+            that.show = false;
+          });
+        })
+        .catch(() => {});
 
-        this.getList()
+      this.getList();
     }
   }
 };
@@ -193,7 +190,7 @@ export default {
   }
 }
 .tree {
-    margin-top: 20px;
-    padding-left: 50px;
+  margin-top: 20px;
+  padding-left: 50px;
 }
 </style>

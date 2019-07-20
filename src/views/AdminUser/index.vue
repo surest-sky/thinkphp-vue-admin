@@ -178,7 +178,8 @@ export default {
       // 获取数据
       getList(data).then(r => {
         if (r.code == 200) {
-          this.list = r.data.list;
+          console.log(r.data.data)
+          this.list = r.data.data;
           this.setPage(r.data);
         }
       });
