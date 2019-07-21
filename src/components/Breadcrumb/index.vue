@@ -11,11 +11,13 @@
 
 <script>
 import pathToRegexp from 'path-to-regexp'
+import {HOST_NAME, HOST_TITLE} from '@/utils/web.js'
 
 export default {
   data() {
     return {
-      levelList: null
+      levelList: null,
+      HOST_TITLE: HOST_TITLE
     }
   },
   watch: {
@@ -33,7 +35,7 @@ export default {
       const first = matched[0]
 
       if (!this.isDashboard(first)) {
-        matched = [{ path: '/', meta: { title: 'd88' }}].concat(matched)
+        matched = [{ path: '/', meta: { title: HOST_TITLE }}].concat(matched)
       }
 
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)

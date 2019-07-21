@@ -4,9 +4,11 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import QS from "qs"
 
+const URL = process.env.NODE_ENV === "development" ? "" : "http://vadmin.surest.cn/admin/"
+
 // 创建一个axios
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: URL , // url = base url + request url
   withCredentials: true, // 跨域请求时发送cookie
   timeout: 5000 // request timeout
 })
@@ -80,9 +82,20 @@ service.interceptors.response.use(
   }
 )
 
+/**
+ * 转换一下 url
+ */
+function getUrl (url) {
+  if(URL) {
+    url = url.replace('/\api/', URL);
+  }
+
+  return url
+}
 
 
 export function get(url, params = {}) {
+  url = getUrl(url)
   return service({
     url: url,
     method: 'get',
@@ -92,6 +105,7 @@ export function get(url, params = {}) {
 
   //封装post请求
   export function post(url, data = {}) { 
+    url = getUrl(url)
     //默认配置 
     let sendObject={
       url: url,
@@ -104,6 +118,7 @@ export function get(url, params = {}) {
   
   //封装put方法 (resfulAPI常用)
   export function put(url,data = {}){
+    url = getUrl(url)
     let sendObject = {
       url: url,
       method: 'put',
@@ -114,6 +129,7 @@ export function get(url, params = {}) {
   
   //删除方法(resfulAPI常用)
   export function deletes(url, data){
+    url = getUrl(url)
     return service({
       url: url,
       method: 'delete',

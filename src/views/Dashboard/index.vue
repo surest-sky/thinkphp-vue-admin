@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <header><h1>D88后台管理</h1></header>
+    <header><h1>{{HOST_NAME}} - {{ HOST_TITLE }}</h1></header>
 
     <!-- 折扣相关图表渲染 -->
     <div class="content">
@@ -14,9 +14,16 @@
 <script>
 import { mapGetters } from 'vuex'
 import echarts from 'echarts'
+import {HOST_NAME, HOST_TITLE} from '@/utils/web.js'
 
 export default {
   name: 'Dashboard',
+  data() {
+    return {
+      HOST_NAME: HOST_NAME,
+      HOST_TITLE: HOST_TITLE,
+    }
+  },
   computed: {
     ...mapGetters([
       'name',

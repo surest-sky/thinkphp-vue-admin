@@ -6,6 +6,8 @@ Vue.use(Router)
 /* 公共组件 */
 import Layout from '@/layout'
 
+import {HOST_NAME, HOST_TITLE} from '@/utils/web.js'
+
 /**
  * 注意: 子菜单仅在路由children.length> = 1时出现
  * 详情见: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -48,163 +50,20 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/index',
-    name: 'D88',
-    meta: { title: 'D88', icon: 'dashboard' },
+    name: HOST_NAME,
+    meta: { title: HOST_NAME, icon: 'dashboard' },
     children: [
       {
         path: '/index',
-        name: 'D88',
+        name: HOST_NAME,
         component: () => import('@/views/Dashboard/index'),
-        meta: { title: 'D88', icon: 'dashboard' }
+        meta: { title: HOST_NAME, icon: 'dashboard' }
       },
     ]
   },
 
-//   {
-//     path: '/superstore',
-//     component: Layout,
-//     redirect: '/superstore/index',
-//     name: '商圈管理',
-//     meta: { title: '商圈管理', icon: 'v' },
-//     children: [
-//       {
-//         path: 'index',
-//         name: '商圈管理',
-//         component: () => import('@/views/Superstore/index'),
-//         meta: { title: '商圈管理', icon: 'superstore' }
-//       },
-//     ]
-//   },
-
-//   {
-//     path: '/store',
-//     component: Layout,
-//     redirect: '/store/index',
-//     name: '店铺管理',
-//     meta: { title: '店铺管理', icon: 'store' },
-//     children: [
-//       {
-//         path: 'index',
-//         name: '店铺管理',
-//         component: () => import('@/views/Store/index'),
-//         meta: { title: '店铺管理', icon: 'store' }
-//       },
-//     ]
-//   },
-
-//   {
-//       path: '/circle',
-//       component: Layout,
-//       redirect: '/circle/index',
-//       name: '圈子管理',
-//       meta: { title: '圈子管理', icon: 'circle' },
-//       children: [
-//         {
-//           path: 'index',
-//           name: '圈子管理',
-//           component: () => import('@/views/Circle/index'),
-//           meta: { title: '圈子管理', icon: 'circle' }
-//         },
-//     ]
-//   },
-
-//   {
-//     path: '/auth',
-//     component: Layout,
-//     redirect: '/auth/index',
-//     name: '权限管理',
-//     meta: { title: '权限管理', icon: 'auth' },
-//     children: [
-//       {
-//         path: 'index',
-//         name: '权限管理',
-//         component: () => import('@/views/Auth/index'),
-//         meta: { title: '权限管理', icon: 'auth' }
-//       },
-//   ]
-// },
-
-//   // {
-//   //   path: '/message',
-//   //   component: Layout,
-//   //   redirect: '/message/index',
-//   //   name: '消息管理',
-//   //   meta: { title: '消息管理', icon: 'message' },
-//   //   children: [
-//   //     {
-//   //       path: 'index',
-//   //       name: '消息管理',
-//   //       component: () => import('@/views/Message/index'),
-//   //       meta: { title: '消息管理', icon: 'message' }
-//   //     },
-//   //   ]
-//   // },
-
-//   {
-//     path: '/app',
-//     component: Layout,
-//     redirect: '/app/index',
-//     name: 'App管理',
-//     meta: { title: 'App管理', icon: 'app' },
-//     children: [
-//       {
-//         path: 'index',
-//         name: 'App管理',
-//         component: () => import('@/views/App/index'),
-//         meta: { title: 'App管理', icon: 'app' }
-//       },
-//       {
-//         path: 'index2',
-//         name: 'App管理',
-//         component: () => import('@/views/App/index'),
-//         meta: { title: 'App管理', icon: 'app' }
-//       },
-//     ]
-//   },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/App/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/App/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  // 最后匹配404页面
-  // { path: '*', redirect: '/404', hidden: true }
-
 ]
 
-/**
- * asyncRoutes
- * 需要根据用户角色动态加载的路由
- */
-export const asyncRoutes = [
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-]
 
 const createRouter = () => new Router({
   // mode: 'history', // 需要服务支持

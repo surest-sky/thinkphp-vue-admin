@@ -12,9 +12,9 @@ export const page = {
     methods: {
         // 设置分页
         setPage(data) {
-            this.current_page = data.page;
+            this.current_page = data.current_page;
             this.total = data.total;
-            this.pagesize = parseInt(data.pagesize);
+            this.pagesize = parseInt(data.per_page);
             this.loading = false
         },
         // 监听分页地址改变
