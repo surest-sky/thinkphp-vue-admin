@@ -1,62 +1,20 @@
 <template>
   <div class="dashboard-container">
-    <header><h1>{{HOST_NAME}} - {{ HOST_TITLE }}</h1></header>
-
-    <!-- 折扣相关图表渲染 -->
-    <div class="content">
-      <h2>数据统计 - 每周</h2>
-      <div ref="discount" id="discount"></div>
-    </div>
-
+    <admin-dashboard />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import echarts from 'echarts'
-import {HOST_NAME, HOST_TITLE} from '@/utils/web.js'
+import adminDashboard from './admin'
 
 export default {
   name: 'Dashboard',
+  components: { adminDashboard },
   data() {
     return {
-      HOST_NAME: HOST_NAME,
-      HOST_TITLE: HOST_TITLE,
+      currentRole: 'adminDashboard'
     }
-  },
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
-  },
-  mounted() {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-
-header {
-  text-align: center;
-}
-
-.content {
-  text-align: center;
-}
-
-#discount {
-  width: 100%;
-  height: 800px;
-  margin: 0px auto;
-}
-</style>

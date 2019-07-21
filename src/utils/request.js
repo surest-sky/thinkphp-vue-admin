@@ -3,8 +3,9 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import QS from "qs"
+import { AdminApiUrl } from "@/settings.js"
 
-const URL = process.env.NODE_ENV === "development" ? "" : "http://vadmin.surest.cn/admin/"
+const URL = process.env.NODE_ENV === "development" ? "" : AdminApiUrl
 
 // 创建一个axios
 const service = axios.create({
@@ -43,6 +44,7 @@ service.interceptors.response.use(
 
   response => {
     const res = response.data
+    console.log(res)
 
     // 这里设置的非请求成功的code
     if (res.code !== 200) {
@@ -89,7 +91,6 @@ function getUrl (url) {
   if(URL) {
     url = url.replace('/\api/', URL);
   }
-
   return url
 }
 
