@@ -60,11 +60,11 @@ const actions = {
           reject('验证失败,请重新登录')
         }
 
-        const { rules, username, user_avatar } = data
+        const { rules, username, avatar } = data
 
         commit('SET_ROLES', 'admin')
         commit('SET_NAME', username)
-        commit('SET_AVATAR', user_avatar)
+        commit('SET_AVATAR', avatar)
 
         
         resolve(data)

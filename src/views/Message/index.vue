@@ -201,7 +201,7 @@ export default {
     getList() {
       this.loading = true;
       let that = this
-      get("/api/message", {
+      get("/admin/message", {
         page: this.current_page,
         pagesize: this.pagesize
       }).then(r => {
@@ -228,7 +228,7 @@ export default {
       this.loading = true;
 
       let that = this
-      post("/api/message/send/" + id).then(r => {
+      post("/admin/message/send/" + id).then(r => {
         if (r.code == 200) {
           this.$success_(r.msg);
           this.getList();
@@ -245,7 +245,7 @@ export default {
       this.loading = true;
       let that = this
       MessageConfirm("是否删除消息", () => {
-        deletes("/api/message/" + id).then(r => {
+        deletes("/admin/message/" + id).then(r => {
             if (r.code == 200) {
               that.$success_(r.msg);
               that.getList();
@@ -261,7 +261,7 @@ export default {
     // 撤回发送消息
     with_draw(id) {
       let that = this
-      post("/api/message/with_draw/" + id).then(r => {
+      post("/admin/message/with_draw/" + id).then(r => {
         if (r.code == 200) {
           this.$success_(r.msg);
           this.getList();
@@ -319,7 +319,7 @@ export default {
       this.form.type = this.form.type == "紧急通知" ? 1 : 2;
       this.loading_ = true;
       let that = this
-      post("/api/message", this.form)
+      post("/admin/message", this.form)
         .then(r => this.msg(r))
         .catch(r => {});
     },

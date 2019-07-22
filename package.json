@@ -5,7 +5,7 @@
   "author": "Pan <chenf@surest.cn>",
   "license": "MIT",
   "scripts": {
-    "dev": "vue-cli-service serve --inline",
+    "dev": "vue-cli-service serve --inline --progress",
     "prod": "cross-env NODE_ENV=production vue-cli-service serve --inline",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",

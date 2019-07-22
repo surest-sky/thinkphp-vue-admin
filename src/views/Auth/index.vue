@@ -1,13 +1,38 @@
 <template>
   <div v-loading="show">
-    <div class="filter">
-      <el-button @click="add" type="primary">添加权限</el-button>
-      <el-button @click="init_permission" type="primary">初始化权限节点</el-button>
-      <el-radio v-model="is_delete" label="1">重建节点</el-radio>
-      <el-radio v-model="is_delete" label="0">更新节点</el-radio>
+    <div class="filter-tool">
+      <el-row>
+        <el-col :sm="12" :md="12">
+          <el-button
+            size="medium"
+            @click="init_permission"
+            type="warning"
+            icon="el-icon-refresh"
+          >初始化权限节点</el-button>
+        </el-col>
+        <el-col :sm="20" :md="20">
+          <el-radio size="medium" v-model="is_delete" label="1" border>重建节点</el-radio>
+          <el-radio size="medium" v-model="is_delete" label="0" border>更新节点</el-radio>
+        </el-col>
+        <el-col :xs="20" :sm="20" :md="20">
+          <el-button size="medium" @click="add" type="primary" icon="el-icon-plus">添加权限</el-button>
+        </el-col>
+      </el-row>
     </div>
 
     <div class="tree">
+
+    <el-row>
+      <el-col :span="4" :sm="10" :xs="10">
+      <el-input
+        class="filter-input"
+        placeholder="输入关键字进行过滤"
+        v-model="filterText"
+      >
+    </el-input>
+    </el-col>
+    </el-row>
+
       <el-tree
         :data="list"
         node-key="id"
@@ -15,6 +40,8 @@
         :expand-on-click-node="false"
         :render-content="renderContent"
         :props="props"
+        :filter-node-method="filterNode"
+        ref="tree"
       ></el-tree>
     </div>
 
@@ -62,14 +89,16 @@ export default {
       formShow: false,
       title: "权限管理",
       show: false,
-      msg: "Hello Vue.",
-      msg1: "",
-      msg2: "",
-      msg3: ""
+      filterText: ""
     };
   },
   mounted() {
     this.getList();
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val);
+    }
   },
   methods: {
     edit(data) {
@@ -85,14 +114,16 @@ export default {
           that.$error_(r.msg);
         }
       });
-      //   data.children.push(newChild);
+    },
+
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1;
     },
 
     setData() {
       this.form.status = this.form.status == 0 ? "禁用" : "启用";
       this.form.hidden = this.form.hidden == 1 ? "是" : "否";
-
-      console.log(this.form);
     },
 
     remove(node, data) {
@@ -123,7 +154,6 @@ export default {
       let that = this;
       getList().then(function(r) {
         that.list = r.data;
-        console.log(that.list);
       });
     },
 
@@ -190,7 +220,11 @@ export default {
   }
 }
 .tree {
-  margin-top: 20px;
-  padding-left: 50px;
+  margin-top: 20px;    
+  margin-left: 30px;
+
+  .filter-input {
+    margin-bottom: 10px;
+  }
 }
 </style>

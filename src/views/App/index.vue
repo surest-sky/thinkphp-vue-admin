@@ -191,7 +191,7 @@ export default {
         type: "warning"
       }).then(() => {
         let that = this;
-        deletes(`/api/app/${id}`).then(r => {
+        deletes(`/admin/app/${id}`).then(r => {
           if (r.code == 200) {
             this.$success_("删除成功");
             this.getList();
@@ -212,7 +212,7 @@ export default {
       this.formShow = true;
       this.id = id;
       let that = this;
-      get("/api/app/" + this.id).then(r => {
+      get("/admin/app/" + this.id).then(r => {
         if (r.code == 200) {
           this.form = r.data;
           this.setData(r.data);
@@ -227,7 +227,7 @@ export default {
       let data = this.form;
       if (this.id) {
         let that = this;
-        put("/api/app/" + this.id, data).then(r => {
+        put("/admin/app/" + this.id, data).then(r => {
           if (r.code == 200) {
             this.$success_(r.msg);
             this.formShow = false;
@@ -238,7 +238,7 @@ export default {
         });
       } else {
         let that = this;
-        post("/api/app", data).then(r => {
+        post("/admin/app", data).then(r => {
           if (r.code == 200) {
             this.$success_(r.msg);
             this.formShow = false;
@@ -256,7 +256,7 @@ export default {
 
     postData(id) {
       let that = this;
-      put("/api/app/" + id).then(r => {
+      put("/admin/app/" + id).then(r => {
         if (r.code == 200) {
           console.log(r);
         } else {
@@ -271,7 +271,7 @@ export default {
 
     getList() {
       let that = this;
-      get("/api/app", {
+      get("/admin/app", {
         page: this.current_page,
         pagesize: this.pagesize
       }).then(response => {

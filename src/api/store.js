@@ -6,21 +6,21 @@ import { get, post, deletes, put } from '@/utils/request'
  * @param {*} params 查询参数
  */
 export function getList(id, params) {
-    return get("/api/store/show/" + id, params)
+    return get("/admin/store/show/" + id, params)
 }
 
 /**
  * 获取所有的商圈
  */
 export function getSuperstoreAll() {
-    return get("/api/superstore/all")
+    return get("/admin/superstore/all")
 }
 
 /**
  * 获取店铺类型
  */
 export function getStoreType() {
-    return get('/api/storetype')
+    return get('/admin/storetype')
 }
 
 /**
@@ -28,7 +28,7 @@ export function getStoreType() {
  * @param {*} superstore_id 
  */
 export function getSroreToSuperstore(superstore_id) {
-    return get('/api/store/show/' + superstore_id )
+    return get('/admin/store/show/' + superstore_id )
 }
 
 /**
@@ -36,7 +36,7 @@ export function getSroreToSuperstore(superstore_id) {
  * @param {*} id 店铺id
  */
 export function getStore(id) {
-    return get("/api/store/" + id)
+    return get("/admin/store/" + id)
 }
 
 /**
@@ -45,7 +45,7 @@ export function getStore(id) {
  * @param {*} data 
  */
 export function updateStore(id, data) {
-    return put("/api/store/" + id, data)
+    return put("/admin/store/" + id, data)
 }
 
 /**
@@ -54,5 +54,5 @@ export function updateStore(id, data) {
  * @param {*} data 
  */
 export function createStore(data) {
-    return post("/api/store", data)
+    return post("/admin/store", data)
 }

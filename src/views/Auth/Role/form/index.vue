@@ -7,7 +7,7 @@
 
       <el-form-item label="选择权限">
         <el-tree
-        ref="tree"
+          ref="tree"
           v-model="formData.permissions"
           :data="tree"
           show-checkbox
@@ -23,6 +23,7 @@
 
       <el-form-item>
         <el-button
+          size="medium"
           type="primary"
           @click="createOrUpdateRole"
         >{{ this.form.submit ? this.form.submit : "创建" }}</el-button>
@@ -43,7 +44,7 @@ export default {
   data() {
     return {
       props: {
-        label: "name"
+        label: "name",
       },
       actived: [],
       formData: {}
@@ -79,7 +80,9 @@ export default {
     setData(data) {
       let tmp = [];
       data.permissions.forEach(element => {
-        tmp.push(element.id);
+        if(element.rule !== '#') {
+          tmp.push(element.id);
+        }
       });
 
       this.formData = Object.assign({}, {
@@ -93,9 +96,25 @@ export default {
     createOrUpdateRole() {
       let that = this;
       let actived = this.$refs.tree.getCheckedNodes()
-      let tmp = []
+      let tmp_id = []
+      let tmp_pid = []
       actived.forEach(function(r) {
-          tmp.push(r.id)
+          tmp_id.push(r.id)
+      })
+      actived.forEach(function(r) {
+          tmp_pid.push(r.p_id)
+      })
+      
+      let tmp = tmp_id.concat(tmp_pid)
+
+
+
+      tmp = tmp.filter((item, index, self) => {
+        return self.indexOf(item) == index
+      })
+
+      tmp = tmp.filter((item, index, self) => {
+        return item !== 0
       })
 
       tmp = tmp.join(',')

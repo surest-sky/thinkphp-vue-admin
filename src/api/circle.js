@@ -1,11 +1,11 @@
 import { get, post, deletes, put } from '@/utils/request'
 
 export function getList(param) {
-    return get('/api/circle', param)
+    return get('/admin/circle', param)
 }
 
 export function update_status(ids, status) {
-    return post('/api/circle/audit', {
+    return post('/admin/circle/audit', {
         ids: ids,
         status: status
     })

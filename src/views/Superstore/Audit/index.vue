@@ -103,7 +103,7 @@ export default {
     getList() {
       this.id = this.$store.state.superstore.superstore_id
       let that = this
-      get("/api/superstore/feedbackbanner/" + this.id).then(r => {
+      get("/admin/superstore/feedbackbanner/" + this.id).then(r => {
         if (r.code == 200) {
           this.list = r.data.banner_list;
         }
@@ -114,7 +114,7 @@ export default {
     enable(id) {
         let banner_id = id
         let that = this
-        put(`/api/superstore/feedbackbanner/${this.id}`, {
+        put(`/admin/superstore/feedbackbanner/${this.id}`, {
               banner_id: banner_id
           }).then((r) => {
               if(r.code == 200) {

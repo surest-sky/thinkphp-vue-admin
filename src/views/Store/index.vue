@@ -598,7 +598,7 @@ export default {
     // 上架
     online(id) {
       let that = this
-      post("/api/store/online/" + id).then(r => {
+      post("/admin/store/online/" + id).then(r => {
         if (r.code == 200) {
           that.getList();
           that.$success_("上架成功");
@@ -613,7 +613,7 @@ export default {
     // 下架
     lower(id) {
       let that = this
-      deletes("/api/store/lower/" + id).then(r => {
+      deletes("/admin/store/lower/" + id).then(r => {
         if (r.code == 200) {
           that.getList();
           that.$success_("下架成功");
@@ -631,7 +631,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       }).then(() => {
-        deletes("/api/store/" + id).then(r => {
+        deletes("/admin/store/" + id).then(r => {
           if (r.code == 200) {
             that.$success_("删除成功");
             that.stores = jsonRemove(that.stores, "id", id);
@@ -678,7 +678,7 @@ export default {
       this.getSelected();
       let ids = this.multipleSelectionIds.join(",");
 
-      this.$deletes(`/api/store/batch_delete?ids=${ids}`).then(r => {
+      this.$deletes(`/admin/store/batch_delete?ids=${ids}`).then(r => {
         console.log(r);
         if (r.code === 200) {
           this.$success_(`删除成功`);
@@ -694,7 +694,7 @@ export default {
       this.getSelected();
       let ids = this.multipleSelectionIds.join(",");
       let that = this
-        post(`/api/store/batch_online?ids=${ids}`).then(r => {
+        post(`/admin/store/batch_online?ids=${ids}`).then(r => {
           if (r.code === 200) {
             that.$success_(`上架成功`);
             that.getList();
@@ -709,7 +709,7 @@ export default {
       this.getSelected();
       let ids = this.multipleSelectionIds.join(",");
       let that = this
-        post(`/api/store/batch_lower?ids=${ids}`).then(r => {
+        post(`/admin/store/batch_lower?ids=${ids}`).then(r => {
         if (r.code === 200) {
           this.$success_(`下架成功`);
           this.getList();

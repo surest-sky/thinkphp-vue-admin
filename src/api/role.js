@@ -1,25 +1,25 @@
 import { get, post, deletes, put } from '@/utils/request'
 
 export function getList() {
-    return get('/api/role')
+    return get('/admin/role')
 }
 
 export function getPermissionAll(roleid) {
-    return get('/api/role/permission' + '/' + roleid)
+    return get('/admin/role/permission' + '/' + roleid)
 }
 
 export function getRoleInfo(id) {
-    return get('/api/role/permissions/' + id)
+    return get('/admin/role/permissions/' + id)
 }
 
 export function createOrUpdateRole(id = null, data) {
     if(!id) {
-        return post('/api/role', data)
+        return post('/admin/role', data)
     }else{
-        return put('/api/role/' + id, data)
+        return put('/admin/role/' + id, data)
     }
 }
 
 export function getRoleList() {
-    return get('/api/role/all')
+    return get('/admin/role/all')
 }

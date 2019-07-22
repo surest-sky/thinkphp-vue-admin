@@ -1,25 +1,24 @@
 <template>
   <div>
-
     <div class="filter-tool">
       <el-row :gutter="20">
-        <el-col :span="5">
-          <el-input v-model="filter.rolename" placeholder="角色名称"></el-input>
+        <el-col :xs="12" :sm="12" :md="4">
+          <el-input size="medium" v-model="filter.rolename" placeholder="角色名称"></el-input>
         </el-col>
-        <el-col :span="4">
-          <el-button type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
+        <el-col :xs="12" :sm="12" :md="4">
+           <el-button
+              size="medium"
+              type="success"
+              icon="el-icon-search"
+              @click="search"
+              @keyup.enter="search"
+            >搜  索</el-button>
+          <el-button size="medium" type="primary" icon="el-icon-plus" @click="add" @keyup.enter="add">添加角色</el-button>
         </el-col>
       </el-row>
-      <br>
-      <el-row>
-<el-col :span="4">
-          <el-button type="primary" icon="el-icon-search" @click="add" @keyup.enter="add">添加角色</el-button>
-        </el-col>
-      </el-row>
-        
     </div>
 
-    <my-table :loading="loading" :tableData="list" :columns="columns" ></my-table>
+    <my-table :loading="loading" :tableData="list" :columns="columns"></my-table>
 
     <el-dialog :title="this.form.submit" :visible.sync="formShow">
       <my-create :form="form" @updated="updated" :tree="tree" @submited="submited" ref="form"></my-create>
@@ -40,7 +39,7 @@ import {
 
 import { getList } from "@/api/role";
 import { getPermissionAll } from "@/api/permission";
-import MyCreate from './form/index'
+import MyCreate from "./form/index";
 
 export default {
   name: "index",
@@ -98,7 +97,7 @@ export default {
               props: { dropDownData: dropDownData },
               on: {
                 edit: this.edit,
-                delete: this.delete,
+                delete: this.delete
               }
             });
           }
@@ -130,26 +129,26 @@ export default {
     },
 
     add() {
-        this.getTree()
-        this.formShow = true
-        this.form = {}
+      this.getTree();
+      this.formShow = true;
+      this.form = {};
     },
 
     edit(id) {
-        this.getTree()
-        this.form = Object.assign({}, {
-            id: id,
-            submit: "更新"
-        })
+      this.getTree();
+      this.form = Object.assign(
+        {},
+        {
+          id: id,
+          submit: "更新"
+        }
+      );
 
-        this.formShow = true
-        this.formTitle = "编辑角色"
+      this.formShow = true;
+      this.formTitle = "编辑角色";
     },
 
-
-    delete(id) {
-
-    },
+    delete(id) {},
 
     updated(bol) {},
 
@@ -166,13 +165,11 @@ export default {
     },
 
     submited() {
-        this.formShow = false
-        this.getList()
+      this.formShow = false;
+      this.getList();
     },
 
-    search() {
-
-    }
+    search() {}
   }
 };
 </script>

@@ -6,7 +6,7 @@
       </el-form-item>
 
       <el-form-item label="用户昵称">
-        <el-input type="text" v-model="formData.user_nickname"></el-input>
+        <el-input type="text" v-model="formData.nickname"></el-input>
       </el-form-item>
 
       <el-form-item label="用户密码">
@@ -33,7 +33,7 @@
       </el-form-item>
 
       <el-form-item label="用户头像">
-        <upload-simple @setImgSrc="setImgSrc" :imgSrc="formData.user_avatar"></upload-simple>
+        <upload-simple @setImgSrc="setImgSrc" :imgSrc="formData.avatar"></upload-simple>
       </el-form-item>
 
       <el-form-item>
@@ -77,8 +77,6 @@ export default {
         this.formData = this.form;
         this.role_ids = this.form.role_ids;
         this.formData.isNotice = this.formData.isNotice.toString();
-        console.log(this.formData);
-        console.log(this.formData.isNotice);
       }
     }
   },
@@ -109,7 +107,7 @@ export default {
     },
 
     setImgSrc(src) {
-      this.formData.user_avatar = src;
+      this.formData.avatar = src;
     },
   }
 };

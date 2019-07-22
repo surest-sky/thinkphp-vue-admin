@@ -2,23 +2,19 @@
   <div>
 
     <div class="filter-tool">
-      <el-row :gutter="20">
-        <el-col :span="4">
-          <el-input v-model="filter.username" placeholder="用户账户"></el-input>
+      <el-row :gutter="10">
+        <el-col :xs="12" :sm="12" :md="4">
+          <el-input size="medium" v-model="filter.username" placeholder="用户账户"></el-input>
         </el-col>
-        <el-col :span="4">
-          <el-input v-model="filter.nickname" placeholder="用户名称"></el-input>
+        <el-col  :xs="12" :sm="12" :md="4">
+          <el-input size="medium" v-model="filter.nickname" placeholder="用户名称"></el-input>
         </el-col>
-        <el-col :span="4">
-          <el-input v-model="filter.email" placeholder="用户邮箱"></el-input>
+        <el-col :xs="12" :sm="12" :md="4">
+          <el-input size="medium" v-model="filter.email" placeholder="用户邮箱"></el-input>
         </el-col>
-        <el-col :span="2"></el-col>
-        <el-col :span="4">
-          <el-button type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
-        </el-col>
-
-        <el-col :span="4">
-          <el-button type="primary" icon="el-icon-plus" @click="add" @keyup.enter="add">添加</el-button>
+        <el-col :xs="24" :md="20">
+          <el-button size="medium" type="success" icon="el-icon-plus" @click="add" @keyup.enter="add">添加</el-button>
+          <el-button size="medium" type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
         </el-col>
       </el-row>
     </div>
@@ -84,14 +80,14 @@ export default {
       columns: [
         { prop: "id", label: "Id", width: "50"},
         { prop: "username", label: "账号" },
-        { prop: "user_nickname", label: "用户名称" },
+        { prop: "nickname", label: "用户名称" },
         {
-          prop: "user_avatar",
+          prop: "avatar",
           label: "用户头像",
           render: (h, param) => {
             let avatar = [];
-            if (param.row.user_avatar) {
-              avatar.push(param.row.user_avatar);
+            if (param.row.uavatar) {
+              avatar.push(param.row.avatar);
               return h(Imgs, {
                 props: {
                   imgs: avatar
@@ -131,10 +127,16 @@ export default {
               items: []
             };
 
-            dropDownData.items = dropDownData.items.concat([
-              { label: "删除", func: { func: "delete", id: param.row.id } },
-              { label: "编辑", func: { func: "edit", id: param.row.id } }
-            ]);
+            if(parseInt(param.row.is_admin)) {
+              dropDownData.items = dropDownData.items.concat([
+                { label: "编辑", func: { func: "edit", id: param.row.id } }
+              ]);
+            }else{
+              dropDownData.items = dropDownData.items.concat([
+                { label: "删除", func: { func: "delete", id: param.row.id } },
+                { label: "编辑", func: { func: "edit", id: param.row.id } }
+              ]);
+            }
 
             // 触发MyDropDown的update和del事件
             return h(MyDropDown, {
@@ -146,14 +148,14 @@ export default {
             });
           }
         },
-        { prop: "loginip", label: "最近登录ip", render: (h, param) => {
+        { prop: "login_ip", label: "最近登录ip", render: (h, param) => {
           return h(MyTag, {
-              props: { text: param.row.loginip }
+              props: { text: param.row.login_ip }
             });
         }},
-        { prop: "logintime", label: "最近登录时间", render: (h, param) => {
+        { prop: "login_time", label: "最近登录时间", render: (h, param) => {
           return h(MyTag, {
-              props: { text: param.row.logintime }
+              props: { text: param.row.login_time }
             });
         }},
       ]
@@ -189,6 +191,7 @@ export default {
       this.formShow = true;
       var that = this;
       this.submit = "添加";
+      this.form = {}
     },
 
     /**
@@ -208,9 +211,9 @@ export default {
               nickname: data.nickname,
               description: data.description,
               password: "",
-              user_avatar: data.user_avatar,
+              avatar: data.avatar,
               id: id,
-              user_nickname: data.user_nickname,
+              nickname: data.nickname,
               isNotice: parseInt(data.isNotice),
               email: data.email,
               roles: data.roles
@@ -261,3 +264,9 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+  .el-col {
+    margin-top: 10px;
+  }
+</style>
+

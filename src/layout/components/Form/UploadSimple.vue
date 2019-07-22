@@ -33,7 +33,7 @@ export default {
     return {
       dialogVisible: false,
       domain: "https://upload-z2.qiniup.com",
-      qiniuaddr: "http://offline-photo.d88.tech/",
+      qiniuaddr: "http://cdn.surest.cn/",
       QiniuData: {
         key: "", //图片名字处理
         token: "" //七牛云token
@@ -91,7 +91,6 @@ export default {
       this.dialogVisible = true;
     },
     handSuccess(response, file, fileList) {
-      console.log(arguments);
       let imgSrc = this.qiniuaddr + this.QiniuData.key;
       console.log(imgSrc);
       this.setImgSrc(imgSrc);
@@ -122,15 +121,9 @@ export default {
 
     getQiniuToken() {
       let that = this
-      getQiniuToken()
-        .then(r => {
-          if (r.code == 200) {
-            that.QiniuData.token = r.data.token;
-          } else {
-            that.$message.error(r.msg);
-          }
-        })
-        .catch();
+      getQiniuToken().then(r => {
+        that.QiniuData.token = r.data.token
+      })
     },
 
     // 设置文件上传地址

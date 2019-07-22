@@ -28,11 +28,11 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     proxy: {
-      '/api': {
+      '/admin': {
         target: defaultSettings.AdminApiUrl + '/admin',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/admin': ''
         }
       }
     },

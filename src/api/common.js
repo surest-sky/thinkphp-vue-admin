@@ -6,7 +6,7 @@ import { get, post, deletes, put } from '@/utils/request'
  * @param {*} params 查询参数
  */
 export function getQiniuToken() {
-    return get("/api/qiniu/photo", {
+    return get("/admin/qiniu/photo", {
         type: 'photo'
     })
 }
