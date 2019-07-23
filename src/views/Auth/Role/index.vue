@@ -3,14 +3,14 @@
     <div class="filter-tool">
       <el-row :gutter="20">
         <el-col :xs="12" :sm="12" :md="4">
-          <el-input size="medium" v-model="filter.rolename" placeholder="角色名称"></el-input>
+          <el-input size="medium" v-model="filter.name" placeholder="角色名称"></el-input>
         </el-col>
         <el-col :xs="12" :sm="12" :md="4">
            <el-button
               size="medium"
               type="success"
               icon="el-icon-search"
-              @click="search"
+              @click="getList"
               @keyup.enter="search"
             >搜  索</el-button>
           <el-button size="medium" type="primary" icon="el-icon-plus" @click="add" @keyup.enter="add">添加角色</el-button>
@@ -110,12 +110,16 @@ export default {
   },
   methods: {
     // 获取列表数据
-    getList(param = {}) {
+    getList() {
       this.loading = true;
       let page = {
         page: this.current_page,
         pagesize: this.pagesize
       };
+
+      let param = {
+        name: this.filter.name
+      }
 
       let data = Object.assign({}, param, page);
       var that = this;
@@ -168,8 +172,6 @@ export default {
       this.formShow = false;
       this.getList();
     },
-
-    search() {}
   }
 };
 </script>

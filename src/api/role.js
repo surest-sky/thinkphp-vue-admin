@@ -1,7 +1,7 @@
 import { get, post, deletes, put } from '@/utils/request'
 
-export function getList() {
-    return get('/admin/role')
+export function getList(data) {
+    return get('/admin/role', data)
 }
 
 export function getPermissionAll(roleid) {
