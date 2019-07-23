@@ -4,10 +4,11 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import QS from "qs"
 
+const URL = process.env.NODE_ENV === 'development' ? '' : 'http://v.surest.cn'
 
 // 创建一个axios
 const service = axios.create({
-  baseURL: "" , 
+  baseURL: URL , 
   withCredentials: true, // 跨域请求时发送cookie
   timeout: 5000 // request timeout
 })
