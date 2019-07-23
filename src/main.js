@@ -11,7 +11,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-import {success_, error_} from '@/utils/message.js'
+import {success_, error_, MessageConfirm} from '@/utils/message.js'
 import VueAMap  from 'vue-amap';  //注意不要和 AMap原始名称覆盖
 
 import '@/icons' // icon
@@ -31,6 +31,7 @@ import '@/permission' // permission control
 Vue.prototype.$success_ = success_
 Vue.prototype.$error_ = error_
 Vue.prototype.baseURL = process.env.NODE_ENV
+Vue.prototype.$messageConfirm = MessageConfirm
 
 
 // set ElementUI lang to EN

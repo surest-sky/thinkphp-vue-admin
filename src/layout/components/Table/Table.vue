@@ -5,7 +5,6 @@
     :data="tableData"
     v-loading="loading"
     :row-class-name="tableRowClassName"
-    style="width:100%; margin-top:20px"
     class="table_"
     @selection-change="handleSelectionChange"
     border
@@ -71,6 +70,9 @@ export default {
 <style>
 .table_ {
   margin-left: 30px;
+  margin-top: 20px;
+  box-sizing: border-box !important;
+  width: 97% !important;
 }
 </style>
 

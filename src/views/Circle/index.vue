@@ -1,16 +1,16 @@
 <template>
   <div>
 
-    <div class="filter-tool">
+     <div class="filter-tool">
         <el-row :gutter="20">
-            <el-col :span="4">
-                <el-input v-model="filter.nickname" placeholder="用户名称"></el-input>
+            <el-col :xs="6" :md="4" :xl="4">
+                <el-input size="medium" v-model="filter.nickname" placeholder="用户名称"></el-input>
             </el-col>
-            <el-col :span="4">
-                <el-input v-model="filter.content" placeholder="帖子内容"></el-input>
+            <el-col :xs="6" :md="4" :xl="4">
+                <el-input size="medium" v-model="filter.content" placeholder="帖子内容"></el-input>
             </el-col>
-            <el-col :span="6">
-                <el-select v-model="filter.status" placeholder="圈子状态">
+            <el-col :xs="12" :md="4" :xl="4">
+                <el-select size="medium" v-model="filter.status" placeholder="圈子状态">
                     <el-option
                     v-for="item in statuses"
                     :key="item.value"
@@ -19,13 +19,18 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
-                <el-button type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
+        </el-row>
+        <el-row>
+          <el-col :xs="24" :md="3" :xl="2">
+                <el-button size="medium" type="success" icon="el-icon-search" @click="search" @keyup.enter="search">搜&emsp;&emsp;索</el-button>
+            </el-col>
+            <el-col :xs="24" :md="3" :xl="2">
+                <drop-down :dropDownData="dropDownData" @batch_online="batch_online" @batch_lower="batch_lower" @batch_delete="batch_delete"></drop-down>
             </el-col>
         </el-row>
     </div>
 
-    <my-table :loading="loading" :tableData="list" :columns="columns"></my-table>
+    <my-table :loading="loading" :tableData="list" :columns="columns" @handleSelectionChange="getSelected"></my-table>
 
     <!-- 分页 -->
     <Pagination
@@ -51,10 +56,16 @@ import {
   page,
   MyTag,
   table,
-  Imgs
+  Imgs,
+  MyDateSearch,
+  DropDown
 } from "@/layout/components/index";
 
-import { getList, statusText, getStatus, update_status } from "@/api/circle";
+import { 
+getList, statusText, getStatus, 
+update_status, del, 
+batch_lower, batch_online, 
+batch_delete} from "@/api/circle";
 
 export default {
   name: "index",
@@ -66,22 +77,35 @@ export default {
     Pagination,
     MyDropDown,
     Imgs,
+    MyDateSearch,
+    DropDown
   },
   data() {
     return {
       list: [],
       title: "圈子管理",
+      date: {},
+      // 选中的table
+      selected: "",
+      dropDownData: {
+        label: "批量操作",
+        items: [
+          {
+            label: "批量上线",
+            func: "batch_online"
+          },
+          {
+            label: "批量屏蔽",
+            func: "batch_lower"
+          },
+          {
+            label: "批量删除",
+            func: "batch_delete"
+          }
+        ]
+      },
       columns: [
         { prop: "id", label: "ID" },
-        {
-          prop: "user",
-          label: "用户",
-          render: (h, param) => {
-            return h(MyTag, {
-              props: { effect: "dark", text: param.row.user.nickname }
-            });
-          }
-        },
         {
           prop: "imgs",
           label: "圈子图片",
@@ -109,6 +133,18 @@ export default {
         { prop: "beautiful_count", label: "美数量" },
         { prop: "handsome_count", label: "帅数量" },
         { prop: "howe_count", label: "豪数量" },
+        {
+          prop: "create_time",
+          label: "创建时间",
+          width: 150,
+          render: (h, param) => {
+            return h(MyTag, {
+              props: {
+                text: param.row.create_time
+              }
+            });
+          }
+        },
         {
           prop: "is_xiaohongshu",
           label: "是否来自小红书",
@@ -149,7 +185,7 @@ export default {
 
             dropDownData.items = dropDownData.items.concat([
               { label: "删除", func: { func: "delete", id: param.row.id } },
-              { label: "详情", func: { func: "showDetail", id: param.row.id } }
+              // { label: "详情", func: { func: "showDetail", id: param.row.id } }
             ]);
 
             // 触发MyDropDown的update和del事件
@@ -184,8 +220,7 @@ export default {
   created() {
     this.getList();
   },
-
-
+  
   methods: {
     // 获取列表数据
     getList() {
@@ -201,12 +236,21 @@ export default {
             content: this.filter.content,
       }
 
+      if(this.date) {
+        param = Object.assign(param, {
+          start_time: this.date.start_time ,
+          end_time: this.date.end_time
+        })
+      }
+
+      console.log(this.date)
+
       let data = Object.assign({}, param, page)
       
       // 获取数据
       getList(data).then(r => {
         if (r.code == 200) {
-          this.list = r.data.list;
+          this.list = r.data.data;
           this.setPage(r.data);
         }
       });
@@ -217,7 +261,13 @@ export default {
     },
 
     delete(id) {
-
+      let that = this
+      that.$messageConfirm('是否删除圈子, 不可恢复的那种', (r) => {
+          del(id).then((r) => {
+            that.$success_('删除成功')
+            that.getList()
+          })
+      })
     },
 
     showDetail(id) {
@@ -246,6 +296,49 @@ export default {
 
     search() {
         this.getList()
+    },
+
+    /**
+     * 批量屏蔽
+     */
+    batch_lower() {
+      batch_lower(this.selected).then(r => {
+        this.$success_('屏蔽成功')
+        this.getList()
+      })
+    },
+
+    /**
+     * 批量上线
+     */
+    batch_online() {
+      batch_online(this.selected).then(r => {
+        this.$success_('上线成功')
+        this.getList()
+      })
+    },
+
+    /**
+     * 批量删除
+     */
+    batch_delete() {
+      this.$messageConfirm('删除后不可恢复哦, 请谨慎选择', r => {
+          batch_delete(this.selected).then(r => {
+            this.$success_('删除成功')
+            this.getList()
+        })
+      })
+    },
+
+    /**
+     * 获取选中的值
+     */
+    getSelected(data) {
+      let selected = []
+      data.forEach(element => {
+        selected.push(element.id)
+      });
+      this.selected = selected.join(',')
     }
   }
 };

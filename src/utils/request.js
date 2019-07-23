@@ -4,7 +4,8 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import QS from "qs"
 
-const URL = process.env.NODE_ENV === 'development' ? '' : 'http://v.surest.cn'
+// const URL = process.env.NODE_ENV === 'development' ? '' : 'http://v.surest.cn'
+const URL = process.env.NODE_ENV === 'development' ? '' : 'http://vue-admin.ink'
 
 // 创建一个axios
 const service = axios.create({

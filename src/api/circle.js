@@ -45,3 +45,16 @@ export function getStatus(v) {
         return 0
     }
 }
+
+
+export function batch_lower(ids) {
+    return post('/admin/circle/batch_lower', {ids})
+}
+
+export function batch_online(ids) {
+    return post('/admin/circle/batch_online', {ids})
+}
+
+export function batch_delete(ids) {
+    return deletes('/admin/circle/batch_delete', {ids})
+}

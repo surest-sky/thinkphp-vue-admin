@@ -12,7 +12,7 @@ export function error_(title) {
 }
 
 export function MessageConfirm(title, func) {
-    MessageBox.confirm('是否删除消息', '提示', {
+    MessageBox.confirm(title, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
