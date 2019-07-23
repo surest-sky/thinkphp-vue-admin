@@ -99,6 +99,7 @@ export default {
         {
           prop: "to_roles",
           label: "用户角色",
+          width: "300",
           render: (h, param) => {
             let roles = [];
             if (param.row.to_roles) {
