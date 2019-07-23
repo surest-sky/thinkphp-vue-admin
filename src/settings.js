@@ -15,8 +15,6 @@ module.exports = {
   sidebarLogo: false,
 
   AdminApiUrl: 'http://vue-admin.ink', // 本地
-  // AdminApiUrl: 'http://test-offline.d88.ink', // 线上
-  // AdminApiUrl: 'http://test-offline.d88.ink', // 线上
   // AdminApiUrl: 'http://192.168.2.199:96', // 周坤
   // AdminApiUrl: 'http://vue-admin.test', // 周坤
 
