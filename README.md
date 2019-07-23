@@ -1,4 +1,4 @@
-## thinkphp + vue + element + 权限管理 + 菜单自定义解决方案
+## thinkphp-vue-admin thinkphp + vue + element + 权限管理 + 菜单自定义解决方案
 
 在线地址: [http://v-web.surest.cn/](http://v-web.surest.cn/)
 
@@ -99,7 +99,9 @@
 ## 交流群
 
 
-![https://s2.ax1x.com/2019/07/23/ek4oCD.jpg](https://s2.ax1x.com/2019/07/23/ek5rZt.jpg
-)
+![https://s2.ax1x.com/2019/07/23/ek4oCD.jpg](https://s2.ax1x.com/2019/07/23/ek4oCD.jpg)
 
 
+### 我的博客
+
+[http://surest.cn](http://surest.cn)
