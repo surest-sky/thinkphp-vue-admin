@@ -5,12 +5,12 @@ import { getToken } from '@/utils/auth'
 import QS from "qs"
 
 // const URL = process.env.NODE_ENV === 'development' ? '' : 'http://v.surest.cn'
-const URL = process.env.NODE_ENV === 'development' ? '' : 'http://vue-admin.ink'
+const URL = process.env.NODE_ENV === 'development' ? 'http://t-api.test' : 'http://vue-admin.ink'
 
 // 创建一个axios
 const service = axios.create({
   baseURL: URL , 
-  withCredentials: true, // 跨域请求时发送cookie
+  // withCredentials: true, // 跨域请求时发送cookie
   timeout: 5000 // request timeout
 })
 
