@@ -263,7 +263,7 @@ export default {
     delete(id) {
       let that = this
       that.$messageConfirm('是否删除圈子, 不可恢复的那种', (r) => {
-          del(id).then((r) => {
+          batch_delete(id).then((r) => {
             that.$success_('删除成功')
             that.getList()
           })

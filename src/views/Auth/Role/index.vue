@@ -2,10 +2,10 @@
   <div>
     <div class="filter-tool">
       <el-row :gutter="20">
-        <el-col :xs="12" :sm="12" :md="4">
+        <el-col :xs="12" :sm="6" :md="4">
           <el-input size="medium" v-model="filter.name" placeholder="角色名称"></el-input>
         </el-col>
-        <el-col :xs="12" :sm="12" :md="4">
+        <el-col :xs="12" :sm="6" :md="4">
            <el-button
               size="medium"
               type="success"
@@ -13,8 +13,8 @@
               @click="getList"
               @keyup.enter="search"
             >搜  索</el-button>
-          <el-button size="medium" type="primary" icon="el-icon-plus" @click="add" @keyup.enter="add">添加角色</el-button>
         </el-col>
+        <el-col><el-button size="medium" type="primary" icon="el-icon-plus" @click="add" @keyup.enter="add">添加角色</el-button></el-col>
       </el-row>
     </div>
 
