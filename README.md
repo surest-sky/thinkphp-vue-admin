@@ -1,3 +1,13 @@
+
+# 非常抱歉，由于时间问题，这个项目暂时不维护了，有需要的使用这个（最近没有时间) 
+
+https://github.com/hardphp/vue-admin
+
+
+---------
+
+以下是原文
+
 ## thinkphp-vue-admin thinkphp + vue + element + 权限管理 + 菜单自定义解决方案
 
 在线地址: [http://v-web.surest.cn/](http://v-web.surest.cn/)
