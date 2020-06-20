@@ -7,7 +7,7 @@ import { Settings } from "@/layout/components"
 
 // 创建一个axios
 const service = axios.create({
-  baseURL: "/" , 
+  baseURL: (process.env.NODE_ENV == "production") ? Settings.AdminApiUrl :"/" , 
 
   timeout: 5000 // request timeout
 })
