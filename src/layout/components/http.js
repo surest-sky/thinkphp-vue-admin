@@ -8,21 +8,8 @@ import { Message } from 'element-ui'
 
 const service = axios.create()
 
-const http = {}
-
-// dev 开发版
-// production 生产环境
-// const host = "http://store.ink/admin/"
-const host = "http://test-offline.d88.ink/admin/"
-// const host = "https://offline.d88.ink/admin/"
-// const host = "http://192.168.2.199:96/admin/"
-
 service.interceptors.request.use(config => {
   if (store.getters.token) {
-    // let each request carry token
-    // ['X-Token'] is a custom headers key
-    // please modify it according to the actual situation
-    
     if(config.params) {
       config.params.sid = getToken()
     }else{
@@ -81,8 +68,7 @@ service.interceptors.response.use(
     }
 )
 export function get(url, params = {}) {
-    params.t = new Date().getTime(); //get方法加一个时间参数,解决ie下可能缓存问题.
-    var url = url.replace('/\api/', host);
+    params.t = new Date().getTime(); //get方法加一个时间参数,解决ie下可能缓存问题.  
     return service({
       url: url,
       method: 'get',
@@ -92,15 +78,11 @@ export function get(url, params = {}) {
 
 
   //封装post请求
-export function post(url, data = {}) { 
-    var url = url.replace('/\api/', host);
+export function post(url, data = {}) {    
     //默认配置 
     let sendObject={
       url: url,
       method: 'post',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
       data:QS.stringify(data)
     };
 
@@ -109,26 +91,18 @@ export function post(url, data = {}) {
   
   //封装put方法 (resfulAPI常用)
   export function put(url,data = {}){
-    var url = url.replace('/\api/', host);
     let sendObject = {
       url: url,
       method: 'put',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
       data:QS.stringify(data)
     }
     return service(sendObject)
   }
   //删除方法(resfulAPI常用)
   export function deletes(url, data){
-    var url = url.replace('/\api/', host);
     return service({
       url: url,
       method: 'delete',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
       data:QS.stringify(data)
     }) 
   }

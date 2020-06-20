@@ -1,16 +1,9 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 
 import Layout from '@/layout'
-import Message from "@/views/Message/index"
-import Storetype from "@/views/Storetype/index"
-import Superstore from "@/views/Superstore/index"
-import Store from "@/views/Store/index"
-import Circle from "@/views/Circle/index"
-import App from "@/views/App/index"
-import Auth from "@/views/Auth/index"
+import Permission from "@/views/Auth/Permission/index"
 import Role from "@/views/Auth/Role/index"
 import AdminUser from "@/views/AdminUser/index"
-import Data from "@/views/Data/index"
 
 
 /**
@@ -19,39 +12,9 @@ import Data from "@/views/Data/index"
  */
 const routeMap = [
   {
-    "path": "admin/storetype",
-    "component": Storetype,
-    "icon": "type",
-  },
-  {
-    "path": "admin/message",
-    "component": Message,
-    "icon": "message",
-  },
-  {
     "path": "admin/permission",
-    "component": Auth,
+    "component": Permission,
     "icon": "auth",
-  },
-  {
-    "path": "admin/superstore",
-    "component": Superstore,
-    "icon": "superstore",
-  },
-  {
-    "path": "admin/store/show/<id>",
-    "component": Store,
-    "icon": "store",
-  },
-  {
-    "path": "admin/circle",
-    "component": Circle,
-    "icon": "circle",
-  },
-  {
-    "path": "admin/app",
-    "component": App,
-    "icon": "app",
   },
   {
     "path": "admin/role",
@@ -62,10 +25,6 @@ const routeMap = [
     "path": "admin/admin-user",
     "component": AdminUser,
     "icon": "admin-user",
-  }, {
-    "path": "admin/info/data",
-    "component": Data,
-    "icon": "data",
   }
 ]
 

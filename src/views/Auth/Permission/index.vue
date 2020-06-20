@@ -1,23 +1,22 @@
 <template>
-  <div v-loading="show">
+  <div v-loading="show" class="app-container">
     <div class="filter-tool">
-      <el-row>
-        <el-col :sm="12" :md="12">
+      <el-form :inline="true">
+        <el-form-item>
           <el-button
-            size="medium"
             @click="init_permission"
             type="warning"
             icon="el-icon-refresh"
           >初始化权限节点</el-button>
-        </el-col>
-        <el-col :sm="20" :md="20">
-          <el-radio size="medium" v-model="is_delete" label="1" border>重建节点</el-radio>
-          <el-radio size="medium" v-model="is_delete" label="0" border>更新节点</el-radio>
-        </el-col>
-        <el-col :xs="20" :sm="20" :md="20">
-          <el-button size="medium" @click="add" type="primary" icon="el-icon-plus">添加权限</el-button>
-        </el-col>
-      </el-row>
+        </el-form-item>
+        <el-form-item>
+          <el-radio v-model="is_delete" label="1" border>重建节点</el-radio>
+          <el-radio v-model="is_delete" label="0" border>更新节点</el-radio>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="add" type="primary" icon="el-icon-plus">添加权限</el-button>
+        </el-form-item>
+      </el-form>
     </div>
 
     <div class="tree">
@@ -46,38 +45,21 @@
     </div>
 
     <el-dialog :title="this.form.submit" :visible.sync="formShow">
-      <my-create :form="form" @updated="updated"></my-create>
+      <Tform :form="form" @updated="updated"></Tform>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {
-  myHeader,
-  MyTable,
-  Button,
-  Pagination,
-  MySelect,
-  MyDate,
-  page,
-  MyTag
-} from "@/layout/components/index";
 
 import { getList, getSimple, delete_, init_permission } from "@/api/permission";
-import myCreate from "./form/index";
+import Tform from "./form";
+import page from "@/layout/mixin/page";
 
 export default {
   name: "index",
   mixins: [page],
-  components: {
-    myHeader,
-    MyTable,
-    Button,
-    MyTag,
-    MySelect,
-    MyDate,
-    myCreate
-  },
+  components: { Tform },
   data() {
     return {
       list: [],
@@ -172,7 +154,6 @@ export default {
       }).then(() => {
         delete_(id).then(r => {
           that.$success_("删除成功");
-
           this.getList();
         });
       });

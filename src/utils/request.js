@@ -4,12 +4,10 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import QS from "qs"
 
-// const URL = process.env.NODE_ENV === 'development' ? '' : 'http://v.surest.cn'
-const URL = process.env.NODE_ENV === 'development' ? 'http://t-api.test' : 'http://vue-admin.ink'
 
 // 创建一个axios
 const service = axios.create({
-  baseURL: URL , 
+  baseURL: "/" , 
   // withCredentials: true, // 跨域请求时发送cookie
   timeout: 5000 // request timeout
 })
@@ -17,10 +15,7 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
-    config.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-
     if (store.getters.token) {
-      
       // 添加前置参数
       if(config.params) {
         config.params.sid = getToken()
@@ -33,7 +28,6 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    
     console.log(error) // for debug
     return Promise.reject(error)
   }

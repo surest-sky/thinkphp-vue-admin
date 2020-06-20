@@ -23,3 +23,7 @@ export function createOrUpdateRole(id = null, data) {
 export function getRoleList() {
     return get('/admin/role/all')
 }
+
+export function deleteRole(id) {
+    return deletes(`/admin/role/${id}`)
+}

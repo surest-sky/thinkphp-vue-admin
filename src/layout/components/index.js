@@ -18,4 +18,3 @@ export { default as MySelect } from "./Form/Select";
 export { default as Imgs } from "./Table/Imgs";
 export { statusToText, jsonRemove , storeStatusType} from "./common";
 export { page } from "../mixin/page";
-export { table } from "../mixin/table";

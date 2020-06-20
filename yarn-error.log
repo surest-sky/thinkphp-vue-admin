@@ -1,40 +1,41 @@
 Arguments: 
-  /opt/node-v10.15.3-linux-x64/bin/node /opt/node-v10.15.3-linux-x64/bin/yarn add Qs
+  /usr/local/bin/node /usr/local/bin/yarn add vue-router:2.8.1
 
 PATH: 
-  /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/sbin:/usr/sbin:/home/chenf/.config/composer/vendor/psy/psysh/bin:/opt/node-v10.15.3-linux-x64/lib/node_modules/hexo-cli/bin:/opt/node-v10.15.3-linux-x64/bin:/dowload/go/bin
+  /Users/surest/bin:/Users/surest/go/bin:/bin:/usr/bin:/usr/local/bin:/Users/surest/bin:/Users/surest/go/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Docker.app/Contents/Resources/bin:/Users/surest/Library/Android/sdk/platform-tools:/Users/surest/Library/Android/sdk/tools:/usr/local/mysql/bin:/usr/local/mysql/support-files
 
 Yarn version: 
-  1.16.0
+  1.21.1
 
 Node version: 
-  10.15.3
+  12.14.1
 
 Platform: 
-  linux x64
+  darwin x64
 
 Trace: 
-  Error: https://registry.npm.taobao.org/Qs: Not found
-      at Request.params.callback [as _callback] (/opt/node-v10.15.3-linux-x64/lib/node_modules/yarn/lib/cli.js:66091:18)
-      at Request.self.callback (/opt/node-v10.15.3-linux-x64/lib/node_modules/yarn/lib/cli.js:129590:22)
-      at Request.emit (events.js:189:13)
-      at Request.<anonymous> (/opt/node-v10.15.3-linux-x64/lib/node_modules/yarn/lib/cli.js:130562:10)
-      at Request.emit (events.js:189:13)
-      at IncomingMessage.<anonymous> (/opt/node-v10.15.3-linux-x64/lib/node_modules/yarn/lib/cli.js:130484:12)
-      at Object.onceWrapper (events.js:277:13)
-      at IncomingMessage.emit (events.js:194:15)
-      at endReadableNT (_stream_readable.js:1125:12)
-      at process._tickCallback (internal/process/next_tick.js:63:19)
+  Error: vue-router:2.8.1: Invalid protocol: vue-router:
+      at Request.module.exports.Request.init (/usr/local/lib/node_modules/yarn/lib/cli.js:140934:31)
+      at new Request (/usr/local/lib/node_modules/yarn/lib/cli.js:140607:8)
+      at request (/usr/local/lib/node_modules/yarn/lib/cli.js:137513:10)
+      at RequestManager.execute (/usr/local/lib/node_modules/yarn/lib/cli.js:66999:15)
+      at RequestManager.shiftQueue (/usr/local/lib/node_modules/yarn/lib/cli.js:67037:10)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:66716:13
+      at new Promise (<anonymous>)
+      at new F (/usr/local/lib/node_modules/yarn/lib/cli.js:5301:28)
+      at RequestManager.request (/usr/local/lib/node_modules/yarn/lib/cli.js:66714:19)
+      at NpmRegistry.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:31704:42)
 
 npm manifest: 
   {
     "name": "vue-admin-template",
     "version": "4.2.1",
     "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
-    "author": "Pan <panfree23@gmail.com>",
+    "author": "Pan <chenf@surest.cn>",
     "license": "MIT",
     "scripts": {
-      "dev": "vue-cli-service serve",
+      "dev": "vue-cli-service serve --inline --progress",
+      "prod": "cross-env NODE_ENV=production vue-cli-service serve --inline",
       "build:prod": "vue-cli-service build",
       "build:stage": "vue-cli-service build --mode staging",
       "preview": "node build/index.js --preview",
@@ -45,13 +46,17 @@ npm manifest:
     },
     "dependencies": {
       "axios": "^0.18.0",
+      "echarts": "^4.2.1",
       "element-ui": "2.7.2",
       "js-cookie": "2.2.0",
+      "js-md5": "^0.7.3",
       "normalize.css": "7.0.0",
       "nprogress": "0.2.0",
       "path-to-regexp": "2.4.0",
+      "qs": "^6.7.0",
       "vue": "2.6.10",
-      "vue-router": "3.0.6",
+      "vue-amap": "^0.5.10",
+      "vue-count-to": "^1.0.13",
       "vuex": "3.1.0"
     },
     "devDependencies": {
@@ -69,19 +74,19 @@ npm manifest:
       "chalk": "2.4.2",
       "connect": "3.6.6",
       "css-loader": "^3.0.0",
-      "less-loader": "^5.0.0",
-      "sass-loader": "^7.1.0",
-      "style-loader": "^0.23.1",
       "eslint": "5.15.3",
       "eslint-plugin-vue": "5.2.2",
       "html-webpack-plugin": "3.2.0",
+      "less-loader": "^5.0.0",
       "mockjs": "1.0.1-beta3",
       "moment": "^2.24.0",
       "node-sass": "^4.9.0",
       "runjs": "^4.3.2",
+      "sass-loader": "^7.1.0",
       "script-ext-html-webpack-plugin": "2.1.3",
       "script-loader": "0.7.2",
       "serve-static": "^1.13.2",
+      "style-loader": "^0.23.1",
       "svg-sprite-loader": "4.1.3",
       "svgo": "1.2.2",
       "vue-template-compiler": "2.6.10"
@@ -2413,6 +2418,11 @@ Lockfile:
       camelcase "^2.0.0"
       map-obj "^1.0.0"
   
+  camelcase@^1.2.1:
+    version "1.2.1"
+    resolved "https://registry.npm.taobao.org/camelcase/download/camelcase-1.2.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcamelcase%2Fdownload%2Fcamelcase-1.2.1.tgz#9bb5304d2e0b56698b2c758b08a3eaa9daa58a39"
+    integrity sha1-m7UwTS4LVmmLLHWLCKPqqdqlijk=
+  
   camelcase@^2.0.0:
     version "2.1.1"
     resolved "https://registry.npm.taobao.org/camelcase/download/camelcase-2.1.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcamelcase%2Fdownload%2Fcamelcase-2.1.1.tgz#7c1d16d679a1bbe59ca02cacecfb011e201f5a1f"
@@ -3601,6 +3611,13 @@ Lockfile:
     dependencies:
       jsbn "~0.1.0"
       safer-buffer "^2.1.0"
+  
+  echarts@^4.2.1:
+    version "4.2.1"
+    resolved "https://registry.npm.taobao.org/echarts/download/echarts-4.2.1.tgz#9a8ea3b03354f86f824d97625c334cf16965ef03"
+    integrity sha1-mo6jsDNU+G+CTZdiXDNM8Wll7wM=
+    dependencies:
+      zrender "4.0.7"
   
   editorconfig@^0.15.3:
     version "0.15.3"
@@ -6141,6 +6158,11 @@ Lockfile:
     resolved "https://registry.npm.taobao.org/js-levenshtein/download/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"
     integrity sha1-xs7ljrNVA3LfjeuF+tXOZs4B1Z0=
   
+  js-md5@^0.7.3:
+    version "0.7.3"
+    resolved "https://registry.npm.taobao.org/js-md5/download/js-md5-0.7.3.tgz#b4f2fbb0b327455f598d6727e38ec272cd09c3f2"
+    integrity sha1-tPL7sLMnRV9ZjWcn447Ccs0Jw/I=
+  
   js-message@1.0.5:
     version "1.0.5"
     resolved "https://registry.npm.taobao.org/js-message/download/js-message-1.0.5.tgz#2300d24b1af08e89dd095bc1a4c9c9cfcb892d15"
@@ -8441,7 +8463,7 @@ Lockfile:
     resolved "https://registry.npm.taobao.org/q/download/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
     integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
   
-  qs@6.7.0:
+  qs@6.7.0, qs@^6.7.0:
     version "6.7.0"
     resolved "https://registry.npm.taobao.org/qs/download/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
     integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
@@ -10197,6 +10219,13 @@ Lockfile:
     resolved "https://registry.npm.taobao.org/upper-case/download/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
     integrity sha1-9rRQHC7EzdJrp4vnIilh3ndiFZg=
   
+  uppercamelcase@^1.1.0:
+    version "1.1.0"
+    resolved "https://registry.npm.taobao.org/uppercamelcase/download/uppercamelcase-1.1.0.tgz#324d98a6b3afc7e8a8953e10641509b0e4e23f97"
+    integrity sha1-Mk2YprOvx+iolT4QZBUJsOTiP5c=
+    dependencies:
+      camelcase "^1.2.1"
+  
   uri-js@^4.2.2:
     version "4.2.2"
     resolved "https://registry.npm.taobao.org/uri-js/download/uri-js-4.2.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Furi-js%2Fdownload%2Furi-js-4.2.2.tgz#94c540e1ff772956e2299507c010aea6c8838eb0"
@@ -10320,6 +10349,18 @@ Lockfile:
     resolved "https://registry.npm.taobao.org/vm-browserify/download/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
     integrity sha1-vXbWojMj4sqP+hICjcBFWcdfkBk=
   
+  vue-amap@^0.5.10:
+    version "0.5.10"
+    resolved "https://registry.npm.taobao.org/vue-amap/download/vue-amap-0.5.10.tgz#464516203af0c085d404bd8acabf2401e4a36ff6"
+    integrity sha1-RkUWIDrwwIXUBL2Kyr8kAeSjb/Y=
+    dependencies:
+      uppercamelcase "^1.1.0"
+  
+  vue-count-to@^1.0.13:
+    version "1.0.13"
+    resolved "https://registry.npm.taobao.org/vue-count-to/download/vue-count-to-1.0.13.tgz#3e7573ea6e64c2b2972f64e0a2ab2e23c7590ff3"
+    integrity sha1-PnVz6m5kwrKXL2TgoqsuI8dZD/M=
+  
   vue-eslint-parser@^2.0.3:
     version "2.0.3"
     resolved "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-2.0.3.tgz#c268c96c6d94cfe3d938a5f7593959b0ca3360d1"
@@ -10375,11 +10416,6 @@ Lockfile:
       loader-utils "^1.1.0"
       vue-hot-reload-api "^2.3.0"
       vue-style-loader "^4.1.0"
-  
-  vue-router@3.0.6:
-    version "3.0.6"
-    resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-3.0.6.tgz#2e4f0f9cbb0b96d0205ab2690cfe588935136ac3"
-    integrity sha1-Lk8PnLsLltAgWrJpDP5YiTUTasM=
   
   vue-style-loader@^4.1.0:
     version "4.1.2"
@@ -10849,3 +10885,8 @@ Lockfile:
       is-ci "^1.0.10"
       normalize-path "^1.0.0"
       strip-indent "^2.0.0"
+  
+  zrender@4.0.7:
+    version "4.0.7"
+    resolved "https://registry.npm.taobao.org/zrender/download/zrender-4.0.7.tgz#15ae960822f5efed410995d37e5107fe3de10e6d"
+    integrity sha1-Fa6WCCL17+1BCZXTflEH/j3hDm0=

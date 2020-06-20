@@ -14,9 +14,7 @@ module.exports = {
    */
   sidebarLogo: false,
 
-  AdminApiUrl: 'http://vue-admin.ink', // 本地
-  // AdminApiUrl: 'http://192.168.2.199:96', // 周坤
-  // AdminApiUrl: 'http://vue-admin.test', // 周坤
+  AdminApiUrl: 'http://vue-admin-api.test/', // 本地
 
     /**
    * @type {boolean} true | false

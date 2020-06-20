@@ -32,8 +32,8 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      domain: "https://upload-z2.qiniup.com",
-      qiniuaddr: "http://cdn.surest.cn/",
+      domain: undefined,
+      qiniuaddr: undefined,
       QiniuData: {
         key: "", //图片名字处理
         token: "" //七牛云token
@@ -122,7 +122,9 @@ export default {
     getQiniuToken() {
       let that = this
       getQiniuToken().then(r => {
-        that.QiniuData.token = r.data.token
+        that.QiniuData.token = r.data.token,
+        that.domain = r.data.domain
+        that.qiniuaddr = r.data.qiniuaddr
       })
     },
 

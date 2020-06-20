@@ -1,4 +1,4 @@
-export const page = {
+export default {
     data() {
         return {
             pagesize: 10,
@@ -38,15 +38,10 @@ export const page = {
         getSelected() {
             var data = this.multipleSelection;
             var ids = [];
-            
-
             data.forEach(row => {
                 ids.push(row.id);
             });
             this.multipleSelectionIds = ids;
-            console.log(ids)
-
-            
         }
     }
 }

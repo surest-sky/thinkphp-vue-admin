@@ -1,28 +1,49 @@
 <template>
-  <div>
-
+  <div class="app-container">
     <div class="filter-tool">
-      <el-row :gutter="10">
-        <el-col :xs="12" :sm="12" :md="4">
-          <el-input size="medium" v-model="filter.username" placeholder="用户账户"></el-input>
-        </el-col>
-        <el-col  :xs="12" :sm="12" :md="4">
-          <el-input size="medium" v-model="filter.nickname" placeholder="用户名称"></el-input>
-        </el-col>
-        <el-col :xs="12" :sm="12" :md="4">
-          <el-input size="medium" v-model="filter.email" placeholder="用户邮箱"></el-input>
-        </el-col>
-        <el-col :xs="24" :md="20">
-          <el-button size="medium" type="success" icon="el-icon-plus" @click="add" @keyup.enter="add">添加</el-button>
-          <el-button size="medium" type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
-        </el-col>
-      </el-row>
+      <el-form :inline="true">
+        <el-form-item>
+          <el-input v-model="filter.username" placeholder="用户账户"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="filter.nickname" placeholder="用户名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="filter.email" placeholder="用户邮箱"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="success" icon="el-icon-plus" @click="add" @keyup.enter="add">添加</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="search" @keyup.enter="search">搜索</el-button>
+        </el-form-item>
+      </el-form>
     </div>
 
-    <my-table :loading="loading" :tableData="list" :columns="columns"></my-table>
+    <el-table :data="list" border="">
+      <el-table-column prop="id" label="Id"></el-table-column>
+      <el-table-column prop="username" label="账号"></el-table-column>
+      <el-table-column prop="nickname" label="用户名称"></el-table-column>
+      <el-table-column label="用户头像">
+        <template slot-scope="{ row }">
+          <el-image :src="row.avatar" style="width: 50px; height: 50px" :lazy="false" :preview-src-list=[row.avatar]></el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户角色">
+        <template slot-scope="{ row }">
+          <el-tag v-for="(item, key) in row.to_roles" :key="key" type="success">{{ item.name }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="description" label="用户描述"></el-table-column>
+      <el-table-column prop="email" label="用户邮箱"></el-table-column>
+      <el-table-column label="操作" width="150px">
+        <template slot-scope="{row}">
+          <el-button type="success" plain @click="edit(row.id)">编辑</el-button>
+          <el-button type="warning" plain @click="delete(row.id)" v-if="!row.is_admin">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-    <el-dialog :title="submit" :visible.sync="formShow">
-      <create-table :form="form" :submit="submit" @submited="submited"></create-table>
+    <el-dialog :title="submit" :visible.sync="formShow" width="80%">
+      <TForm :form="form" :submit="submit" @submited="submited"></TForm>
     </el-dialog>
 
     <!-- 分页 -->
@@ -38,37 +59,16 @@
 </template>
 
 <script>
-import {
-  myHeader,
-  MyTable,
-  Button,
-  Pagination,
-  MyDropDown,
-  page,
-  MyTag,
-  table,
-  Imgs,
-  MyTags
-} from "@/layout/components/index";
-
 import { getList, getUser, deleteUser } from "@/api/admin-user";
-
-import createTable from "./form/index";
+import TForm from "./form";
+import listMix from "@/layout/mixin/listMix"
+import page from "@/layout/mixin/page"
+import { Imgs } from "@/layout/components/index";
 
 export default {
   name: "index",
-  mixins: [page, table],
-  components: {
-    myHeader,
-    MyTable,
-    Button,
-    Pagination,
-    MyDropDown,
-    Imgs,
-    createTable,
-    MyTags,
-    MyTag
-  },
+  mixins: [page, listMix],
+  components: { TForm },
   data() {
     return {
       list: [],
@@ -76,90 +76,7 @@ export default {
       title: "管理员管理",
       formShow: false,
       submit: "创建",
-      form: {},
-      columns: [
-        { prop: "id", label: "Id", width: "50"},
-        { prop: "username", label: "账号" },
-        { prop: "nickname", label: "用户名称" },
-        {
-          prop: "avatar",
-          label: "用户头像",
-          render: (h, param) => {
-            let avatar = [];
-            if (param.row.uavatar) {
-              avatar.push(param.row.avatar);
-              return h(Imgs, {
-                props: {
-                  imgs: avatar
-                }
-              });
-            }
-          }
-        },
-        {
-          prop: "to_roles",
-          label: "用户角色",
-          width: "300",
-          render: (h, param) => {
-            let roles = [];
-            if (param.row.to_roles) {
-              param.row.to_roles.forEach(r => {
-                roles.push({
-                  text: r.name
-                });
-              });
-              return h(MyTags, {
-                props: { tags: roles }
-              });
-            }
-          }
-        },
-
-        { prop: "description", label: "用户描述" },
-        { prop: "email", label: "用户邮箱" },
-        {
-          prop: "",
-          fixed: "right",
-          label: "操作",
-          width: 150,
-          render: (h, param) => {
-            let dropDownData = {
-              label: "更多",
-              items: []
-            };
-
-            if(parseInt(param.row.is_admin)) {
-              dropDownData.items = dropDownData.items.concat([
-                { label: "编辑", func: { func: "edit", id: param.row.id } }
-              ]);
-            }else{
-              dropDownData.items = dropDownData.items.concat([
-                { label: "删除", func: { func: "delete", id: param.row.id } },
-                { label: "编辑", func: { func: "edit", id: param.row.id } }
-              ]);
-            }
-
-            // 触发MyDropDown的update和del事件
-            return h(MyDropDown, {
-              props: { dropDownData: dropDownData },
-              on: {
-                edit: this.edit,
-                delete: this.delete
-              }
-            });
-          }
-        },
-        { prop: "login_ip", label: "最近登录ip", render: (h, param) => {
-          return h(MyTag, {
-              props: { text: param.row.login_ip }
-            });
-        }},
-        { prop: "login_time", label: "最近登录时间", render: (h, param) => {
-          return h(MyTag, {
-              props: { text: param.row.login_time }
-            });
-        }},
-      ]
+      form: {}
     };
   },
 
@@ -265,9 +182,4 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-  .el-col {
-    margin-top: 10px;
-  }
-</style>
 
