@@ -14,7 +14,7 @@ module.exports = {
    */
   sidebarLogo: false,
 
-  AdminApiUrl: 'http://v.surest.cn/',  // 请求地址
+  AdminApiUrl: (process.env.NODE_ENV == "production") ? 'http://v.surest.cn/' : 'http://vue-admin-api.test/',  // 请求地址
 
     /**
    * @type {boolean} true | false
