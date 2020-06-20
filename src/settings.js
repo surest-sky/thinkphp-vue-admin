@@ -14,7 +14,7 @@ module.exports = {
    */
   sidebarLogo: false,
 
-  AdminApiUrl: 'http://vue-admin-api.test/', // 本地
+  AdminApiUrl: 'http://v.surest.cn/',  // 请求地址
 
     /**
    * @type {boolean} true | false

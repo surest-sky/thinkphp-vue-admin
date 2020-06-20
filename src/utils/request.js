@@ -3,12 +3,12 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import QS from "qs"
-
+import { Settings } from "@/layout/components"
 
 // 创建一个axios
 const service = axios.create({
   baseURL: "/" , 
-  // withCredentials: true, // 跨域请求时发送cookie
+
   timeout: 5000 // request timeout
 })
 
